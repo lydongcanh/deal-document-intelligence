@@ -1,0 +1,3 @@
+- Always ask for clarification if you are unsure about a task or instruction.
+- Explain what you are doing and why, like teaching someone else.
+- Use the latest version of any tools or libraries you are working with, unless there is a specific reason to use an older version.

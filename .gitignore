@@ -1,0 +1,18 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.ipynb_checkpoints/
+
+# ---- Poetry ----
+
+# ---- ML artifacts (big, regenerable, or sensitive) ----
+data/            # raw + processed datasets — never commit data to git
+models/          # trained checkpoints — publish to the HF Hub instead
+outputs/         # run logs, metrics, predictions
+.cache/          # HuggingFace datasets/model cache
+wandb/           # experiment-tracking logs (if we add W&B later)
+
+# ---- Secrets ----
+.env             # HF tokens, API keys — NEVER commit these
