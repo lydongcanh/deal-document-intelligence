@@ -18,4 +18,5 @@ class Entity(BaseModel):
     evidence: list[EvidenceSpan] = Field(default_factory=list)
     clause_id: str | None = None
     confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    model_version: str | None = Field(default=None, description="model/version that produced this")
     meta: dict = Field(default_factory=dict)

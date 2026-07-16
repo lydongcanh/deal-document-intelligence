@@ -1,9 +1,9 @@
-"""Phase 1 walking skeleton — one document flows through ALL stages end-to-end.
+"""Phase 1 walking skeleton — the finalized pipeline, end-to-end.
 
-This is a *consumer* of `deal_document_intelligence`: it supplies a docling-based
-Parser and rule/regex baselines for stages 4-7, wires them into the package's
-`Pipeline`, and runs a real contract through it. The package itself depends on
-none of this.
+A *consumer* of `deal_document_intelligence`: it supplies a docling parser and
+rule/regex baselines for every stage, wires them into `Pipeline` (single doc)
+and `DealPipeline` (whole data room), and runs two real contracts through them.
+The package depends on none of this.
 
     poetry run python demo/walking_skeleton.py
 """
@@ -12,55 +12,62 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from baseline_relation_extractor import BaselineRelationExtractor
 from docling_parser import DoclingParser
 from keyword_classifier import KeywordClassifier
-from offset_linker import OffsetLinker
-from regex_extractor import RegexExtractor
+from naive_deal_aggregator import NaiveDealAggregator
+from regex_entity_extractor import RegexEntityExtractor
 from rule_based_segmenter import RuleBasedSegmenter
+from simple_language_detector import SimpleLanguageDetector
+from simple_resolver import SimpleResolver
 
+from deal_document_intelligence.deal_pipeline import DealPipeline
 from deal_document_intelligence.pipeline import Pipeline
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 
 
-def main() -> None:
-    source = HERE / "sample_contract.md"
-
-    pipeline = Pipeline(
+def build_pipeline() -> Pipeline:
+    return Pipeline(
         parser=DoclingParser(),
+        language_detector=SimpleLanguageDetector(),
         segmenter=RuleBasedSegmenter(),
         classifier=KeywordClassifier(),
-        extractor=RegexExtractor(),
-        linker=OffsetLinker(),
+        entity_extractor=RegexEntityExtractor(),
+        relation_extractor=BaselineRelationExtractor(),
+        resolver=SimpleResolver(),
     )
 
-    print(f"Running pipeline on {source.name} …\n")
-    result = pipeline.run(source)
 
+def main() -> None:
+    sources = [HERE / "sample_contract.md", HERE / "sample_amendment.md"]
+    pipeline = build_pipeline()
+
+    # ---- document-level (stage 9a) on the first contract ----
+    result = pipeline.run(sources[0])
     doc = result.document
-    print(f"=== DOCUMENT ===  {doc.doc_id}  ({doc.page_count} page(s), {len(doc.blocks)} blocks)\n")
+    print(f"=== DOCUMENT: {doc.doc_id} ===")
+    print(f"  language={doc.language}  type={doc.document_type.value if doc.document_type else '?'}"
+          f"  pages={doc.page_count}  blocks={len(doc.blocks)}")
+    print(f"  clauses={len(result.clauses)}  entities={len(result.entities)}"
+          f"  obligations={len(result.obligations)}  events={len(result.events)}"
+          f"  relations={len(result.relations)}")
+    print(f"  evidence integrity: {'OK ✅' if not result.verify_evidence() else 'BROKEN ❌'}")
 
-    print(f"=== CLAUSES ({len(result.clauses)}) ===")
-    for c in result.clauses:
-        ctype = c.clause_type.value if c.clause_type else "?"
-        conf = f"{c.classification_confidence:.2f}" if c.classification_confidence else "—"
-        print(f"  [{c.number or '-':>3}] {ctype:<28} conf={conf}  «{(c.heading or c.text)[:40]}»")
+    # ---- deal-level (stage 9b) across BOTH documents ----
+    deal = DealPipeline(pipeline, NaiveDealAggregator(deal_id="acme-globex")).run(sources)
+    print(f"\n=== DEAL: {deal.deal_id} ===  {len(deal.documents)} documents")
+    print(f"  canonical entities resolved across documents ({len(deal.canonical_entities)}):")
+    for ce in deal.canonical_entities:
+        docs = sorted({m.doc_id for m in ce.mentions})
+        cross = "  ← spans multiple docs" if len(docs) > 1 else ""
+        print(f"    {ce.type.value:<12} «{ce.canonical_name}»  seen in {docs}{cross}")
 
-    print(f"\n=== ENTITIES ({len(result.entities)}) ===")
-    for e in result.entities:
-        norm = f" → {e.normalized_value}" if e.normalized_value else ""
-        print(f"  {e.type.value:<12} «{e.text}»{norm}  (clause {e.clause_id})")
-
-    print(f"\n=== RELATIONS ({len(result.relations)}) ===  entity→clause links")
-
-    failures = result.verify_evidence()
-    print(f"\n=== EVIDENCE INTEGRITY ===  {'OK ✅' if not failures else f'{len(failures)} BROKEN ❌'}")
-
-    out = REPO / "outputs" / f"{doc.doc_id}.json"
+    out = REPO / "outputs" / f"deal_{deal.deal_id}.json"
     out.parent.mkdir(exist_ok=True)
-    out.write_text(result.model_dump_json(indent=2))
-    print(f"\nWrote evidence-backed JSON → {out.relative_to(REPO)}")
+    out.write_text(deal.model_dump_json(indent=2))
+    print(f"\nWrote deal intelligence → {out.relative_to(REPO)}")
 
 
 if __name__ == "__main__":

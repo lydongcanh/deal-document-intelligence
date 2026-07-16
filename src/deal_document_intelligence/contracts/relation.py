@@ -15,4 +15,5 @@ class Relation(BaseModel):
     target_id: str
     evidence: list[EvidenceSpan] = Field(default_factory=list)
     confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    model_version: str | None = Field(default=None, description="model/version that produced this")
     meta: dict = Field(default_factory=dict)

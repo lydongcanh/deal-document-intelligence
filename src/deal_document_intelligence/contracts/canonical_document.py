@@ -1,8 +1,9 @@
-"""The normalised document every stage reads from (output of stages 2-3).
+"""The normalised document every stage reads from (output of stages 1-2).
 
 `text` is the single normalised string for the whole document; every downstream
 fact points back into it by character offset. That is what makes results
-evidence-backed.
+evidence-backed. `language` and `document_type` are filled by stage 3 and route
+the rest of the pipeline (which models, which taxonomy).
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 from deal_document_intelligence.contracts.block import Block
+from deal_document_intelligence.contracts.document_type import DocumentType
 from deal_document_intelligence.contracts.evidence_span import EvidenceSpan
 
 
@@ -20,6 +22,8 @@ class CanonicalDocument(BaseModel):
     source_path: str | None = None
     mime_type: str | None = None
     page_count: int | None = None
+    language: str | None = Field(default=None, description="ISO 639-1, e.g. 'en'")
+    document_type: DocumentType | None = None
     meta: dict = Field(default_factory=dict)
 
     def slice(self, char_start: int, char_end: int) -> str:

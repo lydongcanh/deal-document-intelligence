@@ -22,6 +22,7 @@ class ClauseUnit(BaseModel):
     heading: str | None = None
     clause_type: ClauseType | None = None
     classification_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    model_version: str | None = Field(default=None, description="model/version that classified it")
     meta: dict = Field(default_factory=dict)
 
     @model_validator(mode="after")

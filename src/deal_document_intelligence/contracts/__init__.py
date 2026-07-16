@@ -8,18 +8,22 @@ from deal_document_intelligence.contracts.bbox import BBox
 from deal_document_intelligence.contracts.block import Block
 from deal_document_intelligence.contracts.block_type import BlockType
 from deal_document_intelligence.contracts.canonical_document import CanonicalDocument
+from deal_document_intelligence.contracts.canonical_entity import CanonicalEntity
 from deal_document_intelligence.contracts.clause_type import ClauseType
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
+from deal_document_intelligence.contracts.deal_intelligence import DealIntelligence
+from deal_document_intelligence.contracts.document_type import DocumentType
 from deal_document_intelligence.contracts.entity import Entity
+from deal_document_intelligence.contracts.entity_mention import EntityMention
 from deal_document_intelligence.contracts.entity_type import EntityType
 from deal_document_intelligence.contracts.event import Event
 from deal_document_intelligence.contracts.evidence_backed_result import (
     EvidenceBackedResult,
 )
 from deal_document_intelligence.contracts.evidence_span import EvidenceSpan
-from deal_document_intelligence.contracts.extractions import Extractions
 from deal_document_intelligence.contracts.obligation import Obligation
 from deal_document_intelligence.contracts.relation import Relation
+from deal_document_intelligence.contracts.relation_extraction import RelationExtraction
 from deal_document_intelligence.contracts.relation_type import RelationType
 
 __all__ = [
@@ -27,15 +31,19 @@ __all__ = [
     "Block",
     "BlockType",
     "CanonicalDocument",
+    "CanonicalEntity",
     "ClauseType",
     "ClauseUnit",
+    "DealIntelligence",
+    "DocumentType",
     "Entity",
+    "EntityMention",
     "EntityType",
     "Event",
     "EvidenceBackedResult",
     "EvidenceSpan",
-    "Extractions",
     "Obligation",
     "Relation",
+    "RelationExtraction",
     "RelationType",
 ]

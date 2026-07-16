@@ -8,24 +8,28 @@ entities, obligations and events - plus the applications built on top of them
 ## Pipeline
 
 ```
-PDF / DOCX / scan
+UPSTREAM (commodity, consumer-supplied):  Ingest (PDF/DOCX/scan) → OCR
+        ↓  OCR result
+ 1. Canonicalise OCR text
+ 2. Reconstruct document structure (blocks, headings, tables, pages, offsets)
+ 3. Detect language & document type
+ 4. Split into sections & clauses
+ 5. Classify clauses
+ 6. Extract entities
+ 7. Extract relations & obligations/events
+ 8. Normalise values & resolve aliases (coreference)
+ 9. Aggregate → (a) document intelligence  (b) deal intelligence [cross-document]
+10. Persist results
         ↓
-document parsing & OCR
-        ↓
-canonical blocks, headings, tables, pages & offsets
-        ↓
-clause segmentation
-        ↓
-clause classification
-        ↓
-entity + obligation/event extraction
-        ↓
-relation linking & value normalisation
-        ↓
-evidence-backed JSON
-        ↓
-search, comparison, policy checks, summaries & Q&A
+DOWNSTREAM consumers:  search, comparison, policy checks, summaries, Q&A
+
+⟂ cross-cutting on EVERY stage: evidence spans + confidence + model/version
 ```
+
+**Scope:** *deal-level is first-class* — entities are resolved and aggregated
+across **all documents in a data room**, not one file at a time. *Multilingual
+from the start* — stage 3 routes by detected language; models are multilingual
+(XLM-R / mDeBERTa), value normalisation is locale-aware.
 
 ## Design principle: wrap commodities, build differentiation
 
@@ -35,15 +39,20 @@ tools on *deal* documents). Custom effort concentrates on the contract-specific 
 
 | # | Stage | Decision | Tool / how |
 |---|-------|----------|------------|
-| 1 | Ingestion | **Buy** | file/format handling |
-| 2 | Parsing + OCR | **Buy** | `docling` / `unstructured` (+ Tesseract/EasyOCR for scans) |
-| 3 | Structure (blocks/headings/tables/offsets) | **Buy + own adapter** | parser output → our `CanonicalDocument` |
-| 4 | Clause segmentation | **Build** | contract-aware numbering/heading/cross-ref logic |
-| 5 | Clause classification | **Build** | fine-tuned encoder on CUAD |
-| 6 | Entities + obligations/events | **Hybrid** | `GLiNER`/spaCy/Presidio baselines; custom deal roles/obligations/events |
-| 7 | Relation linking + normalisation | **Hybrid** | `dateparser`/`price-parser`/`pint` for values; custom linking |
-| 8 | Evidence-backed JSON | **Build** (schema) | our Pydantic output contract |
-| 9 | Apps (search/compare/policy/Q&A) | **Hybrid** | vector store + embeddings + LLM; custom policy/comparison + evidence grounding |
+| — | Ingest + OCR (upstream) | **Buy** | consumer-supplied: Textract / Azure DI / docling |
+| 1 | Canonicalise OCR text | **Buy + adapter** | consumer adapter → `CanonicalDocument` |
+| 2 | Reconstruct structure | **Buy + own adapter** | parser output → blocks/headings/tables/offsets |
+| 3 | Detect language & doc type | **Buy / light** | language ID + doc-type classifier (routes models) |
+| 4 | Segment sections & clauses | **Build** | contract-aware, multilingual |
+| 5 | Classify clauses | **Build** | multilingual encoder (XLM-R/mDeBERTa) fine-tuned on CUAD |
+| 6 | Extract entities | **Hybrid** | multilingual NER baseline + custom deal entities |
+| 7 | Relations & obligations/events | **Build** | deal-specific |
+| 8 | Normalise + resolve aliases | **Hybrid** | locale-aware value normalisation + entity/coref resolution |
+| 9 | Aggregate → doc + deal intelligence | **Build** | per-doc, then cross-document resolution & aggregation |
+| 10 | Persist (evidence, confidence, versions) | **Engineering** | storage + provenance |
+
+Applications (search/compare/policy/Q&A) are downstream consumers of the deal
+intelligence, not pipeline stages.
 
 **Discipline:** baseline every stage with a library first → measure on real deal
 documents → build custom only where the metric justifies it.
@@ -69,15 +78,20 @@ src/deal_document_intelligence/
 │   ├── entity.py             # + entity_type.py, obligation.py, event.py, relation*.py
 │   ├── extractions.py        #   stage-6 output bundle
 │   └── evidence_backed_result.py   # stage-8 output + verify_evidence()
-├── parsing/parser.py         # 1-3  Parser interface        [consumer implements]
-├── segmentation/segmenter.py # 4     Segmenter interface     [we implement]
-├── classification/classifier.py # 5  Classifier interface    [we implement]
-├── extraction/extractor.py   # 6     Extractor interface      [we implement]
-├── linking/linker.py         # 7     Linker interface         [we implement]
-├── assembly/ applications/   # 8-9   assembled by Pipeline / downstream consumers
-├── pipeline.py               #       Pipeline: composes any objects matching the interfaces
+├── parsing/parser.py         # 1-2  Parser interface            [consumer implements]
+├── language/                 # 3    language + doc-type detect   [planned]
+├── segmentation/segmenter.py # 4    Segmenter interface         [we implement]
+├── classification/classifier.py # 5 Classifier interface        [we implement]
+├── extraction/extractor.py   # 6    Extractor interface          [we implement]
+├── linking/linker.py         # 7    Linker (relations/obligs.)   [we implement]
+├── resolution/               # 8    normalise + alias resolution [planned]
+├── aggregation/              # 9    document + deal intelligence [planned]
+├── assembly/                 # 10   persist / evidence output
+├── pipeline.py               #      composes any objects matching the interfaces
 └── config.py
-demo/  eval/  scripts/  tests/  # models/ & data/ gitignored; vendor wiring (docling) lives in demo/, not in-package
+# planned contracts: language/doc_type on CanonicalDocument; model_version on items;
+#                    deal.py, canonical_entity.py, deal_intelligence.py (deal-level)
+demo/  eval/  scripts/  tests/   # models/ & data/ gitignored; docling wiring lives in demo/
 ```
 
 ## Build strategy — walking skeleton first

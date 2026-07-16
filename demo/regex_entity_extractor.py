@@ -1,10 +1,7 @@
-"""Baseline Extractor (stage 6) — regex spotting of money, dates, orgs and
-jurisdictions over the canonical text. A dependency-light stand-in for a real
-NER model (GLiNER/spaCy) or custom deal extractor; it's the baseline to beat.
-Satisfies the `Extractor` interface.
-
-Because matches are found in `document.text`, every entity's EvidenceSpan is
-guaranteed to verify against the source.
+"""Baseline EntityExtractor (stage 6) — regex spotting of money, dates, orgs and
+jurisdictions over the canonical text. Dependency-light stand-in for a real
+multilingual NER model. Normalisation is deferred to stage 8 (the resolver), so
+entities here carry raw text only. Satisfies the `EntityExtractor` interface.
 """
 
 from __future__ import annotations
@@ -17,41 +14,41 @@ from deal_document_intelligence.contracts import (
     Entity,
     EntityType,
     EvidenceSpan,
-    Extractions,
 )
+
+_MODEL_VERSION = "regex-baseline-0.1"
 
 _PATTERNS: list[tuple[EntityType, re.Pattern[str]]] = [
     (EntityType.MONEY, re.compile(r"(?:USD|US\$|\$)\s?[\d,]+(?:\.\d+)?")),
     (EntityType.DATE, re.compile(r"[A-Z][a-z]+ \d{1,2},? \d{4}|\d{4}-\d{2}-\d{2}")),
     (EntityType.ORG, re.compile(
         r"(?:[A-Z][A-Za-z&.'\-]+ )+(?:Inc|LLC|L\.L\.C|Corp|Ltd)\.?")),
-    (EntityType.JURISDICTION, re.compile(r"State of [A-Z][a-z]+")),
+    (EntityType.JURISDICTION, re.compile(r"State of [A-Z][a-z]+(?: [A-Z][a-z]+)*")),
 ]
 
 
-class RegexExtractor:
+class RegexEntityExtractor:
     def extract(
         self, document: CanonicalDocument, clauses: list[ClauseUnit]
-    ) -> Extractions:
+    ) -> list[Entity]:
         entities: list[Entity] = []
         counter = 0
         for etype, pattern in _PATTERNS:
             for match in pattern.finditer(document.text):
-                start, end = match.start(), match.end()
+                start = match.start()
                 text = match.group().strip()
-                span = EvidenceSpan(
-                    page=self._page_at(document, start),
-                    char_start=start, char_end=start + len(text), text=text,
-                )
                 entities.append(
                     Entity(
                         id=f"e{counter}", type=etype, text=text,
-                        normalized_value=self._normalize(etype, text),
-                        evidence=[span], confidence=0.5,
+                        evidence=[EvidenceSpan(
+                            page=self._page_at(document, start),
+                            char_start=start, char_end=start + len(text), text=text,
+                        )],
+                        confidence=0.5, model_version=_MODEL_VERSION,
                     )
                 )
                 counter += 1
-        return Extractions(entities=entities)
+        return entities
 
     @staticmethod
     def _page_at(document: CanonicalDocument, offset: int) -> int:
@@ -59,10 +56,3 @@ class RegexExtractor:
             if block.char_start <= offset < block.char_end:
                 return block.page
         return 1
-
-    @staticmethod
-    def _normalize(etype: EntityType, text: str) -> str | None:
-        if etype == EntityType.MONEY:
-            digits = re.sub(r"[^\d.]", "", text)
-            return f"USD {digits}" if digits else None
-        return None
