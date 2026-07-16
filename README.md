@@ -72,26 +72,26 @@ This package is meant to be **consumed** without dictating vendors. Two rules:
 
 ```
 src/deal_document_intelligence/
-├── contracts/                # ⭐ one Pydantic model per file (the data backbone)
-│   ├── canonical_document.py # + block.py, bbox.py, block_type.py, evidence_span.py
-│   ├── clause_unit.py        # + clause_type.py
-│   ├── entity.py             # + entity_type.py, obligation.py, event.py, relation*.py
-│   ├── extractions.py        #   stage-6 output bundle
-│   └── evidence_backed_result.py   # stage-8 output + verify_evidence()
-├── parsing/parser.py         # 1-2  Parser interface            [consumer implements]
-├── language/                 # 3    language + doc-type detect   [planned]
-├── segmentation/segmenter.py # 4    Segmenter interface         [we implement]
-├── classification/classifier.py # 5 Classifier interface        [we implement]
-├── extraction/extractor.py   # 6    Extractor interface          [we implement]
-├── linking/linker.py         # 7    Linker (relations/obligs.)   [we implement]
-├── resolution/               # 8    normalise + alias resolution [planned]
-├── aggregation/              # 9    document + deal intelligence [planned]
-├── assembly/                 # 10   persist / evidence output
-├── pipeline.py               #      composes any objects matching the interfaces
+├── contracts/                     # ⭐ one Pydantic model per file (19 models)
+│   ├── canonical_document.py      #   + block, bbox, block_type, evidence_span, document_type
+│   ├── clause_unit.py             #   + clause_type
+│   ├── entity.py                  #   + entity_type, obligation, event, relation*
+│   ├── relation_extraction.py     #   stage-7 output bundle
+│   ├── evidence_backed_result.py  #   stage-9a (per-document) + verify_evidence()
+│   └── deal_intelligence.py       #   stage-9b + canonical_entity, entity_mention (deal-level)
+├── parsing/parser.py              # 1-2  Parser              [consumer implements]
+├── language/language_detector.py  # 3    LanguageDetector
+├── segmentation/segmenter.py      # 4    Segmenter
+├── classification/classifier.py   # 5    Classifier
+├── extraction/entity_extractor.py # 6    EntityExtractor
+├── linking/relation_extractor.py  # 7    RelationExtractor
+├── resolution/resolver.py         # 8    Resolver (normalise + alias)
+├── aggregation/deal_aggregator.py # 9b   DealAggregator (cross-document)
+├── assembly/                      # 10   persist / evidence output
+├── pipeline.py                    #      single-document Pipeline (stage 9a)
+├── deal_pipeline.py               #      DealPipeline (many docs → DealIntelligence)
 └── config.py
-# planned contracts: language/doc_type on CanonicalDocument; model_version on items;
-#                    deal.py, canonical_entity.py, deal_intelligence.py (deal-level)
-demo/  eval/  scripts/  tests/   # models/ & data/ gitignored; docling wiring lives in demo/
+demo/  training/  eval/  scripts/  tests/  # models/ & data/ gitignored; docling in demo/, model-training code in training/
 ```
 
 ## Build strategy — walking skeleton first
@@ -118,8 +118,10 @@ intend to publish. Anything trained for public release uses openly-licensed data
 - [x] Repo scaffold + Poetry (Python 3.13), dependencies pinned to latest
 - [x] CUAD explored — `poetry run python scripts/explore_cuad.py`
 - [x] Phase 0 — contracts + module tree
-- [x] Phase 1 — walking skeleton (docling demo, all stages, evidence-backed JSON)
+- [x] Phase 0.5 — pipeline revised to 10 stages; contracts + interfaces evolved (deal-level, multilingual, `model_version` provenance)
+- [x] Phase 1 — walking skeleton: docling demo, all stages, document + deal-level (cross-doc) intelligence, evidence-backed JSON
 - [ ] Phase 2 — custom models (segmentation, clause classification, extraction)
+  - [x] stage 5 — clause-classification dataset built (CUAD positives + LEDGAR negatives → `data/clause_classification/`)
 - [ ] Phase 3 — applications & production hardening
 
 ## Setup
