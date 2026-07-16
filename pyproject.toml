@@ -28,6 +28,15 @@ evaluate = "==0.4.6"        # standard metric implementations (F1, etc.)
 accelerate = "==1.14.0"     # device/precision handling for training loops
 seqeval = "==1.2.2"         # the standard metric for token-level NER
 
+# Demo / walking-skeleton stack — a CONSUMER of the package, not part of it.
+# docling lives here (not in the package) so the library stays vendor-free.
+# Install with:  poetry install --with demo
+[tool.poetry.group.demo]
+optional = true
+
+[tool.poetry.group.demo.dependencies]
+docling = "==2.113.0"
+
 [build-system]
 requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"

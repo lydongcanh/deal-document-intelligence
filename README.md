@@ -77,7 +77,7 @@ src/deal_document_intelligence/
 ├── assembly/ applications/   # 8-9   assembled by Pipeline / downstream consumers
 ├── pipeline.py               #       Pipeline: composes any objects matching the interfaces
 └── config.py
-api/  eval/  scripts/  tests/  # models/ & data/ gitignored; vendor wiring lives here, not in-package
+demo/  eval/  scripts/  tests/  # models/ & data/ gitignored; vendor wiring (docling) lives in demo/, not in-package
 ```
 
 ## Build strategy — walking skeleton first
@@ -104,14 +104,16 @@ intend to publish. Anything trained for public release uses openly-licensed data
 - [x] Repo scaffold + Poetry (Python 3.13), dependencies pinned to latest
 - [x] CUAD explored — `poetry run python scripts/explore_cuad.py`
 - [x] Phase 0 — contracts + module tree
-- [ ] Phase 1 — walking skeleton
+- [x] Phase 1 — walking skeleton (docling demo, all stages, evidence-backed JSON)
 - [ ] Phase 2 — custom models (segmentation, clause classification, extraction)
 - [ ] Phase 3 — applications & production hardening
 
 ## Setup
 
 ```bash
-poetry install                                   # light stack
+poetry install                                   # light stack (core package only)
 poetry install --with training                   # + model-training stack
+poetry install --with demo                       # + docling, for the demo
 poetry run python scripts/explore_cuad.py        # sanity-check the data
+poetry run python demo/walking_skeleton.py       # run the end-to-end demo
 ```

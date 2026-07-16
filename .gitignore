@@ -10,7 +10,8 @@ __pycache__/
 # ---- ML artifacts (big, regenerable, or sensitive) ----
 data/            # raw + processed datasets — never commit data to git
 models/          # trained checkpoints — publish to the HF Hub instead
-outputs/         # run logs, metrics, predictions
+outputs/*        # run logs, metrics, predictions
+outputs/
 .cache/          # HuggingFace datasets/model cache
 wandb/           # experiment-tracking logs (if we add W&B later)
 
