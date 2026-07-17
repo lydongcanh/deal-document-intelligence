@@ -1,3 +1,7 @@
+# NOTE: .gitignore has NO inline comments — '#' only starts a comment at the
+# START of a line. Never put "pattern  # explanation" on one line; git treats
+# the whole line as a literal pattern and it silently matches nothing.
+
 # ---- Python ----
 __pycache__/
 *.py[cod]
@@ -5,15 +9,19 @@ __pycache__/
 *.egg-info/
 .ipynb_checkpoints/
 
-# ---- Poetry ----
+# ---- Poetry: commit poetry.lock; the venv is ignored above ----
 
-# ---- ML artifacts (big, regenerable, or sensitive) ----
-data/            # raw + processed datasets — never commit data to git
-models/          # trained checkpoints — publish to the HF Hub instead
-outputs/*        # run logs, metrics, predictions
+# ---- ML artifacts: big, regenerable, or sensitive ----
+# data/    raw + processed datasets (regenerable via training/ scripts)
+# models/  trained checkpoints (publish to the HF Hub instead)
+# outputs/ run logs, metrics, predictions
+# .cache/  HuggingFace datasets/model cache
+# wandb/   experiment-tracking logs (if we add W&B later)
+data/
+models/
 outputs/
-.cache/          # HuggingFace datasets/model cache
-wandb/           # experiment-tracking logs (if we add W&B later)
+.cache/
+wandb/
 
-# ---- Secrets ----
-.env             # HF tokens, API keys — NEVER commit these
+# ---- Secrets: NEVER commit ----
+.env

@@ -142,14 +142,34 @@ because clauses say "the laws of the State of …", not "governing law" — and 
 on types with no obvious keyword (*Cap on Liability*, *ROFR/ROFO*, *Document
 Name*). That gap is the headroom a trained model should capture.
 
+### Trained model — v1 (Legal-XLM-R-base, 1 epoch)
+
+Fine-tuned `Legal-XLM-RoBERTa-base` (multi-label, sigmoid + BCE) for **1 epoch**
+on the full 24,664 training examples (~29 min on an M3, MPS). Decision threshold
+tuned on val (best = **0.10** — rare multi-label classes rank positives below
+0.5). Scored on the **test** split via `evaluate_model.py`:
+
+| Model | micro-F1 | macro-F1 (deal types) |
+|-------|----------|-----------------------|
+| keyword baseline | 0.459 | 0.166 |
+| **Legal-XLM-R (1 epoch)** | **0.677** | **0.252** |
+
+**Beats the floor** (+0.086 macro, +0.218 micro). Frequent/clear types are
+already strong — *Governing Law* 0.95, *Insurance* 0.90, *Cap on Liability*
+0.85, *Parties* 0.82, *Audit Rights* 0.71 — while the rare tail is the headroom:
+*ROFR/ROFO* 0.00, *Anti-Assignment* recall 0.26. A longer run (3 epochs) is the
+obvious next lever.
+
 ## 5. Roadmap
 
 - [x] **Data prep** — build the labelled, split dataset *(done — this report)*
 - [x] **Evaluation harness + baseline floor** — multi-label P/R/F1 (micro, macro,
       per-type) on the test split → keyword baseline **macro-F1 = 0.166** (the floor)
-- [ ] **Train** a multilingual encoder (mDeBERTa-v3 / XLM-R) as a multi-label
-      classifier → checkpoint in `models/`
-- [ ] **Measure the lift** vs baseline, per clause type
+- [x] **Train** a multilingual encoder → Legal-XLM-R-base, 1 epoch, checkpoint in
+      `models/clause_classifier/`
+- [x] **Measure the lift** vs baseline → test **macro-F1 0.252 vs 0.166**, micro
+      **0.677 vs 0.459**
+- [ ] **Longer run (3 epochs)** to lift the rare-type tail *(optional next lever)*
 - [ ] **Package `Classifier` implementation** loading the checkpoint, to replace
       the demo's `KeywordClassifier` in the pipeline
 
@@ -163,6 +183,12 @@ Name*). That gap is the headroom a trained model should capture.
 - **`Governing Law` is inflated** by LEDGAR's mapped provisions.
 - **`OTHER` cap (15,000) is arbitrary** — a class-balance lever to tune.
 - **Multilingual transfer is unvalidated** — no non-English test data yet.
+- **Rare-type tail is weak** — several low-support deal types (e.g. *ROFR/ROFO*)
+  score ~0 after 1 epoch; more epochs and/or class weighting are the levers.
+- **Pretraining exposure** — Legal-XLM-R was pretrained (unsupervised) on legal
+  text that may overlap our sources, so test metrics could be mildly optimistic.
+- **Tokenizer warning** — transformers 4.57 emits a benign "mistral regex"
+  warning for this tokenizer; results confirm tokenization is correct.
 
 ## 7. Reproducibility
 
@@ -172,6 +198,11 @@ poetry run python training/clause_classification/build_clause_dataset.py
 # → data/clause_classification/{train,val,test}.jsonl
 poetry run python training/clause_classification/evaluate.py
 # → baseline metrics on the test split
+
+poetry install --with training                          # torch, transformers, ...
+poetry run python training/clause_classification/train.py --smoke   # validate loop
+poetry run python training/clause_classification/train.py --epochs 1 # full 1-epoch run
+poetry run python training/clause_classification/evaluate_model.py   # trained model on test
 ```
 
 ## Changelog
@@ -183,3 +214,8 @@ poetry run python training/clause_classification/evaluate.py
   Floor on the test split: keyword **macro-F1 (deal types) = 0.166**,
   micro-F1 = 0.459; all-`OTHER` micro-F1 = 0.458, macro = 0.000. This is the
   number the trained model must beat.
+- **2026-07-17** — Trained v1: `Legal-XLM-R-base`, 1 epoch, full data (~29 min,
+  M3/MPS), threshold tuned to 0.10. Test: **macro-F1 (deal types) = 0.252**,
+  **micro-F1 = 0.677** — beats the 0.166 floor. Strong on frequent types
+  (Governing Law 0.95, Insurance 0.90); rare tail (ROFR 0.00) is the headroom.
+  Added `train.py` and `evaluate_model.py`.
