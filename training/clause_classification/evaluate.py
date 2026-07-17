@@ -20,7 +20,7 @@ from typing import Callable
 
 from deal_document_intelligence.contracts import ClauseType
 
-DATA = Path("data/clause_classification")
+DATA = Path("artifacts/data/clause_classification")
 OTHER = ClauseType.UNKNOWN
 
 Predictor = Callable[[str], set[ClauseType]]

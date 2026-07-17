@@ -31,7 +31,7 @@ from transformers import (
 
 from deal_document_intelligence.contracts import ClauseType
 
-DATA = Path("data/clause_classification")
+DATA = Path("artifacts/data/clause_classification")
 LABELS = list(ClauseType)  # 41 deal types + UNKNOWN(=OTHER) = 42
 L2I = {label: i for i, label in enumerate(LABELS)}
 DEAL_IDX = [i for i, label in enumerate(LABELS) if label != ClauseType.UNKNOWN]
@@ -84,7 +84,7 @@ def _sweep_threshold(logits, labels) -> tuple[float, float]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="joelniklaus/legal-xlm-roberta-base")
-    ap.add_argument("--out", default="models/clause_classifier")
+    ap.add_argument("--out", default="artifacts/models/clause_classifier")
     ap.add_argument("--epochs", type=float, default=3.0)
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--max-len", type=int, default=256)

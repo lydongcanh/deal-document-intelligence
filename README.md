@@ -71,7 +71,7 @@ This package is meant to be **consumed** without dictating vendors. Two rules:
   classification, extraction, linking). Vendor wiring lives outside the package.
 
 ```
-src/deal_document_intelligence/
+package/deal_document_intelligence/    # 📦 the library (one package)
 ├── contracts/                     # ⭐ one Pydantic model per file (19 models)
 │   ├── canonical_document.py      #   + block, bbox, block_type, evidence_span, document_type
 │   ├── clause_unit.py             #   + clause_type
@@ -91,7 +91,11 @@ src/deal_document_intelligence/
 ├── pipeline.py                    #      single-document Pipeline (stage 9a)
 ├── deal_pipeline.py               #      DealPipeline (many docs → DealIntelligence)
 └── config.py
-demo/  training/  eval/  scripts/  tests/  # models/ & data/ gitignored; docling in demo/, model-training code in training/
+training/   # 🔬 model building, per stage (data prep, train, evaluate, explore)
+demo/       # ▶️ runnable consumer (docling parser + baseline stages)
+tests/      # ✅ tests (root, outside the package — standard)
+docs/       # 📄 living technical reports
+artifacts/  #   gitignored: data/ (datasets) · models/ (checkpoints) · outputs/ (logs)
 ```
 
 ## Build strategy — walking skeleton first
@@ -116,12 +120,12 @@ intend to publish. Anything trained for public release uses openly-licensed data
 ## Status
 
 - [x] Repo scaffold + Poetry (Python 3.13), dependencies pinned to latest
-- [x] CUAD explored — `poetry run python scripts/explore_cuad.py`
+- [x] CUAD explored — `training/clause_classification/explore_cuad.py`
 - [x] Phase 0 — contracts + module tree
 - [x] Phase 0.5 — pipeline revised to 10 stages; contracts + interfaces evolved (deal-level, multilingual, `model_version` provenance)
 - [x] Phase 1 — walking skeleton: docling demo, all stages, document + deal-level (cross-doc) intelligence, evidence-backed JSON
 - [ ] Phase 2 — custom models (segmentation, clause classification, extraction)
-  - [x] stage 5 — clause-classification dataset built (CUAD positives + LEDGAR negatives → `data/clause_classification/`)
+  - [x] stage 5 — dataset built + Legal-XLM-R trained (1 epoch): test macro-F1 **0.252** vs 0.166 floor
 - [ ] Phase 3 — applications & production hardening
 
 ## Setup
@@ -130,6 +134,8 @@ intend to publish. Anything trained for public release uses openly-licensed data
 poetry install                                   # light stack (core package only)
 poetry install --with training                   # + model-training stack
 poetry install --with demo                       # + docling, for the demo
-poetry run python scripts/explore_cuad.py        # sanity-check the data
+poetry run python training/clause_classification/explore_cuad.py   # sanity-check the data
 poetry run python demo/walking_skeleton.py       # run the end-to-end demo
 ```
+Generated artifacts (datasets, model checkpoints, run outputs) live under
+`artifacts/` and are gitignored.

@@ -64,8 +64,8 @@ def main() -> None:
         cross = "  ← spans multiple docs" if len(docs) > 1 else ""
         print(f"    {ce.type.value:<12} «{ce.canonical_name}»  seen in {docs}{cross}")
 
-    out = REPO / "outputs" / f"deal_{deal.deal_id}.json"
-    out.parent.mkdir(exist_ok=True)
+    out = REPO / "artifacts" / "outputs" / f"deal_{deal.deal_id}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(deal.model_dump_json(indent=2))
     print(f"\nWrote deal intelligence → {out.relative_to(REPO)}")
 

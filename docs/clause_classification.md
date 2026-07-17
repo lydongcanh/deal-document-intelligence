@@ -166,7 +166,7 @@ obvious next lever.
 - [x] **Evaluation harness + baseline floor** — multi-label P/R/F1 (micro, macro,
       per-type) on the test split → keyword baseline **macro-F1 = 0.166** (the floor)
 - [x] **Train** a multilingual encoder → Legal-XLM-R-base, 1 epoch, checkpoint in
-      `models/clause_classifier/`
+      `artifacts/models/clause_classifier/`
 - [x] **Measure the lift** vs baseline → test **macro-F1 0.252 vs 0.166**, micro
       **0.677 vs 0.459**
 - [ ] **Longer run (3 epochs)** to lift the rare-type tail *(optional next lever)*
@@ -195,7 +195,7 @@ obvious next lever.
 ```bash
 poetry install                 # datasets + huggingface-hub
 poetry run python training/clause_classification/build_clause_dataset.py
-# → data/clause_classification/{train,val,test}.jsonl
+# → artifacts/data/clause_classification/{train,val,test}.jsonl
 poetry run python training/clause_classification/evaluate.py
 # → baseline metrics on the test split
 

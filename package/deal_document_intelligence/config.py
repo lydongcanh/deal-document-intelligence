@@ -13,10 +13,10 @@ from pydantic import BaseModel
 
 
 class Settings(BaseModel):
-    data_dir: Path = Path("data")        # raw + processed datasets
-    models_dir: Path = Path("models")    # local model checkpoints
-    outputs_dir: Path = Path("outputs")  # run logs, predictions, results
-    cache_dir: Path = Path(".cache")     # HuggingFace / library caches
+    data_dir: Path = Path("artifacts/data")        # raw + processed datasets
+    models_dir: Path = Path("artifacts/models")    # local model checkpoints
+    outputs_dir: Path = Path("artifacts/outputs")  # run logs, predictions, results
+    cache_dir: Path = Path("artifacts/.cache")     # HuggingFace / library caches
     pipeline_version: str = "0.1.0"
 
 

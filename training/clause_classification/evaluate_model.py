@@ -18,8 +18,8 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from deal_document_intelligence.contracts import ClauseType
 
-MODEL_DIR = Path("models/clause_classifier")
-DATA = Path("data/clause_classification")
+MODEL_DIR = Path("artifacts/models/clause_classifier")
+DATA = Path("artifacts/data/clause_classification")
 OTHER = ClauseType.UNKNOWN
 
 

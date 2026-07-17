@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [tool.poetry]
-packages = [{ include = "deal_document_intelligence", from = "src" }]
+packages = [{ include = "deal_document_intelligence", from = "package" }]
 
 # Heavy training stack — optional so a fresh clone stays light.
 # Install with:  poetry install --with training

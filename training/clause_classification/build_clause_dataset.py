@@ -37,7 +37,7 @@ class ClauseDatasetBuilder:
     LEDGAR_CFG = "ledgar"
 
     def __init__(
-        self, out_dir: Path = Path("data/clause_classification"), other_max: int = 15000
+        self, out_dir: Path = Path("artifacts/data/clause_classification"), other_max: int = 15000
     ) -> None:
         self.out_dir = out_dir
         self.other_max = other_max

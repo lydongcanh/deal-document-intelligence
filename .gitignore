@@ -12,15 +12,9 @@ __pycache__/
 # ---- Poetry: commit poetry.lock; the venv is ignored above ----
 
 # ---- ML artifacts: big, regenerable, or sensitive ----
-# data/    raw + processed datasets (regenerable via training/ scripts)
-# models/  trained checkpoints (publish to the HF Hub instead)
-# outputs/ run logs, metrics, predictions
-# .cache/  HuggingFace datasets/model cache
-# wandb/   experiment-tracking logs (if we add W&B later)
-data/
-models/
-outputs/
-.cache/
+# artifacts/ holds: data/ (datasets), models/ (checkpoints), outputs/ (logs, predictions)
+# All regenerable via training/ scripts or published to the HF Hub — never committed.
+artifacts/
 wandb/
 
 # ---- Secrets: NEVER commit ----
