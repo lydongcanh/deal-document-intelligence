@@ -8,10 +8,14 @@ readme = "README.md"
 requires-python = ">=3.13,<3.14"
 
 dependencies = [
-    "datasets==3.6.0",
-    "huggingface-hub==0.36.2",
     "pydantic==2.13.4",
 ]
+
+# Consumer-facing extras: install only the capability you need.
+#   pip install deal-document-intelligence               → core (contracts + interfaces + pipeline)
+#   pip install deal-document-intelligence[classification] → + the trained clause classifier
+[project.optional-dependencies]
+classification = ["torch==2.13.0", "transformers==4.57.6", "sentencepiece==0.2.2"]
 
 [tool.poetry]
 packages = [{ include = "deal_document_intelligence", from = "package" }]
@@ -22,6 +26,8 @@ packages = [{ include = "deal_document_intelligence", from = "package" }]
 optional = true
 
 [tool.poetry.group.training.dependencies]
+datasets = "==3.6.0"        # load CUAD / LEDGAR (training data prep only)
+huggingface-hub = "==0.36.2"
 transformers = "==4.57.6"
 torch = "==2.13.0"
 evaluate = "==0.4.6"        # standard metric implementations (F1, etc.)
@@ -37,6 +43,14 @@ optional = true
 
 [tool.poetry.group.demo.dependencies]
 docling = "==2.113.0"
+
+# Dev tooling — optional so consumer/core installs stay minimal.
+# Install with:  poetry install --with dev
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+pytest = "==9.1.1"
 
 [build-system]
 requires = ["poetry-core>=2.0"]

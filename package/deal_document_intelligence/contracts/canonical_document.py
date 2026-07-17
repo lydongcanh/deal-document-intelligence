@@ -31,8 +31,12 @@ class CanonicalDocument(BaseModel):
         return self.text[char_start:char_end]
 
     def verify(self, span: EvidenceSpan) -> bool:
-        """Check a span's stored `text` still matches the canonical text.
+        """Check a span is in-bounds AND its stored `text` matches the source.
 
-        Guards against offset drift — the key invariant for evidence integrity.
+        Guards against offset drift and out-of-range spans — the key invariant
+        for evidence integrity. A span whose `char_end` exceeds the document
+        length fails here (Python slicing would otherwise silently truncate).
         """
+        if not 0 <= span.char_start <= span.char_end <= len(self.text):
+            return False
         return self.slice(span.char_start, span.char_end) == span.text

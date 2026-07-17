@@ -1,9 +1,11 @@
 # deal-document-intelligence
 
-An **end-to-end, production-ready** system for turning deal / contract documents
-(PDF, DOCX, scans) into structured, **evidence-backed** intelligence — clauses,
-entities, obligations and events - plus the applications built on top of them
-(search, comparison, policy checks, summaries, Q&A).
+A **walking skeleton toward a production** system for turning deal / contract
+documents (PDF, DOCX, scans) into structured, **evidence-backed** intelligence —
+clauses, entities, obligations and events - plus the applications built on top of
+them (search, comparison, policy checks, summaries, Q&A). The architecture and
+contracts target production; most stages are still library baselines and the one
+trained model (stage 5) is an early checkpoint — see `docs/` for status.
 
 ## Pipeline
 
@@ -71,15 +73,15 @@ This package is meant to be **consumed** without dictating vendors. Two rules:
   classification, extraction, linking). Vendor wiring lives outside the package.
 
 ```
-package/deal_document_intelligence/    # 📦 the library (one package)
-├── contracts/                     # ⭐ one Pydantic model per file (19 models)
+package/deal_document_intelligence/    # the library (one package)
+├── contracts/                     #   one Pydantic model per file (19 models)
 │   ├── canonical_document.py      #   + block, bbox, block_type, evidence_span, document_type
 │   ├── clause_unit.py             #   + clause_type
 │   ├── entity.py                  #   + entity_type, obligation, event, relation*
 │   ├── relation_extraction.py     #   stage-7 output bundle
 │   ├── evidence_backed_result.py  #   stage-9a (per-document) + verify_evidence()
 │   └── deal_intelligence.py       #   stage-9b + canonical_entity, entity_mention (deal-level)
-├── parsing/parser.py              # 1-2  Parser              [consumer implements]
+├── parsing/parser.py              # 1-2  Parser[consumer implements]
 ├── language/language_detector.py  # 3    LanguageDetector
 ├── segmentation/segmenter.py      # 4    Segmenter
 ├── classification/classifier.py   # 5    Classifier
@@ -125,15 +127,17 @@ intend to publish. Anything trained for public release uses openly-licensed data
 - [x] Phase 0.5 — pipeline revised to 10 stages; contracts + interfaces evolved (deal-level, multilingual, `model_version` provenance)
 - [x] Phase 1 — walking skeleton: docling demo, all stages, document + deal-level (cross-doc) intelligence, evidence-backed JSON
 - [ ] Phase 2 — custom models (segmentation, clause classification, extraction)
-  - [x] stage 5 — dataset built + Legal-XLM-R trained (1 epoch): test macro-F1 **0.252** vs 0.166 floor
+  - [x] stage 5 — dataset built (leakage-checked) + Legal-XLM-R trained (1 epoch): test macro-F1 **0.246** vs 0.162 floor (all 41 deal types)
 - [ ] Phase 3 — applications & production hardening
 
 ## Setup
 
 ```bash
-poetry install                                   # light stack (core package only)
+poetry install                                   # light core (pydantic only)
+poetry install -E classification                  # + trained clause classifier (torch/transformers)
 poetry install --with training                   # + model-training stack
 poetry install --with demo                       # + docling, for the demo
+poetry install --with dev && poetry run pytest    # tests
 poetry run python training/clause_classification/explore_cuad.py   # sanity-check the data
 poetry run python demo/walking_skeleton.py       # run the end-to-end demo
 ```

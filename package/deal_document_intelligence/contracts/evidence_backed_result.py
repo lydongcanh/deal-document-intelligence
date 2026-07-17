@@ -42,9 +42,54 @@ class EvidenceBackedResult(BaseModel):
             yield from item.evidence
 
     def verify_evidence(self) -> list[EvidenceSpan]:
-        """Return spans whose stored text no longer matches the document.
+        """Return spans that are out-of-bounds or whose text no longer matches.
 
-        An empty list means evidence integrity holds; a non-empty list means
-        offsets have drifted and results can't be trusted.
+        An empty list means every *present* span is sound. Note this does NOT
+        catch missing evidence or dangling references — use `validate()` for the
+        full integrity check.
         """
         return [s for s in self.all_evidence() if not self.document.verify(s)]
+
+    def validate(self) -> list[str]:
+        """Full integrity check. Returns human-readable issues ([] = valid).
+
+        Checks: doc_id consistency; every content fact (clause/entity/obligation/
+        event) carries evidence; every evidence span verifies (bounds + text);
+        clause char-spans are in range; and every relation references an id that
+        actually exists. Relations are treated as links, so they are exempt from
+        the required-evidence rule.
+        """
+        doc = self.document
+        n = len(doc.text)
+        issues: list[str] = []
+
+        if self.doc_id != doc.doc_id:
+            issues.append(f"doc_id mismatch: result {self.doc_id!r} != document {doc.doc_id!r}")
+
+        known_ids: set[str] = set()
+        content = (
+            ("clause", self.clauses), ("entity", self.entities),
+            ("obligation", self.obligations), ("event", self.events),
+        )
+        for kind, items in content:
+            for item in items:
+                known_ids.add(item.id)
+                if not item.evidence:
+                    issues.append(f"{kind} {item.id!r} has no evidence")
+                for span in item.evidence:
+                    if not doc.verify(span):
+                        issues.append(
+                            f"{kind} {item.id!r} evidence [{span.char_start}:{span.char_end}] "
+                            "is out-of-bounds or does not match the source text"
+                        )
+
+        for clause in self.clauses:
+            if not 0 <= clause.char_start <= clause.char_end <= n:
+                issues.append(f"clause {clause.id!r} char-span out of bounds")
+
+        for relation in self.relations:
+            for ref in (relation.source_id, relation.target_id):
+                if ref not in known_ids:
+                    issues.append(f"relation {relation.id!r} references unknown id {ref!r}")
+
+        return issues

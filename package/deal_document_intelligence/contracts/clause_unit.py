@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field, model_validator
 
+from deal_document_intelligence.contracts.clause_prediction import ClausePrediction
 from deal_document_intelligence.contracts.clause_type import ClauseType
 from deal_document_intelligence.contracts.evidence_span import EvidenceSpan
 
@@ -20,8 +21,11 @@ class ClauseUnit(BaseModel):
     evidence: list[EvidenceSpan] = Field(default_factory=list)
     number: str | None = Field(default=None, description="clause number, e.g. '5.1'")
     heading: str | None = None
-    clause_type: ClauseType | None = None
+    clause_type: ClauseType | None = None  # primary (top) type, convenience
     classification_confidence: float | None = Field(default=None, ge=0.0, le=1.0)
+    predictions: list[ClausePrediction] = Field(
+        default_factory=list, description="all labels above threshold, scored (multi-label)"
+    )
     model_version: str | None = Field(default=None, description="model/version that classified it")
     meta: dict = Field(default_factory=dict)
 

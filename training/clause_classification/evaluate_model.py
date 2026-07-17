@@ -21,6 +21,7 @@ from deal_document_intelligence.contracts import ClauseType
 MODEL_DIR = Path("artifacts/models/clause_classifier")
 DATA = Path("artifacts/data/clause_classification")
 OTHER = ClauseType.UNKNOWN
+DEAL_TYPES = [c for c in ClauseType if c != OTHER]  # fixed 41 — same metric everywhere
 
 
 def _prf(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
@@ -74,13 +75,12 @@ def main() -> None:
                 fn[label] += 1
 
     micro = _prf(sum(tp.values()), sum(fp.values()), sum(fn.values()))
-    deal = [label for label in support if label != OTHER]
     per = {label: _prf(tp[label], fp[label], fn[label]) for label in support}
-    macro = sum(per[label][2] for label in deal) / len(deal) if deal else 0.0
+    macro = sum(_prf(tp[t], fp[t], fn[t])[2] for t in DEAL_TYPES) / len(DEAL_TYPES)
 
     print(f"=== TEST (threshold={threshold}) ===")
     print(f"micro F1       : {micro[2]:.3f}")
-    print(f"macro-deal F1  : {macro:.3f}   (baseline floor: 0.166)")
+    print(f"macro-deal F1  : {macro:.3f}   (over all {len(DEAL_TYPES)} deal types)")
     print(f"{'clause type':30} {'P':>5} {'R':>5} {'F1':>5} {'n':>5}")
     for label in sorted(deal, key=lambda x: -support[x])[:12]:
         p, r, f = per[label]

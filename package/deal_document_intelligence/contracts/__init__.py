@@ -9,6 +9,7 @@ from deal_document_intelligence.contracts.block import Block
 from deal_document_intelligence.contracts.block_type import BlockType
 from deal_document_intelligence.contracts.canonical_document import CanonicalDocument
 from deal_document_intelligence.contracts.canonical_entity import CanonicalEntity
+from deal_document_intelligence.contracts.clause_prediction import ClausePrediction
 from deal_document_intelligence.contracts.clause_type import ClauseType
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
 from deal_document_intelligence.contracts.deal_intelligence import DealIntelligence
@@ -32,6 +33,7 @@ __all__ = [
     "BlockType",
     "CanonicalDocument",
     "CanonicalEntity",
+    "ClausePrediction",
     "ClauseType",
     "ClauseUnit",
     "DealIntelligence",

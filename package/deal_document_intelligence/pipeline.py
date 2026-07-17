@@ -41,6 +41,7 @@ class Pipeline:
         relation_extractor: RelationExtractor,
         resolver: Resolver,
         pipeline_version: str = "0.1.0",
+        validate: bool = True,
     ) -> None:
         self.parser = parser
         self.language_detector = language_detector
@@ -50,6 +51,7 @@ class Pipeline:
         self.relation_extractor = relation_extractor
         self.resolver = resolver
         self.pipeline_version = pipeline_version
+        self.validate = validate
 
     def run(self, source: Path) -> EvidenceBackedResult:
         document = self.parser.parse(source)
@@ -59,7 +61,7 @@ class Pipeline:
         entities = self.entity_extractor.extract(document, clauses)
         rel = self.relation_extractor.extract(document, clauses, entities)
         entities = self.resolver.resolve(document, entities)
-        return EvidenceBackedResult(
+        result = EvidenceBackedResult(
             doc_id=document.doc_id,
             document=document,
             clauses=clauses,
@@ -69,3 +71,6 @@ class Pipeline:
             relations=rel.relations,
             pipeline_version=self.pipeline_version,
         )
+        if self.validate:  # surface integrity issues rather than silently trusting
+            result.meta["validation_issues"] = result.validate()
+        return result

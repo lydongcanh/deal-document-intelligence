@@ -2,3 +2,4 @@
 - Explain what you are doing and why, like teaching someone else.
 - Use the latest version of any tools or libraries you are working with, unless there is a specific reason to use an older version.
 - Always use one class per file, unless there is a compelling reason to do otherwise.
+- Comment like a true senior developer, not an AI slop.

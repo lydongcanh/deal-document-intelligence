@@ -46,9 +46,33 @@ class ClauseDatasetBuilder:
         examples = self._from_cuad() + self._from_ledgar()
         for ex in examples:
             ex.split = self._split_for(ex.doc_id)
+        examples = self._dedup_across_splits(examples)
         self._write(examples)
         self._report(examples)
         return examples
+
+    @staticmethod
+    def _dedup_across_splits(examples: list[ClauseExample]) -> list[ClauseExample]:
+        """Keep each exact text in ONE split only (train > val > test priority).
+
+        Splitting by source contract stops clauses of the *same* contract leaking
+        across splits, but identical boilerplate sentences recur across *different*
+        contracts (e.g. "governed by the laws of the State of Delaware"), landing
+        the same text in multiple splits. This drops those cross-split copies (and
+        intra-split exact duplicates), so no test text is seen in training.
+        """
+        priority = {"train": 0, "val": 1, "test": 2}
+        best: dict[str, str] = {}
+        for ex in examples:
+            if ex.text not in best or priority[ex.split] < priority[best[ex.text]]:
+                best[ex.text] = ex.split
+        kept, emitted = [], set()
+        for ex in examples:
+            if ex.split != best[ex.text] or ex.text in emitted:
+                continue
+            emitted.add(ex.text)
+            kept.append(ex)
+        return kept
 
     # ---- CUAD → deal-critical positives (sentence-level, multi-label) -------
     def _from_cuad(self) -> list[ClauseExample]:

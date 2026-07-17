@@ -22,6 +22,10 @@ from deal_document_intelligence.contracts import ClauseType
 
 DATA = Path("artifacts/data/clause_classification")
 OTHER = ClauseType.UNKNOWN
+# One immutable label list for ALL evaluation paths (train, threshold, eval):
+# the 41 deal types. Labels absent from a split count as F1 0, so the metric
+# never silently shrinks to the labels that happen to appear.
+DEAL_TYPES = [c for c in ClauseType if c != OTHER]
 
 Predictor = Callable[[str], set[ClauseType]]
 Example = tuple[str, set[ClauseType]]
@@ -60,8 +64,7 @@ def score(predictor: Predictor, examples: list[Example]) -> dict:
     labels = sorted(support, key=lambda t: t.value)
     per = {label: _prf(tp[label], fp[label], fn[label]) for label in labels}
     micro = _prf(sum(tp.values()), sum(fp.values()), sum(fn.values()))
-    deal = [label for label in labels if label != OTHER]
-    macro_deal_f1 = sum(per[label][2] for label in deal) / len(deal) if deal else 0.0
+    macro_deal_f1 = sum(_prf(tp[t], fp[t], fn[t])[2] for t in DEAL_TYPES) / len(DEAL_TYPES)
     return {"micro": micro, "macro_deal_f1": macro_deal_f1, "per": per, "support": support}
 
 
@@ -69,7 +72,7 @@ def report(name: str, res: dict) -> None:
     mp, mr, mf = res["micro"]
     print(f"\n=== {name} ===")
     print(f"micro    P={mp:.3f}  R={mr:.3f}  F1={mf:.3f}")
-    print(f"macro-F1 (deal types, excl. OTHER): {res['macro_deal_f1']:.3f}")
+    print(f"macro-F1 (all 41 deal types): {res['macro_deal_f1']:.3f}")
     print(f"{'clause type':30} {'P':>5} {'R':>5} {'F1':>5} {'n':>6}")
     for label in sorted(res["per"], key=lambda t: -res["support"][t])[:12]:
         p, r, f = res["per"][label]
