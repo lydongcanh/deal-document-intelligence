@@ -21,13 +21,22 @@ from __future__ import annotations
 from pathlib import Path
 
 from deal_document_intelligence.classification.classifier import Classifier
-from deal_document_intelligence.contracts import EvidenceBackedResult
+from deal_document_intelligence.contracts import EvidenceBackedResult, ValidationIssue
 from deal_document_intelligence.extraction.entity_extractor import EntityExtractor
 from deal_document_intelligence.language.language_detector import LanguageDetector
 from deal_document_intelligence.linking.relation_extractor import RelationExtractor
 from deal_document_intelligence.parsing.parser import Parser
 from deal_document_intelligence.resolution.resolver import Resolver
 from deal_document_intelligence.segmentation.segmenter import Segmenter
+
+
+class IntegrityError(Exception):
+    """Raised by `Pipeline(validation="strict")` when a result fails integrity."""
+
+    def __init__(self, issues: list[ValidationIssue]) -> None:
+        self.issues = issues
+        preview = "; ".join(i.message for i in issues[:5])
+        super().__init__(f"{len(issues)} integrity issue(s): {preview}")
 
 
 class Pipeline:
@@ -41,8 +50,10 @@ class Pipeline:
         relation_extractor: RelationExtractor,
         resolver: Resolver,
         pipeline_version: str = "0.1.0",
-        validate: bool = True,
+        validation: str = "warn",
     ) -> None:
+        if validation not in ("off", "warn", "strict"):
+            raise ValueError("validation must be 'off', 'warn', or 'strict'")
         self.parser = parser
         self.language_detector = language_detector
         self.segmenter = segmenter
@@ -51,7 +62,7 @@ class Pipeline:
         self.relation_extractor = relation_extractor
         self.resolver = resolver
         self.pipeline_version = pipeline_version
-        self.validate = validate
+        self.validation = validation  # "off" | "warn" (record issues) | "strict" (raise)
 
     def run(self, source: Path) -> EvidenceBackedResult:
         document = self.parser.parse(source)
@@ -71,6 +82,9 @@ class Pipeline:
             relations=rel.relations,
             pipeline_version=self.pipeline_version,
         )
-        if self.validate:  # surface integrity issues rather than silently trusting
-            result.meta["validation_issues"] = result.validate()
+        if self.validation != "off":
+            issues = result.validate_integrity()
+            result.meta["validation_issues"] = [i.model_dump() for i in issues]
+            if self.validation == "strict" and issues:
+                raise IntegrityError(issues)
         return result

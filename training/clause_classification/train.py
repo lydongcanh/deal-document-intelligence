@@ -2,7 +2,8 @@
 
 Default model: Legal-XLM-RoBERTa-base (legal + multilingual). Labels are the 41
 CUAD deal types + OTHER (ClauseType.UNKNOWN) = 42, trained as multi-label
-(sigmoid + BCE). Tracks macro-F1 over the deal types — the metric to beat 0.166.
+(sigmoid + BCE). Tracks macro-F1 over the 41 deal types — the baseline to beat
+is 0.162 (see docs/clause_classification.md).
 
     # quick loop validation (small subset, 1 epoch)
     poetry run python training/clause_classification/train.py --smoke
@@ -58,8 +59,10 @@ def _compute_metrics(eval_pred) -> dict:
     probs = 1.0 / (1.0 + np.exp(-logits))
     preds = (probs > 0.5).astype(int)
     per = f1_score(labels, preds, average=None, zero_division=0)
+    # micro over the deal columns only (exclude OTHER), matching metrics.py
     return {
-        "micro_f1": f1_score(labels, preds, average="micro", zero_division=0),
+        "micro_f1": f1_score(labels[:, DEAL_IDX], preds[:, DEAL_IDX],
+                             average="micro", zero_division=0),
         "macro_deal_f1": float(np.mean([per[i] for i in DEAL_IDX])),
     }
 
@@ -147,7 +150,7 @@ def main() -> None:
     # tune the decision threshold on val, then report at the best threshold
     pred = trainer.predict(val_ds)
     best_t, best_f = _sweep_threshold(pred.predictions, pred.label_ids)
-    print(f"best threshold : {best_t}  → macro_deal_f1 {best_f:.3f}  (floor to beat: 0.166)")
+    print(f"best threshold : {best_t}  → macro_deal_f1 {best_f:.3f}  (baseline floor: 0.162)")
 
     trainer.save_model(args.out)
     tokenizer.save_pretrained(args.out)

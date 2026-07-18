@@ -100,9 +100,15 @@ all clauses of one contract land in the same split. That alone is **not
 sufficient**: identical boilerplate sentences recur across *different* contracts
 (a review found 11/12/1 exact-text overlaps train↔val/train↔test/val↔test), so a
 second pass **dedups exact text across splits** (train > val > test priority),
-keeping each unique text in a single split. After it, cross-split exact-text
-overlap is **0/0/0**. (Near-duplicate — not just exact — detection and a
-persisted split manifest remain future work.)
+keeping each unique text in a single split (labels of duplicates are merged).
+After it, cross-split exact-text overlap is **0/0/0**.
+
+Caveats (future work): (a) splitting-by-`doc_id` only groups **CUAD** by
+contract — LEDGAR rows have no source-document identity in `lex_glue`, so each
+LEDGAR provision is its own "document"; (b) exact-text dedup does not catch
+**paraphrased/templated** near-duplicates; (c) the train>val>test dedup priority
+is a small selection bias. Stronger approach: group near-duplicates + contract
+families, assign each group to one split, and persist a split manifest.
 
 ### 3.6 Multilingual strategy
 
@@ -114,35 +120,45 @@ The data-prep is language-agnostic so non-English data can be added later.
 
 ## 4. Dataset statistics (current build)
 
+Post-dedup build (cross-split exact-text overlap 0/0/0):
+
 | Metric | Value |
 |--------|-------|
-| Total examples | **31,005** |
-| Train / Val / Test | 24,664 / 3,293 / 3,048 |
-| Source: CUAD / LEDGAR | 10,560 / 20,445 |
-| Deal-type positives | 18,094 (across all 41 types) |
+| Total examples | **30,900** |
+| Train / Val / Test | 24,584 / 3,280 / 3,036 |
+| Source: CUAD / LEDGAR | 10,455 / 20,445 |
+| Deal-type positives | 17,976 (across all 41 types) |
 | `OTHER` negatives | 15,000 |
-| Multi-label examples | 1,468 |
+| Multi-label examples | 1,459 |
 
 Most frequent clause types:
 
-| Clause type | Examples | | Clause type | Examples |
-|---|---|---|---|---|
-| Governing Law | 3,630 | | Anti-Assignment | 650 |
-| Insurance | 1,659 | | Audit Rights | 642 |
-| Parties | 1,444 | | Change Of Control | 599 |
-| Effective Date | 909 | | Document Name | 519 |
-| License Grant | 775 | | Agreement Date | 475 |
-| Cap On Liability | 670 | | Expiration Date | 467 |
+| Clause type | Examples |
+|---|---|
+| Governing Law | 3,627 |
+| Insurance | 1,658 |
+| Parties | 1,428 |
+| Effective Date | 906 |
+| License Grant | 762 |
+| Cap On Liability | 669 |
+| Anti-Assignment | 642 |
+| Audit Rights | 641 |
+| Change Of Control | 599 |
+| Document Name | 481 |
+| Agreement Date | 473 |
+| Expiration Date | 464 |
 
 ### Baseline results (the floor to beat)
 
-Evaluated on the held-out **test** split (3,048 examples) via
-`training/clause_classification/evaluate.py`:
+Evaluated on the held-out **test** split (3,036 examples) via
+`training/clause_classification/evaluate.py`. **Both micro and macro are over the
+41 deal types with `OTHER` excluded** (so the easy, abundant OTHER class can't
+inflate the number):
 
 | Baseline | micro-F1 | macro-F1 (all 41 deal types) |
 |----------|----------|------------------------------------|
-| all-`OTHER` (floor) | 0.458 | 0.000 |
-| keyword matching | 0.459 | **0.162** |
+| all-`OTHER` (floor) | 0.000 | 0.000 |
+| keyword matching | 0.318 | **0.162** |
 
 **The number the trained model must beat is macro-F1 = 0.162.** The keyword
 baseline is predictably brittle: strong where a type name appears verbatim
@@ -154,20 +170,21 @@ Name*). That gap is the headroom a trained model should capture.
 ### Trained model — v1 (Legal-XLM-R-base, 1 epoch)
 
 Fine-tuned `Legal-XLM-RoBERTa-base` (multi-label, sigmoid + BCE) for **1 epoch**
-on the full 24,664 training examples (~29 min on an M3, MPS). Decision threshold
-tuned on val (best = **0.10** — rare multi-label classes rank positives below
-0.5). Scored on the **test** split via `evaluate_model.py`:
+(~29 min on an M3, MPS). Decision threshold tuned on val (best = **0.10** — rare
+multi-label classes rank positives below 0.5). Scored on the **test** split via
+`evaluate_model.py` (micro/macro over the 41 deal types, `OTHER` excluded):
 
-| Model | micro-F1 | macro-F1 (deal types) |
+| Model | micro-F1 | macro-F1 (all 41 deal types) |
 |-------|----------|-----------------------|
-| keyword baseline | 0.459 | 0.162 |
-| **Legal-XLM-R (1 epoch)** | **0.677** | **0.246** |
+| keyword baseline | 0.318 | 0.162 |
+| **Legal-XLM-R (1 epoch)** | **0.663** | **0.246** |
 
-**Beats the floor** (+0.086 macro, +0.218 micro). Frequent/clear types are
+**Beats the floor** (macro +0.084, micro +0.345). Frequent/clear types are
 already strong — *Governing Law* 0.95, *Insurance* 0.90, *Cap on Liability*
 0.85, *Parties* 0.82, *Audit Rights* 0.71 — while the rare tail is the headroom:
-*ROFR/ROFO* 0.00, *Anti-Assignment* recall 0.26. A longer run (3 epochs) is the
-obvious next lever.
+*ROFR/ROFO* 0.00, *Anti-Assignment* recall 0.27. **Caveat:** this checkpoint was
+trained on the pre-dedup split and re-evaluated on the clean test split (the
+delta was negligible); a clean multi-epoch retrain is the proper next run.
 
 ## 5. Roadmap
 
@@ -178,10 +195,21 @@ obvious next lever.
       `artifacts/models/clause_classifier/`
 - [x] **Measure the lift** vs baseline → test **macro-F1 0.246 vs 0.162**, micro
       **0.677 vs 0.459**
-- [ ] **Longer run (3 epochs)** to lift the rare-type tail *(optional next lever)*
 - [x] **Package `Classifier` implementation** — `TransformerClauseClassifier`
       (torch/transformers behind the `[classification]` extra); drops into the
       pipeline via the `Classifier` interface (`demo/walking_skeleton.py --trained`)
+
+**Next priority is NOT "3 more epochs."** A second review argued (persuasively)
+for: (1) build a small **end-to-end real-document gold set** (OCR → blocks →
+clause boundaries → labels → evidence) so isolated-F1 gains are validated against
+the *actual* product; (2) narrow to a **vertical slice** (e.g. termination /
+change-of-control / governing-law / assignment / liability in English commercial
+agreements) and make it reliable end-to-end; (3) add **document-level** metrics
+(presence/absence, critical-clause recall, evidence exact-match); (4) fix
+OTHER-as-output, per-label thresholds, tokenizer + provenance; *then* retrain
+with multiple seeds + early stopping (a single 3-epoch run can't separate a real
+gain from run variance). Taxonomy also mixes metadata (Document Name, Agreement
+Date) with true provision types — worth separating.
 
 ## 6. Known limitations (to revisit)
 
@@ -197,25 +225,30 @@ obvious next lever.
   score ~0 after 1 epoch; more epochs and/or class weighting are the levers.
 - **Pretraining exposure** — Legal-XLM-R was pretrained (unsupervised) on legal
   text that may overlap our sources, so test metrics could be mildly optimistic.
-- **Tokenizer warning** — transformers 4.57 emits a "mistral regex" warning for
-  this fast tokenizer. Training and inference load the *identical* tokenizer, so
-  there is no train/inference skew; results (Governing Law F1 ~0.95) indicate it
-  works. Not deeply audited against the base model's original tokenization —
-  worth a controlled check before production.
+- **Tokenizer warning** — transformers 4.57 flags a "mistral regex" on this fast
+  tokenizer. A controlled check showed `fix_mistral_regex=True` **does change
+  tokenization** (1/2 sample clauses) — so it is *not* cosmetic. It is harmless
+  *for us* only because training and inference load the identical (unfixed)
+  tokenizer (no skew). **Do not apply the fix without retraining.**
+- **`OTHER` as an independent output** — the model has a 42nd sigmoid for
+  OTHER/UNKNOWN, so it can predict OTHER *and* a deal type simultaneously.
+  Cleaner (at next retrain): 41 independent deal outputs, derive OTHER when none
+  fire, exclude OTHER from BCE, and measure abstention separately.
+- **Single global threshold (0.10)** — one threshold across 41 labels with very
+  different frequencies/calibration is weak. Future: per-label thresholds (with
+  min-support guards), calibration (ECE/Brier), and precision- vs recall-oriented
+  operating points driven by due-diligence costs (a missed clause ≠ a false one).
 
 ## 7. Reproducibility
 
 ```bash
-poetry install                 # datasets + huggingface-hub
+poetry install --with training     # datasets + torch + transformers (training stack)
 poetry run python training/clause_classification/build_clause_dataset.py
 # → artifacts/data/clause_classification/{train,val,test}.jsonl
-poetry run python training/clause_classification/evaluate.py
-# → baseline metrics on the test split
-
-poetry install --with training                          # torch, transformers, ...
-poetry run python training/clause_classification/train.py --smoke   # validate loop
-poetry run python training/clause_classification/train.py --epochs 1 # full 1-epoch run
-poetry run python training/clause_classification/evaluate_model.py   # trained model on test
+poetry run python training/clause_classification/evaluate.py          # baseline metrics
+poetry run python training/clause_classification/train.py --smoke     # validate the loop
+poetry run python training/clause_classification/train.py --epochs 1  # full 1-epoch run
+poetry run python training/clause_classification/evaluate_model.py    # trained model on test
 ```
 
 ## Changelog
@@ -235,12 +268,26 @@ poetry run python training/clause_classification/evaluate_model.py   # trained m
 - **2026-07-17** — Packaged the model as `classification/transformer_clause_classifier.py`
   (`TransformerClauseClassifier`, torch/transformers behind the `[classification]`
   extra; lazy import so core installs stay light). Wired into the demo via
-  `--trained`. Observation on the demo doc: strong on frequent types (Governing
+  `--trained`. (Original observation on the demo doc: strong on frequent types
+  Governing
   Law 0.83, Parties 0.74), weak on the rare tail (Minimum Commitment → Insurance)
   — the train/inference gap (short heading-led clauses are OOD vs CUAD prose) and
   the recall-tuned threshold (0.10) both show. Integration itself is clean;
   quality levers remain: longer training, threshold-per-use-case, clause-like
   training inputs.
+- **2026-07-18** — Second review pass. Fixed: (1) `evaluate_model.py` **crash**
+  (`NameError: deal`) by centralising scoring in `metrics.py` (both evaluators +
+  training share one definition); (2) micro-F1 now **excludes OTHER** — honest
+  deal-only numbers **baseline micro 0.318 / macro 0.162**, **trained micro 0.663
+  / macro 0.246** (earlier micro figures were OTHER-inflated); (3) pipeline
+  **validation modes** off/warn/**strict** + typed `ValidationIssue`/`IntegrityError`
+  (renamed `validate()`→`validate_integrity()`, added unique-id / clause_id FK /
+  text==slice / primary-vs-top-prediction / page-block checks); (4) dedup now
+  **merges duplicate labels**; (5) classifier accepts a **local path or HF id**;
+  (6) added ML-workflow tests (metric, dedup, strict validation). Documented as
+  future work: OTHER-as-independent-output, per-label thresholds/calibration,
+  tokenizer audit, model provenance, and a **strategic pivot** (gold set +
+  narrow vertical + document-level metrics before more epochs).
 - **2026-07-17** — External-review pass. Fixed: (1) eval metric now averages the
   **fixed 41 deal types** in every path (train/threshold/eval) — corrected test
   numbers **baseline 0.162, trained 0.246** (were 0.166/0.252 over 40, since

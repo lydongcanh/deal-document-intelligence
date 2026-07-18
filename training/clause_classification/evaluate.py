@@ -1,12 +1,7 @@
-"""Evaluation harness for stage-5 clause classification, plus baselines.
+"""Evaluate baseline predictors on the test split, using the shared metrics.
 
-Multi-label metrics:
-  - micro P/R/F1 over all labels (incl. OTHER)
-  - macro-F1 over the 41 deal types (excl. OTHER) — the Ansarada metric
-  - per-type P/R/F1
-
-It scores any predictor mapping clause text → set[ClauseType], so the same
-harness measures the baseline today and the trained model later, unchanged.
+Scores any predictor mapping clause text → set[ClauseType]. The trained model is
+scored the same way in evaluate_model.py — both import scoring from `metrics`.
 
 Run:  poetry run python training/clause_classification/evaluate.py
 """
@@ -14,19 +9,14 @@ Run:  poetry run python training/clause_classification/evaluate.py
 from __future__ import annotations
 
 import json
-from collections import Counter
 from pathlib import Path
 from typing import Callable
+
+from metrics import OTHER, report, score
 
 from deal_document_intelligence.contracts import ClauseType
 
 DATA = Path("artifacts/data/clause_classification")
-OTHER = ClauseType.UNKNOWN
-# One immutable label list for ALL evaluation paths (train, threshold, eval):
-# the 41 deal types. Labels absent from a split count as F1 0, so the metric
-# never silently shrinks to the labels that happen to appear.
-DEAL_TYPES = [c for c in ClauseType if c != OTHER]
-
 Predictor = Callable[[str], set[ClauseType]]
 Example = tuple[str, set[ClauseType]]
 
@@ -41,45 +31,12 @@ def load_split(split: str = "test") -> list[Example]:
     return examples
 
 
-def _prf(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
-    p = tp / (tp + fp) if tp + fp else 0.0
-    r = tp / (tp + fn) if tp + fn else 0.0
-    f = 2 * p * r / (p + r) if p + r else 0.0
-    return p, r, f
+def score_predictor(predictor: Predictor, examples: list[Example]) -> dict:
+    gold = [labels for _, labels in examples]
+    pred = [predictor(text) for text, _ in examples]
+    return score(gold, pred)
 
 
-def score(predictor: Predictor, examples: list[Example]) -> dict:
-    tp, fp, fn, support = Counter(), Counter(), Counter(), Counter()
-    for text, gold in examples:
-        pred = predictor(text)
-        for label in gold:
-            support[label] += 1
-        for label in pred | gold:
-            if label in pred and label in gold:
-                tp[label] += 1
-            elif label in pred:
-                fp[label] += 1
-            else:
-                fn[label] += 1
-    labels = sorted(support, key=lambda t: t.value)
-    per = {label: _prf(tp[label], fp[label], fn[label]) for label in labels}
-    micro = _prf(sum(tp.values()), sum(fp.values()), sum(fn.values()))
-    macro_deal_f1 = sum(_prf(tp[t], fp[t], fn[t])[2] for t in DEAL_TYPES) / len(DEAL_TYPES)
-    return {"micro": micro, "macro_deal_f1": macro_deal_f1, "per": per, "support": support}
-
-
-def report(name: str, res: dict) -> None:
-    mp, mr, mf = res["micro"]
-    print(f"\n=== {name} ===")
-    print(f"micro    P={mp:.3f}  R={mr:.3f}  F1={mf:.3f}")
-    print(f"macro-F1 (all 41 deal types): {res['macro_deal_f1']:.3f}")
-    print(f"{'clause type':30} {'P':>5} {'R':>5} {'F1':>5} {'n':>6}")
-    for label in sorted(res["per"], key=lambda t: -res["support"][t])[:12]:
-        p, r, f = res["per"][label]
-        print(f"{label.value:30} {p:5.2f} {r:5.2f} {f:5.2f} {res['support'][label]:6d}")
-
-
-# --- baselines -------------------------------------------------------------
 def all_other_baseline(text: str) -> set[ClauseType]:
     return {OTHER}
 
@@ -118,5 +75,5 @@ def keyword_baseline(text: str) -> set[ClauseType]:
 if __name__ == "__main__":
     examples = load_split("test")
     print(f"test examples: {len(examples):,}")
-    report("baseline: all-OTHER (floor)", score(all_other_baseline, examples))
-    report("baseline: keyword", score(keyword_baseline, examples))
+    report("baseline: all-OTHER (floor)", score_predictor(all_other_baseline, examples))
+    report("baseline: keyword", score_predictor(keyword_baseline, examples))

@@ -15,6 +15,7 @@ and the full scored multi-label set is exposed as typed `clause.predictions`
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from deal_document_intelligence.contracts import (
@@ -37,17 +38,25 @@ class TransformerClauseClassifier:
         import torch  # deferred: only needed for this differentiator model
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-        self.model_dir = Path(model_dir)
-        if not self.model_dir.exists():
-            raise FileNotFoundError(f"clause-classifier model dir not found: {self.model_dir}")
+        # Accept a local checkpoint dir OR a HuggingFace Hub id (from_pretrained
+        # handles both). Only a local-looking path that's missing is an error.
+        model_ref = str(model_dir)
+        looks_local = os.sep in model_ref or model_ref.startswith(".")
+        if looks_local and not Path(model_ref).exists():
+            raise FileNotFoundError(
+                f"clause-classifier not found at {model_ref!r}. Train it with "
+                "training/clause_classification/train.py, or pass a valid local path "
+                "or a HuggingFace Hub id."
+            )
         if max_length <= 0 or batch_size <= 0:
             raise ValueError("max_length and batch_size must be positive")
 
+        self.model_dir = Path(model_ref)
         self._torch = torch
         self.max_length = max_length
         self.batch_size = batch_size
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_dir)
-        self.model = AutoModelForSequenceClassification.from_pretrained(self.model_dir)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_ref)
+        self.model = AutoModelForSequenceClassification.from_pretrained(model_ref)
         if device is None:  # prefer CUDA, then Apple MPS, then CPU
             device = (
                 "cuda" if torch.cuda.is_available()

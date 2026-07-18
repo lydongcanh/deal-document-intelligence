@@ -25,7 +25,7 @@ from deal_document_intelligence.contracts import (
     RelationType,
 )
 from deal_document_intelligence.deal_pipeline import DealPipeline
-from deal_document_intelligence.pipeline import Pipeline
+from deal_document_intelligence.pipeline import IntegrityError, Pipeline
 
 SAMPLE = "This Agreement is governed by the laws of the State of Delaware."
 
@@ -119,8 +119,8 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
     assert result.entities[0].text == "Delaware"
     assert result.relations[0].source_id == "e1"
     assert result.verify_evidence() == []
-    assert result.validate() == []  # fully sound: evidence present, refs resolve
-    assert result.meta["validation_issues"] == []  # pipeline surfaced the check
+    assert result.validate_integrity() == []  # fully sound: evidence present, refs resolve
+    assert result.meta["validation_issues"] == []  # pipeline surfaced the check (warn mode)
 
     class FakeAggregator:
         def aggregate(self, documents) -> DealIntelligence:
@@ -131,32 +131,85 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
     assert len(deal.documents) == 2
 
 
+def _codes(result: EvidenceBackedResult) -> set[str]:
+    return {issue.code for issue in result.validate_integrity()}
+
+
 def test_validate_flags_missing_evidence() -> None:
     result = EvidenceBackedResult(
         doc_id="doc-1", document=_doc(),
         entities=[Entity(id="e1", type=EntityType.OTHER, text="x")],  # no evidence
     )
-    assert any("no evidence" in issue for issue in result.validate())
+    assert "missing_evidence" in _codes(result)
 
 
 def test_validate_flags_dangling_relation() -> None:
     rel = Relation(id="r1", type=RelationType.ENTITY_IN_CLAUSE,
                    source_id="ghost", target_id="also-ghost")
     result = EvidenceBackedResult(doc_id="doc-1", document=_doc(), relations=[rel])
-    assert any("unknown id" in issue for issue in result.validate())
+    assert "dangling_ref" in _codes(result)
 
 
 def test_validate_flags_out_of_bounds_span() -> None:
     bad = EvidenceSpan(page=1, char_start=0, char_end=len(SAMPLE) + 50, text=SAMPLE)
     ent = Entity(id="e1", type=EntityType.OTHER, text=SAMPLE, evidence=[bad])
     result = EvidenceBackedResult(doc_id="doc-1", document=_doc(), entities=[ent])
-    assert result.verify_evidence()  # out-of-bounds span is caught, not silently truncated
-    assert any("out-of-bounds" in issue for issue in result.validate())
+    assert result.verify_evidence()  # out-of-bounds span caught, not silently truncated
+    assert "span_mismatch" in _codes(result)
 
 
 def test_validate_flags_doc_id_mismatch() -> None:
     result = EvidenceBackedResult(doc_id="WRONG", document=_doc())
-    assert any("doc_id mismatch" in issue for issue in result.validate())
+    assert "doc_id_mismatch" in _codes(result)
+
+
+def test_validate_flags_dangling_clause_id() -> None:
+    doc = _doc()
+    ent = Entity(id="e1", type=EntityType.OTHER, text="Delaware", clause_id="nope",
+                 evidence=[EvidenceSpan(page=1, char_start=SAMPLE.index("Delaware"),
+                                        char_end=SAMPLE.index("Delaware") + 8, text="Delaware")])
+    result = EvidenceBackedResult(doc_id="doc-1", document=doc, entities=[ent])
+    assert "dangling_clause_id" in _codes(result)
+
+
+def test_strict_pipeline_raises_on_invalid_result() -> None:
+    doc = _doc()
+
+    class FakeParser:
+        def parse(self, source: Path) -> CanonicalDocument:
+            return doc
+
+    class FakeLang:
+        def detect(self, d: CanonicalDocument) -> CanonicalDocument:
+            return d
+
+    class FakeSeg:
+        def segment(self, d: CanonicalDocument) -> list[ClauseUnit]:
+            return []
+
+    class FakeClf:
+        def classify(self, clauses, d):
+            return clauses
+
+    class FakeEnt:
+        def extract(self, d, clauses) -> list[Entity]:
+            return [Entity(id="e1", type=EntityType.OTHER, text="x")]  # no evidence → invalid
+
+    class FakeRel:
+        def extract(self, d, clauses, entities) -> RelationExtraction:
+            return RelationExtraction()
+
+    class FakeRes:
+        def resolve(self, d, entities) -> list[Entity]:
+            return entities
+
+    pipe = Pipeline(FakeParser(), FakeLang(), FakeSeg(), FakeClf(), FakeEnt(),
+                    FakeRel(), FakeRes(), validation="strict")
+    try:
+        pipe.run(Path("x.md"))
+        raise AssertionError("expected IntegrityError")
+    except IntegrityError as e:
+        assert e.issues
 
 
 if __name__ == "__main__":
@@ -167,4 +220,6 @@ if __name__ == "__main__":
     test_validate_flags_dangling_relation()
     test_validate_flags_out_of_bounds_span()
     test_validate_flags_doc_id_mismatch()
+    test_validate_flags_dangling_clause_id()
+    test_strict_pipeline_raises_on_invalid_result()
     print("All smoke tests passed ✅")

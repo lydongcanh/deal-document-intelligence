@@ -58,19 +58,28 @@ class ClauseDatasetBuilder:
         Splitting by source contract stops clauses of the *same* contract leaking
         across splits, but identical boilerplate sentences recur across *different*
         contracts (e.g. "governed by the laws of the State of Delaware"), landing
-        the same text in multiple splits. This drops those cross-split copies (and
-        intra-split exact duplicates), so no test text is seen in training.
+        the same text in multiple splits. This keeps each exact text once, in the
+        highest-priority split it appears in, and **merges the labels** of all its
+        duplicates so conflicting/partial annotations aren't silently dropped.
+
+        Known limitation: the train>val>test priority preferentially removes dupes
+        from eval sets (a small selection bias — a few dozen rows). Stronger future
+        work: group near-duplicates and contract families, assign each whole group
+        to one split, and persist a split manifest.
         """
         priority = {"train": 0, "val": 1, "test": 2}
-        best: dict[str, str] = {}
+        best_split: dict[str, str] = {}
+        labels_by_text: dict[str, set] = {}
         for ex in examples:
-            if ex.text not in best or priority[ex.split] < priority[best[ex.text]]:
-                best[ex.text] = ex.split
+            if ex.text not in best_split or priority[ex.split] < priority[best_split[ex.text]]:
+                best_split[ex.text] = ex.split
+            labels_by_text.setdefault(ex.text, set()).update(ex.labels)
         kept, emitted = [], set()
         for ex in examples:
-            if ex.split != best[ex.text] or ex.text in emitted:
+            if ex.text in emitted or ex.split != best_split[ex.text]:
                 continue
             emitted.add(ex.text)
+            ex.labels = sorted(labels_by_text[ex.text], key=lambda t: t.value)
             kept.append(ex)
         return kept
 
