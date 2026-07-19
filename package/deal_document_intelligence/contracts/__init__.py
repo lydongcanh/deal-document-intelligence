@@ -16,7 +16,7 @@ from deal_document_intelligence.contracts.clause_category import (
     category_of,
 )
 from deal_document_intelligence.contracts.clause_prediction import ClausePrediction
-from deal_document_intelligence.contracts.clause_type import ClauseType
+from deal_document_intelligence.contracts.clause_type import LABEL_SCHEMA, ClauseType
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
 from deal_document_intelligence.contracts.deal_intelligence import DealIntelligence
 from deal_document_intelligence.contracts.document_type import DocumentType
@@ -38,6 +38,7 @@ __all__ = [
     "BBox",
     "Block",
     "BlockType",
+    "LABEL_SCHEMA",
     "METADATA_TYPES",
     "PROVISION_TYPES",
     "CanonicalDocument",

@@ -435,6 +435,11 @@ poetry run python training/clause_classification/evaluate_model.py    # trained 
   metric-definition change (not a model lift); the gold set is a **dev/acceptance
   set, not a blind test**. Retrained on the OTHER-derived 41-output design but
   **stopped** when this bug surfaced — the retrain is re-queued on clean data.
+- **2026-07-18** — Removed backward-compat workarounds: **deleted the buggy v1
+  checkpoint + backup**, and the classifier now **fails fast** on a non-schema
+  model (rejects an `OTHER` output) instead of tolerating the old 42-label model.
+  `artifacts/models/` is intentionally empty until the clean retrain — there is
+  no valid trained model right now.
 - **2026-07-17** — External-review pass. Fixed: (1) eval metric now averages the
   **fixed 41 deal types** in every path (train/threshold/eval) — corrected test
   numbers **baseline 0.162, trained 0.246** (were 0.166/0.252 over 40, since

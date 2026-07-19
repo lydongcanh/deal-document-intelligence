@@ -19,6 +19,7 @@ import math
 from pathlib import Path
 
 from deal_document_intelligence.contracts import (
+    LABEL_SCHEMA,
     CanonicalDocument,
     ClausePrediction,
     ClauseType,
@@ -86,6 +87,12 @@ class TransformerClauseClassifier:
         ]
         if len(set(self.labels)) != len(self.labels):
             raise ValueError("model id2label contains duplicate clause types")
+        if ClauseType.UNKNOWN in self.labels:
+            raise ValueError(
+                f"model outputs an OTHER/UNKNOWN label, but schema {LABEL_SCHEMA!r} "
+                "derives OTHER from 'no deal type fired'. Retrain with the current "
+                "train.py (41 deal outputs)."
+            )
 
         # Optional PER-LABEL thresholds (tuned on val — see tune_thresholds.py).
         # Each clause type gets its own precision/recall cutoff; any label not
@@ -128,12 +135,11 @@ class TransformerClauseClassifier:
         return clauses
 
     def _assign(self, clause: ClauseUnit, probs: list[float]) -> None:
-        # Deal types above their per-label cutoff. OTHER is never a positive:
-        # a clause is OTHER only when nothing fires (derived below).
+        # The model outputs deal types only (schema guarantees no OTHER output).
+        # A clause is OTHER exactly when no deal type clears its cutoff.
         scored = sorted(
             ((self.labels[j], p) for j, p in enumerate(probs)
-             if self.labels[j] != ClauseType.UNKNOWN
-             and p >= self._threshold_for(self.labels[j])),
+             if p >= self._threshold_for(self.labels[j])),
             key=lambda x: -x[1],
         )
         if scored:
