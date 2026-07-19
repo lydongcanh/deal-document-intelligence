@@ -1,5 +1,9 @@
-"""Score the trained clause classifier on the TEST split — same shared metric as
-the baselines (see metrics.py), so numbers are directly comparable.
+"""Score the trained clause classifier on the TEST split (component eval).
+
+Predicts via `TransformerClauseClassifier` — the *same* code the pipeline uses —
+so thresholding (including per-label thresholds from tune_thresholds.py) is
+applied exactly as in production. One source of truth, no divergence. Metrics are
+the shared `metrics.score` (over the 41 deal types; OTHER excluded from micro).
 
 Run:  poetry run python training/clause_classification/evaluate_model.py
 """
@@ -9,31 +13,19 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import torch
 from metrics import OTHER, report, score
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-from deal_document_intelligence.contracts import ClauseType
+from deal_document_intelligence.classification.transformer_clause_classifier import (
+    TransformerClauseClassifier,
+)
+from deal_document_intelligence.contracts import CanonicalDocument, ClauseType, ClauseUnit
 
 MODEL_DIR = Path("artifacts/models/clause_classifier")
 DATA = Path("artifacts/data/clause_classification")
 
 
 def main() -> None:
-    threshold = json.loads((MODEL_DIR / "threshold.json").read_text())["threshold"]
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
-    model = AutoModelForSequenceClassification.from_pretrained(MODEL_DIR)
-    device = (
-        "cuda" if torch.cuda.is_available()
-        else "mps" if torch.backends.mps.is_available() else "cpu"
-    )
-    model.to(device).eval()
-
-    id2label = model.config.id2label
-    labels_by_idx = [
-        ClauseType(id2label[i] if i in id2label else id2label[str(i)])
-        for i in range(model.config.num_labels)
-    ]
+    clf = TransformerClauseClassifier(MODEL_DIR)  # picks up per-label thresholds if present
 
     texts, gold = [], []
     for line in (DATA / "test.jsonl").read_text().splitlines():
@@ -43,17 +35,20 @@ def main() -> None:
         texts.append(row["text"])
         gold.append({ClauseType(x) for x in row["labels"]})
 
-    pred: list[set[ClauseType]] = []
-    with torch.no_grad():
-        for i in range(0, len(texts), 32):
-            enc = tokenizer(texts[i:i + 32], truncation=True, max_length=256,
-                            padding=True, return_tensors="pt").to(device)
-            probs = torch.sigmoid(model(**enc).logits).cpu().tolist()
-            for row in probs:
-                hit = {labels_by_idx[j] for j, p in enumerate(row) if p > threshold}
-                pred.append(hit or {OTHER})
+    # Wrap each test row as a one-clause document and run the real classifier.
+    clauses = [
+        ClauseUnit(id=str(i), text=text, char_start=0, char_end=len(text))
+        for i, text in enumerate(texts)
+    ]
+    clf.classify(clauses, CanonicalDocument(doc_id="test", text=""))
 
-    report(f"TRAINED MODEL (threshold={threshold})", score(gold, pred))
+    pred: list[set[ClauseType]] = []
+    for clause in clauses:
+        hits = {p.clause_type for p in clause.predictions if p.clause_type != OTHER}
+        pred.append(hits or {OTHER})
+
+    kind = "per-label" if clf.label_thresholds else f"global {clf.threshold}"
+    report(f"TRAINED MODEL (thresholds: {kind})", score(gold, pred))
 
 
 if __name__ == "__main__":

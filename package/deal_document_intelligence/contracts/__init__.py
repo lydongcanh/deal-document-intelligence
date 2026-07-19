@@ -9,6 +9,12 @@ from deal_document_intelligence.contracts.block import Block
 from deal_document_intelligence.contracts.block_type import BlockType
 from deal_document_intelligence.contracts.canonical_document import CanonicalDocument
 from deal_document_intelligence.contracts.canonical_entity import CanonicalEntity
+from deal_document_intelligence.contracts.clause_category import (
+    METADATA_TYPES,
+    PROVISION_TYPES,
+    ClauseCategory,
+    category_of,
+)
 from deal_document_intelligence.contracts.clause_prediction import ClausePrediction
 from deal_document_intelligence.contracts.clause_type import ClauseType
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
@@ -32,11 +38,15 @@ __all__ = [
     "BBox",
     "Block",
     "BlockType",
+    "METADATA_TYPES",
+    "PROVISION_TYPES",
     "CanonicalDocument",
     "CanonicalEntity",
+    "ClauseCategory",
     "ClausePrediction",
     "ClauseType",
     "ClauseUnit",
+    "category_of",
     "DealIntelligence",
     "DocumentType",
     "Entity",

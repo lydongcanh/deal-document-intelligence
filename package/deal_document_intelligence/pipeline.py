@@ -21,22 +21,14 @@ from __future__ import annotations
 from pathlib import Path
 
 from deal_document_intelligence.classification.classifier import Classifier
-from deal_document_intelligence.contracts import EvidenceBackedResult, ValidationIssue
+from deal_document_intelligence.contracts import EvidenceBackedResult
+from deal_document_intelligence.integrity_error import IntegrityError
 from deal_document_intelligence.extraction.entity_extractor import EntityExtractor
 from deal_document_intelligence.language.language_detector import LanguageDetector
 from deal_document_intelligence.linking.relation_extractor import RelationExtractor
 from deal_document_intelligence.parsing.parser import Parser
 from deal_document_intelligence.resolution.resolver import Resolver
 from deal_document_intelligence.segmentation.segmenter import Segmenter
-
-
-class IntegrityError(Exception):
-    """Raised by `Pipeline(validation="strict")` when a result fails integrity."""
-
-    def __init__(self, issues: list[ValidationIssue]) -> None:
-        self.issues = issues
-        preview = "; ".join(i.message for i in issues[:5])
-        super().__init__(f"{len(issues)} integrity issue(s): {preview}")
 
 
 class Pipeline:

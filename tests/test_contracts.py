@@ -163,6 +163,14 @@ def test_validate_flags_doc_id_mismatch() -> None:
     assert "doc_id_mismatch" in _codes(result)
 
 
+def test_taxonomy_partition_is_complete_and_disjoint() -> None:
+    from deal_document_intelligence.contracts import METADATA_TYPES, PROVISION_TYPES
+    deal = {c for c in ClauseType if c != ClauseType.UNKNOWN}
+    assert PROVISION_TYPES | METADATA_TYPES == deal          # covers all 41
+    assert not (PROVISION_TYPES & METADATA_TYPES)             # no overlap
+    assert ClauseType.UNKNOWN not in (PROVISION_TYPES | METADATA_TYPES)
+
+
 def test_validate_flags_dangling_clause_id() -> None:
     doc = _doc()
     ent = Entity(id="e1", type=EntityType.OTHER, text="Delaware", clause_id="nope",
@@ -221,5 +229,6 @@ if __name__ == "__main__":
     test_validate_flags_out_of_bounds_span()
     test_validate_flags_doc_id_mismatch()
     test_validate_flags_dangling_clause_id()
+    test_taxonomy_partition_is_complete_and_disjoint()
     test_strict_pipeline_raises_on_invalid_result()
     print("All smoke tests passed ✅")

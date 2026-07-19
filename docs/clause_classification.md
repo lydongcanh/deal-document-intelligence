@@ -169,6 +169,10 @@ Name*). That gap is the headroom a trained model should capture.
 
 ### Trained model — v1 (Legal-XLM-R-base, 1 epoch)
 
+> ⚠️ **Superseded.** The v1/v1.1/v1.2 numbers below were computed *before* the
+> sentence-extraction bug fix (~3% of training/eval text was truncated) and on a
+> dev set. Keep them as history; the clean-data retrain will replace them.
+
 Fine-tuned `Legal-XLM-RoBERTa-base` (multi-label, sigmoid + BCE) for **1 epoch**
 (~29 min on an M3, MPS). Decision threshold tuned on val (best = **0.10** — rare
 multi-label classes rank positives below 0.5). Scored on the **test** split via
@@ -208,8 +212,60 @@ this phase exists to expose. The failure modes are informative:
   threshold **and** the taxonomy mixing metadata with provisions — both already
   on the Phase B list.
 
-v1 caveats: authored (not real Ansarada) documents; document-level *presence*
-only — gold clause boundaries + evidence are the next increment.
+**This is a development / acceptance set, NOT a blind test.** These two authored
+(synthetic, not real Ansarada) markdown documents have been used to diagnose
+thresholds and motivate the taxonomy split, so their F1 is a *dev* estimate, not
+an unbiased measure of product performance. Required future work: a **separate
+blind system-test set** — real PDFs/DOCX/scans, document families, OCR noise,
+long contracts, tables, amendments — never inspected during development, with
+gold clause boundaries + evidence (not just presence). Rename target: `dev_set`.
+
+### Per-label thresholds (v1.1 — no retraining)
+
+The gold precision drag came from a single global cutoff (0.10). Tuning a
+**per-label threshold** on val (`tune_thresholds.py`; 17/41 labels tuned, the
+rest below MIN_SUPPORT kept global) — **no retraining** — moved the metrics:
+
+| Metric | v1 (global 0.10) | v1.1 (per-label) |
+|---|---|---|
+| test macro-F1 | 0.246 | **0.283** |
+| test micro-F1 | 0.663 | 0.605 |
+| gold document-level F1 | 0.645 | **0.667** |
+| gold critical-clause recall | 4/5 | **5/5** |
+
+macro-F1 and end-to-end recall (now every critical clause) improved for free;
+micro precision traded down a little. The **remaining precision drag is a
+taxonomy problem** — metadata-ish types (*Document Name*, dates) still over-fire,
+and a threshold can't fix a type that shouldn't be a "provision-presence" signal
+at all. That's the next lever (the taxonomy split below), *not* more epochs — the
+cheap decision-rule fix beat what an epochs-only retrain would have done here.
+
+### Taxonomy split — metadata vs provisions (v1.2 — no retraining)
+
+We added a categorisation layer (`contracts/clause_category.py`):
+`METADATA_TYPES` (Document Name, Parties, Agreement/Effective/Expiration Date)
+vs `PROVISION_TYPES` (the other 36). The gold eval now scores **provision
+presence** and reports metadata separately.
+
+| gold metric | all-types (v1.1) | provisions-only (v1.2) |
+|---|---|---|
+| precision | 0.579 | **0.727** |
+| recall | 0.786 | 0.727 |
+| F1 | 0.667 | **0.727** |
+| critical-clause recall | 5/5 | 5/5 |
+
+**Caveat — this is a metric-definition change, not a model improvement.** The
+predictions are identical; we simply stopped counting metadata types as
+"provisions". So read it as *two different metrics* (all-type vs provision-only
+presence), not a before/after model lift. (Also: *Effective/Expiration Date* are
+sometimes substantive provision *attributes*, not pure metadata — a future schema
+may split "provision attributes" from both.) The metadata (title/parties/dates)
+is now surfaced as document *attributes* — whose natural home is entity extraction. The provision errors that remain — missed
+*License Grant / Non-Compete / Warranty Duration*, spurious *Minimum Commitment /
+Post-Termination Services* — are **genuine classifier weaknesses on rarer types**,
+not fixable by thresholds or taxonomy. *That* is what now justifies a proper
+retrain (Phase B: `OTHER`-as-independent-output + multiple seeds), bundled into
+one run.
 
 ## 5. Roadmap
 
@@ -251,9 +307,11 @@ integrity-checked). Remaining work to "production-ready", in dependency order:
 **Phase B — the real model**
 - [ ] Retrain multi-epoch + early stopping + **multiple seeds / confidence intervals** (deduped split)
 - [ ] Redesign `OTHER` as derived (41 independent outputs, exclude from loss/metrics)
-- [ ] Per-label thresholds + calibration (ECE/Brier); precision/recall operating points
+- [x] Per-label thresholds (no retrain) — test macro 0.246→0.283, gold F1 0.645→0.667, crit 4/5→5/5
+- [ ] Calibration (ECE/Brier) + precision/recall operating points; taxonomy split for metadata over-firing
+- [x] Taxonomy split (metadata vs provisions) — gold provision F1 0.667→0.727 (precision 0.579→0.727)
 - [ ] Rare-type tail (class weighting / more data); compare solution families (encoder vs LLM vs hybrid)
-- [ ] Tokenizer audit + lock; taxonomy cleanup (metadata vs provisions); multilingual validation
+- [ ] Tokenizer audit + lock; multilingual validation
 
 **Phase C — productionize**
 - [ ] Provenance + model registry + publish (checkpoint hash, base revision, dataset/split version, card, license)
@@ -279,7 +337,9 @@ integrity-checked). Remaining work to "production-ready", in dependency order:
   tokenizer. A controlled check showed `fix_mistral_regex=True` **does change
   tokenization** (1/2 sample clauses) — so it is *not* cosmetic. It is harmless
   *for us* only because training and inference load the identical (unfixed)
-  tokenizer (no skew). **Do not apply the fix without retraining.**
+  tokenizer (no skew). **Decision (for now): keep the legacy tokenizer** — the
+  fix's gain is small and switching needs a data re-tokenise + retrain. This must
+  be **locked** before the production multi-seed campaign.
 - **`OTHER` as an independent output** — the model has a 42nd sigmoid for
   OTHER/UNKNOWN, so it can predict OTHER *and* a deal type simultaneously.
   Cleaner (at next retrain): 41 independent deal outputs, derive OTHER when none
@@ -345,6 +405,36 @@ poetry run python training/clause_classification/evaluate_model.py    # trained 
   / R 0.714), critical-clause recall **4/5** — below the isolated test micro
   (0.663), quantifying the train/inference gap. Over-fires metadata types
   (Document Name, dates); misses rarer provisions.
+- **2026-07-18** — **Per-label thresholds** (no retraining): `tune_thresholds.py`
+  picks each type's cutoff on val (17/41 tuned); classifier + `evaluate_model.py`
+  now apply them (evaluate_model predicts *via* the classifier — one source of
+  truth). Result: test macro **0.246→0.283**, gold F1 **0.645→0.667**, critical
+  recall **4/5→5/5** (micro traded 0.663→0.605). The cheap decision-rule lever
+  beat an epochs-only retrain for the gold failure; remaining precision drag is a
+  taxonomy issue (metadata types), the next lever. Also renamed
+  `evaluate.py`→`evaluate_baselines.py` and added a repo `Makefile` + folder READMEs.
+- **2026-07-18** — **Taxonomy split** (`contracts/clause_category.py`): METADATA (5)
+  vs PROVISION (36). Gold eval scores provision presence; metadata reported
+  separately. Gold provision F1 **0.667→0.727** (precision 0.579→0.727), critical
+  recall 5/5. Remaining provision errors are genuine model weaknesses on rare
+  types → now the justification for a Phase-B retrain (bundle OTHER-as-independent
+  -output + multiple seeds).
+- **2026-07-18** — Third review pass. **Data bug fixed:** `_sentence_at` stepped
+  2 chars past a `\n` boundary (only ". " is 2), truncating the first character
+  of ~3% of examples ("This"→"his"); fixed + dataset rebuilt (0 truncations) +
+  regression test added. ⚠️ **All earlier v1/v1.1/v1.2 numbers predate this fix
+  (partly-corrupted data) and are superseded — they'll be recomputed after a
+  clean retrain.** Also fixed/added: (3) checkpoint selection now uses macro
+  **average-precision** (threshold-independent) not F1@0.5; (5) threshold
+  tie-break prefers the higher cutoff (precision) + loaded thresholds validated
+  ∈[0,1]; (4) classifier accepts a bare HF id (org/model), not just local paths;
+  (9) `metrics.score` raises on gold/pred length mismatch; (13) `IntegrityError`
+  in its own module; (10) 41-vs-42 wording synced + `LABEL_SCHEMA` id +
+  duplicate-label guard; (7) `run_manifest.json` (git SHA, seed, schema, metrics)
+  written per checkpoint. Reframed docs: the taxonomy 0.667→0.727 is a
+  metric-definition change (not a model lift); the gold set is a **dev/acceptance
+  set, not a blind test**. Retrained on the OTHER-derived 41-output design but
+  **stopped** when this bug surfaced — the retrain is re-queued on clean data.
 - **2026-07-17** — External-review pass. Fixed: (1) eval metric now averages the
   **fixed 41 deal types** in every path (train/threshold/eval) — corrected test
   numbers **baseline 0.162, trained 0.246** (were 0.166/0.252 over 40, since

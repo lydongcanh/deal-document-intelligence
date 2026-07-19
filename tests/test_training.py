@@ -32,6 +32,21 @@ def test_metric_is_41_labels_and_excludes_other_from_micro() -> None:
     assert abs(res["macro_deal_f1"] - 0.6667 / 41) < 1e-3
 
 
+def test_metric_rejects_length_mismatch() -> None:
+    with pytest.raises(ValueError):
+        score([{ClauseType.GOVERNING_LAW}], [])  # missing predictions must not be silently ignored
+
+
+def test_sentence_at_keeps_first_char_after_newline() -> None:
+    pytest.importorskip("datasets")
+    from build_clause_dataset import ClauseDatasetBuilder
+    ctx = "1. Governing Law\nThis Agreement is governed by Delaware law."
+    start = ctx.index("Delaware")
+    out = ClauseDatasetBuilder._sentence_at(ctx, start, start + len("Delaware"))
+    assert out.startswith("This Agreement")  # not "his ..." — the boundary bug
+    assert "Delaware" in out                  # answer span stays contained
+
+
 def test_dedup_merges_labels_and_keeps_one_split() -> None:
     pytest.importorskip("datasets")
     from build_clause_dataset import ClauseDatasetBuilder

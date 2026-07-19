@@ -32,7 +32,12 @@ from simple_resolver import SimpleResolver  # noqa: E402
 from deal_document_intelligence.classification.transformer_clause_classifier import (  # noqa: E402
     TransformerClauseClassifier,
 )
-from deal_document_intelligence.contracts import ClauseType, EvidenceBackedResult  # noqa: E402
+from deal_document_intelligence.contracts import (  # noqa: E402
+    METADATA_TYPES,
+    PROVISION_TYPES,
+    ClauseType,
+    EvidenceBackedResult,
+)
 from deal_document_intelligence.pipeline import Pipeline  # noqa: E402
 
 GOLD_DIR = HERE / "gold"
@@ -75,25 +80,30 @@ def main() -> None:
     }
     pipeline = _build_pipeline()
     tp = fp = fn = crit_hit = crit_total = 0
-    print(f"gold documents: {len(gold)}  (scoring on PREDICTED clauses, end-to-end)\n")
+    print(f"gold documents: {len(gold)}  (PROVISION presence on PREDICTED clauses, end-to-end)\n")
 
     for name, gold_types in gold.items():
-        pred = _predicted_types(pipeline.run(GOLD_DIR / "docs" / f"{name}.md"))
-        hits, missed, spurious = gold_types & pred, gold_types - pred, pred - gold_types
+        pred_all = _predicted_types(pipeline.run(GOLD_DIR / "docs" / f"{name}.md"))
+        # Score PROVISIONS only — metadata types (title/parties/dates) are document
+        # attributes, not provisions, so they don't belong in "clause presence".
+        gold_p, pred_p = gold_types & PROVISION_TYPES, pred_all & PROVISION_TYPES
+        hits, missed, spurious = gold_p & pred_p, gold_p - pred_p, pred_p - gold_p
         tp += len(hits)
         fn += len(missed)
         fp += len(spurious)
-        crit_hit += len(gold_types & CRITICAL & pred)
-        crit_total += len(gold_types & CRITICAL)
+        crit_hit += len(gold_p & CRITICAL & pred_p)
+        crit_total += len(gold_p & CRITICAL)
         print(f"--- {name} ---")
-        print(f"  hits     : {sorted(t.value for t in hits)}")
-        print(f"  MISSED   : {sorted(t.value for t in missed)}")
-        print(f"  spurious : {sorted(t.value for t in spurious)}")
+        print(f"  provision hits     : {sorted(t.value for t in hits)}")
+        print(f"  provision MISSED   : {sorted(t.value for t in missed)}")
+        print(f"  provision spurious : {sorted(t.value for t in spurious)}")
+        print(f"  (metadata detected, reported separately: "
+              f"{sorted(t.value for t in pred_all & METADATA_TYPES)})")
 
     p = tp / (tp + fp) if tp + fp else 0.0
     r = tp / (tp + fn) if tp + fn else 0.0
     f = 2 * p * r / (p + r) if p + r else 0.0
-    print("\n=== DOCUMENT-LEVEL CLAUSE PRESENCE (on predicted clauses) ===")
+    print("\n=== DOCUMENT-LEVEL PROVISION PRESENCE (on predicted clauses) ===")
     print(f"precision {p:.3f}  recall {r:.3f}  F1 {f:.3f}   (tp={tp} fp={fp} fn={fn})")
     print(f"critical-clause recall: {crit_hit}/{crit_total}")
 

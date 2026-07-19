@@ -33,6 +33,8 @@ def prf(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
 def score(
     gold: list[set[ClauseType]], pred: list[set[ClauseType]]
 ) -> dict:
+    if len(gold) != len(pred):  # a silent zip() would flatter the score
+        raise ValueError(f"gold/pred length mismatch: {len(gold)} != {len(pred)}")
     tp, fp, fn, support = Counter(), Counter(), Counter(), Counter()
     for g, p in zip(gold, pred):
         for label in g:

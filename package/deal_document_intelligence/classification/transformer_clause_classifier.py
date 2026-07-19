@@ -15,7 +15,7 @@ and the full scored multi-label set is exposed as typed `clause.predictions`
 from __future__ import annotations
 
 import json
-import os
+import math
 from pathlib import Path
 
 from deal_document_intelligence.contracts import (
@@ -39,14 +39,20 @@ class TransformerClauseClassifier:
         from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
         # Accept a local checkpoint dir OR a HuggingFace Hub id (from_pretrained
-        # handles both). Only a local-looking path that's missing is an error.
+        # handles both). A bare "org/model" is a Hub id, NOT a local path — only
+        # a value that clearly points at the filesystem (a Path, a ./ ../ / ~
+        # prefix, or an existing path) is treated as local and checked to exist.
         model_ref = str(model_dir)
-        looks_local = os.sep in model_ref or model_ref.startswith(".")
-        if looks_local and not Path(model_ref).exists():
+        is_local = (
+            isinstance(model_dir, Path)
+            or model_ref.startswith(("./", "../", "/", "~"))
+            or Path(model_ref).exists()
+        )
+        if is_local and not Path(model_ref).exists():
             raise FileNotFoundError(
                 f"clause-classifier not found at {model_ref!r}. Train it with "
                 "training/clause_classification/train.py, or pass a valid local path "
-                "or a HuggingFace Hub id."
+                "or a HuggingFace Hub id (org/model)."
             )
         if max_length <= 0 or batch_size <= 0:
             raise ValueError("max_length and batch_size must be positive")
@@ -78,11 +84,32 @@ class TransformerClauseClassifier:
             ClauseType(id2label[i] if i in id2label else id2label[str(i)])
             for i in range(self.model.config.num_labels)
         ]
+        if len(set(self.labels)) != len(self.labels):
+            raise ValueError("model id2label contains duplicate clause types")
+
+        # Optional PER-LABEL thresholds (tuned on val — see tune_thresholds.py).
+        # Each clause type gets its own precision/recall cutoff; any label not
+        # listed falls back to the single scalar `threshold`. This is how we stop
+        # trigger-happy types over-firing while keeping rare types sensitive.
+        # Values are validated: finite and within [0, 1], else ignored.
+        self.label_thresholds: dict[ClauseType, float] = {}
+        lpath = self.model_dir / "thresholds.json"
+        if lpath.exists():
+            for name, value in json.loads(lpath.read_text()).items():
+                try:
+                    v, ct = float(value), ClauseType(name)
+                except (ValueError, TypeError):
+                    continue
+                if math.isfinite(v) and 0.0 <= v <= 1.0:
+                    self.label_thresholds[ct] = v
+
         # Modest provenance. TODO(prod): also stamp checkpoint hash, base-model
         # revision, and dataset/split version for full legal-grade auditability.
-        self.version = (
-            f"clause-clf@{self.model_dir.name}|thr={self.threshold}|max_len={self.max_length}"
-        )
+        per_label = "per-label" if self.label_thresholds else f"{self.threshold}"
+        self.version = f"clause-clf@{self.model_dir.name}|thr={per_label}|max_len={self.max_length}"
+
+    def _threshold_for(self, label: ClauseType) -> float:
+        return self.label_thresholds.get(label, self.threshold)
 
     def classify(
         self, clauses: list[ClauseUnit], document: CanonicalDocument
@@ -101,17 +128,18 @@ class TransformerClauseClassifier:
         return clauses
 
     def _assign(self, clause: ClauseUnit, probs: list[float]) -> None:
+        # Deal types above their per-label cutoff. OTHER is never a positive:
+        # a clause is OTHER only when nothing fires (derived below).
         scored = sorted(
-            ((self.labels[j], p) for j, p in enumerate(probs) if p >= self.threshold),
+            ((self.labels[j], p) for j, p in enumerate(probs)
+             if self.labels[j] != ClauseType.UNKNOWN
+             and p >= self._threshold_for(self.labels[j])),
             key=lambda x: -x[1],
         )
-        deal = [(label, p) for label, p in scored if label != ClauseType.UNKNOWN]
-        if deal:
-            clause.clause_type, best = deal[0][0], deal[0][1]
-        elif scored:
-            clause.clause_type, best = ClauseType.UNKNOWN, scored[0][1]
+        if scored:
+            clause.clause_type, best = scored[0]
         else:
-            clause.clause_type, best = ClauseType.UNKNOWN, None
+            clause.clause_type, best = ClauseType.UNKNOWN, None  # derived OTHER
         clause.classification_confidence = round(best, 4) if best is not None else None
         clause.model_version = self.version
         clause.predictions = [

@@ -138,8 +138,19 @@ class ClauseDatasetBuilder:
 
     @staticmethod
     def _sentence_at(context: str, start: int, end: int) -> str:
-        left = max(context.rfind(". ", 0, start), context.rfind("\n", 0, start))
-        s = left + 2 if left != -1 else 0
+        """Expand [start:end] to its surrounding sentence.
+
+        The boundary *before* the span may be ". " (2 chars) or "\\n" (1 char);
+        we must step past exactly the matched boundary's length, or we clip the
+        first character of the sentence (the bug that truncated "Supply"→"upply").
+        s <= start and e >= end always, so the answer span stays contained.
+        """
+        dot = context.rfind(". ", 0, start)
+        nl = context.rfind("\n", 0, start)
+        if dot >= nl:
+            s = dot + 2 if dot != -1 else 0  # ". " is 2 chars (or no boundary → 0)
+        else:
+            s = nl + 1                        # "\n" is 1 char
         rights = [r for r in (context.find(". ", end), context.find("\n", end)) if r != -1]
         e = (min(rights) + 1) if rights else len(context)
         return " ".join(context[s:e].split())

@@ -32,7 +32,13 @@ for developing the model, but *in-distribution*.
 
 The **gold set** here (`gold/`) is different on purpose: it's a small set of whole
 documents run through the **real pipeline**, scored at the document level. It is
-**out-of-distribution and end-to-end** — the "real exam in the wild".
+**out-of-distribution and end-to-end**.
+
+**Status: this is a development / acceptance set, NOT a blind test.** The current
+`gold/` docs are **authored, synthetic** markdown (2 docs) and have been used to
+tune thresholds and taxonomy — so their score is a *dev* estimate. A true blind
+test needs real PDFs/DOCX/scans, never inspected during development, with gold
+boundaries + evidence. Treat this as fast iteration signal, not a final grade.
 
 ## Run
 

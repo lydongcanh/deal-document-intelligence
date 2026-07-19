@@ -9,6 +9,12 @@ from __future__ import annotations
 
 from enum import StrEnum
 
+# Version of the label schema the trained model targets. Bump when the label
+# space or its semantics change (e.g. a taxonomy split). Stamped into training
+# provenance so a checkpoint's schema is unambiguous.
+#   cuad41-derived-other-v1 = 41 deal-type sigmoids; OTHER is DERIVED (no output)
+LABEL_SCHEMA = "cuad41-derived-other-v1"
+
 
 class ClauseType(StrEnum):
     AFFILIATE_LICENSE_LICENSEE = "Affiliate License-Licensee"

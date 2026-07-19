@@ -9,7 +9,8 @@ DATASET := artifacts/data/clause_classification/train.jsonl
 
 .DEFAULT_GOAL := help
 .PHONY: help install install-training install-demo test \
-        clause-explore clause-dataset clause-baseline clause-train clause-eval clause-demo
+        clause-explore clause-dataset clause-baseline clause-train \
+        clause-tune-thresholds clause-eval clause-gold-eval clause-demo
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -42,6 +43,9 @@ clause-baseline: $(DATASET)  ## 2. Score baseline predictors (the floor)
 
 clause-train: $(DATASET)  ## 3. Fine-tune Legal-XLM-R (1 epoch) -> checkpoint
 	$(PY) training/clause_classification/train.py --epochs 1
+
+clause-tune-thresholds:  ## 3b. Tune per-label thresholds on val (no retraining)
+	$(PY) training/clause_classification/tune_thresholds.py
 
 clause-eval:  ## 4. Score the trained model on the test split
 	$(PY) training/clause_classification/evaluate_model.py
