@@ -1,9 +1,15 @@
-"""Evaluate baseline predictors on the test split, using the shared metrics.
+"""Evaluate BASELINE predictors on the test split (the "floor" to beat).
 
-Scores any predictor mapping clause text → set[ClauseType]. The trained model is
-scored the same way in evaluate_model.py — both import scoring from `metrics`.
+This is *component* evaluation: given clean clause text, how good are the labels?
+It scores simple non-ML baselines (predict-nothing, and keyword matching) so we
+have an honest floor. `evaluate_model.py` scores the trained model on the SAME
+test split with the SAME shared `metrics`, so the numbers are comparable.
 
-Run:  poetry run python training/clause_classification/evaluate.py
+(Bigger picture: this + evaluate_model.py answer "how good is the clause model in
+isolation?". `eval/gold_clause_eval.py` answers "does the whole product work on a
+real document?" — see eval/README.md.)
+
+Run:  poetry run python training/clause_classification/evaluate_baselines.py
 """
 
 from __future__ import annotations

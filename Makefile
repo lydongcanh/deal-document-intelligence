@@ -38,13 +38,16 @@ $(DATASET): training/clause_classification/build_clause_dataset.py \
 clause-dataset: $(DATASET)  ## 1. Build the labelled dataset (CUAD + LEDGAR)
 
 clause-baseline: $(DATASET)  ## 2. Score baseline predictors (the floor)
-	$(PY) training/clause_classification/evaluate.py
+	$(PY) training/clause_classification/evaluate_baselines.py
 
 clause-train: $(DATASET)  ## 3. Fine-tune Legal-XLM-R (1 epoch) -> checkpoint
 	$(PY) training/clause_classification/train.py --epochs 1
 
 clause-eval:  ## 4. Score the trained model on the test split
 	$(PY) training/clause_classification/evaluate_model.py
+
+clause-gold-eval:  ## 5. End-to-end gold eval on real docs (doc-level presence)
+	$(PY) eval/gold_clause_eval.py
 
 clause-demo:  ## Run the end-to-end demo with the trained classifier
 	$(PY) demo/walking_skeleton.py --trained

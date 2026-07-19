@@ -151,7 +151,7 @@ Most frequent clause types:
 ### Baseline results (the floor to beat)
 
 Evaluated on the held-out **test** split (3,036 examples) via
-`training/clause_classification/evaluate.py`. **Both micro and macro are over the
+`training/clause_classification/evaluate_baselines.py`. **Both micro and macro are over the
 41 deal types with `OTHER` excluded** (so the easy, abundant OTHER class can't
 inflate the number):
 
@@ -186,6 +186,31 @@ already strong — *Governing Law* 0.95, *Insurance* 0.90, *Cap on Liability*
 trained on the pre-dedup split and re-evaluated on the clean test split (the
 delta was negligible); a clean multi-epoch retrain is the proper next run.
 
+### Gold evaluation — Phase A (end-to-end, on real documents)
+
+`eval/gold_clause_eval.py` runs the **full pipeline** (docling → segment →
+trained classifier) on a small authored gold set and scores **document-level
+clause presence** on the segmenter's *predicted* clauses — not clean CUAD
+sentences. This is the number that reflects the product.
+
+| Metric (2 gold docs, predicted clauses) | Value |
+|---|---|
+| document-level presence P / R / F1 | 0.588 / 0.714 / **0.645** |
+| critical-clause recall | 4 / 5 |
+
+Well below the isolated test micro (0.663) — exactly the **train/inference gap**
+this phase exists to expose. The failure modes are informative:
+- **Missed** provisions (*Termination for Convenience*, *Exclusivity*,
+  *Non-Compete*, *Warranty Duration*) — rarer types and heading-led clauses that
+  read unlike CUAD prose.
+- **Spurious** *Document Name / Effective Date / Expiration Date / Agreement Date*
+  — metadata-ish types over-firing on titles/dates. That's the low (0.10)
+  threshold **and** the taxonomy mixing metadata with provisions — both already
+  on the Phase B list.
+
+v1 caveats: authored (not real Ansarada) documents; document-level *presence*
+only — gold clause boundaries + evidence are the next increment.
+
 ## 5. Roadmap
 
 - [x] **Data prep** — build the labelled, split dataset *(done — this report)*
@@ -210,6 +235,31 @@ OTHER-as-output, per-label thresholds, tokenizer + provenance; *then* retrain
 with multiple seeds + early stopping (a single 3-epoch run can't separate a real
 gain from run variance). Taxonomy also mixes metadata (Document Name, Agreement
 Date) with true provision types — worth separating.
+
+## Path to production (stage 5)
+
+Today this is a **validated walking-skeleton model** (beats the floor; packaged;
+integrity-checked). Remaining work to "production-ready", in dependency order:
+
+**Phase A — trustworthy evaluation (the gate)**
+- [x] End-to-end **gold set** + harness (`eval/`) — v1: authored docs, doc-level labels
+- [x] Score classification on **predicted** clauses — gap surfaced (F1 0.645 vs 0.663 isolated)
+- [x] **Document-level metrics**: presence/absence P/R/F1, critical-clause recall
+- [ ] Extend gold set to **real PDFs** + gold clause **boundaries & evidence** (not just presence)
+- [ ] Narrow to a **vertical slice** (few clause types, English commercial agreements) first
+
+**Phase B — the real model**
+- [ ] Retrain multi-epoch + early stopping + **multiple seeds / confidence intervals** (deduped split)
+- [ ] Redesign `OTHER` as derived (41 independent outputs, exclude from loss/metrics)
+- [ ] Per-label thresholds + calibration (ECE/Brier); precision/recall operating points
+- [ ] Rare-type tail (class weighting / more data); compare solution families (encoder vs LLM vs hybrid)
+- [ ] Tokenizer audit + lock; taxonomy cleanup (metadata vs provisions); multilingual validation
+
+**Phase C — productionize**
+- [ ] Provenance + model registry + publish (checkpoint hash, base revision, dataset/split version, card, license)
+- [ ] Serving (batching, latency/memory, API) + monitoring (drift, abstention — Arize Phoenix)
+- [ ] CI (tests + lint + type-check + a tiny deterministic model-inference test)
+- [ ] Data governance (confidential docs) + human-in-the-loop correction / active learning
 
 ## 6. Known limitations (to revisit)
 
@@ -245,7 +295,7 @@ Date) with true provision types — worth separating.
 poetry install --with training     # datasets + torch + transformers (training stack)
 poetry run python training/clause_classification/build_clause_dataset.py
 # → artifacts/data/clause_classification/{train,val,test}.jsonl
-poetry run python training/clause_classification/evaluate.py          # baseline metrics
+poetry run python training/clause_classification/evaluate_baselines.py  # baseline metrics
 poetry run python training/clause_classification/train.py --smoke     # validate the loop
 poetry run python training/clause_classification/train.py --epochs 1  # full 1-epoch run
 poetry run python training/clause_classification/evaluate_model.py    # trained model on test
@@ -288,6 +338,13 @@ poetry run python training/clause_classification/evaluate_model.py    # trained 
   future work: OTHER-as-independent-output, per-label thresholds/calibration,
   tokenizer audit, model provenance, and a **strategic pivot** (gold set +
   narrow vertical + document-level metrics before more epochs).
+- **2026-07-18** — Started Phase A. Added a `README.md` + repo `Makefile` (one
+  command per step, `make help`), and an end-to-end gold harness
+  (`eval/gold_clause_eval.py` + `eval/gold/`, `make clause-gold-eval`). First
+  result on **predicted** clauses: document-level presence **F1 0.645** (P 0.588
+  / R 0.714), critical-clause recall **4/5** — below the isolated test micro
+  (0.663), quantifying the train/inference gap. Over-fires metadata types
+  (Document Name, dates); misses rarer provisions.
 - **2026-07-17** — External-review pass. Fixed: (1) eval metric now averages the
   **fixed 41 deal types** in every path (train/threshold/eval) — corrected test
   numbers **baseline 0.162, trained 0.246** (were 0.166/0.252 over 40, since

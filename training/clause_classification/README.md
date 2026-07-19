@@ -28,7 +28,7 @@ dataset first if it's missing. Without `make`, run the scripts in the same order
 | `clause_example.py` | lib | `ClauseExample` row schema | (imported) |
 | `build_clause_dataset.py` | step | CUAD+LEDGAR → labelled, split, deduped dataset | HF → `artifacts/data/clause_classification/{train,val,test}.jsonl` |
 | `metrics.py` | lib | shared scoring (micro/macro over the 41 deal types) | (imported by both evaluators + training) |
-| `evaluate.py` | step | baseline predictors on test | dataset → stdout |
+| `evaluate_baselines.py` | step | baseline predictors on test (the floor) | dataset → stdout |
 | `train.py` | step | fine-tune a multilingual encoder | dataset → `artifacts/models/clause_classifier/` |
 | `evaluate_model.py` | step | score the trained model on test | model + dataset → stdout |
 
