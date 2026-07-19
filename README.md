@@ -132,6 +132,9 @@ intend to publish. Anything trained for public release uses openly-licensed data
 
 ## Setup
 
+Common workflows are wrapped in a **Makefile** — run `make help` to list them
+(`make clause-dataset`, `make clause-train`, `make test`, …). Raw commands:
+
 ```bash
 poetry install                                   # light core (pydantic only)
 poetry install -E classification                  # + trained clause classifier (torch/transformers)
