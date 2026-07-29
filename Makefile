@@ -10,7 +10,7 @@ DATASET := artifacts/data/clause_classification/train.jsonl
 .DEFAULT_GOAL := help
 .PHONY: help install install-training install-demo test \
         clause-explore clause-dataset clause-baseline clause-train \
-        clause-tune-thresholds clause-eval clause-gold-eval clause-demo
+        clause-tune-thresholds clause-eval clause-gold-eval demo
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -53,5 +53,6 @@ clause-eval:  ## 4. Score the trained model on the test split
 clause-gold-eval:  ## 5. End-to-end gold eval on real docs (doc-level presence)
 	$(PY) eval/gold_clause_eval.py
 
-clause-demo:  ## Run the end-to-end demo with the trained classifier
-	$(PY) demo/walking_skeleton.py --trained
+# ---- demo ----
+demo:  ## Run the demo (default: the sample lease). Pass DOC=path to override.
+	$(PY) demo/main.py $(DOC)

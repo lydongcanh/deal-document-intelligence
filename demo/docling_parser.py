@@ -1,25 +1,29 @@
-"""A docling-based Parser adapter — lives in the DEMO (a consumer), not the
-package. This is exactly how a real consumer would plug their vendor of choice
-(docling / AWS Textract / Azure DI) into `deal_document_intelligence`.
+"""A docling-based Parser, for the demo.
 
-It satisfies `deal_document_intelligence.parsing.parser.Parser` structurally:
-one `parse(source) -> CanonicalDocument` method, no inheritance.
+This is a CONSUMER implementation of the package's `Parser` interface
+(package/deal_document_intelligence/parsing/parser.py). The package ships no
+parser on purpose: parsing/OCR is a commodity. Here we wire docling to the
+contract. Swapping to AWS Textract or Azure would just mean writing another
+class with the same `parse` method.
 
-Design choice: we build the canonical `text` ourselves by concatenating docling's
-text items and tracking offsets as we go. That way `document.text[start:end]`
-is guaranteed to equal a block's text — evidence integrity holds no matter what
-docling reports internally. The same adapter handles PDF/DOCX/scans/markdown,
-since docling's converter auto-detects the format.
+The one thing worth getting right is offsets. We build the canonical `text`
+ourselves by concatenating docling's text items in order, and we record each
+item's char span as we go. That guarantees the invariant every later stage
+relies on: `document.text[block.char_start:block.char_end] == block.text`.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from docling.document_converter import DocumentConverter
+from docling.datamodel.base_models import InputFormat
+from docling.datamodel.pipeline_options import PdfPipelineOptions
+from docling.document_converter import DocumentConverter, PdfFormatOption
 
 from deal_document_intelligence.contracts import Block, BlockType, CanonicalDocument
 
+# docling labels its text items; map the ones we care about onto our BlockType.
+# Anything unmapped falls back to OTHER, so an unexpected label never crashes us.
 _LABEL_TO_BLOCK_TYPE = {
     "title": BlockType.HEADING,
     "section_header": BlockType.HEADING,
@@ -31,46 +35,61 @@ _LABEL_TO_BLOCK_TYPE = {
     "paragraph": BlockType.PARAGRAPH,
 }
 
+# Blocks are joined by a blank line in the canonical text.
 _SEPARATOR = "\n\n"
 
 
 class DoclingParser:
-    def __init__(self) -> None:
-        self._converter = DocumentConverter()
+    """Parses a file into a CanonicalDocument using docling."""
+
+    def __init__(self, ocr: bool = False) -> None:
+        # OCR is only needed for scanned/image PDFs. Our lease is born-digital
+        # (it has a real text layer), so we leave OCR off: it is faster and it
+        # avoids pulling an OCR model. Set ocr=True for scans.
+        pdf_options = PdfPipelineOptions()
+        pdf_options.do_ocr = ocr
+        # The converter loads docling's layout models on first use.
+        self._converter = DocumentConverter(
+            format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pdf_options)}
+        )
 
     def parse(self, source: Path) -> CanonicalDocument:
-        dl = self._converter.convert(str(source)).document
+        source = Path(source)
+        docling_doc = self._converter.convert(str(source)).document
 
         parts: list[str] = []
         blocks: list[Block] = []
-        cursor = 0
-        for i, item in enumerate(dl.texts):
+        cursor = 0  # next free char offset in the canonical text
+
+        for index, item in enumerate(docling_doc.texts):
             text = (item.text or "").strip()
             if not text:
                 continue
 
+            # docling's label is an enum-like; take its string value.
             label = getattr(item.label, "value", str(item.label))
+            # Page number lives in provenance; default to 1 (Block requires >= 1).
             prov = getattr(item, "prov", None)
-            page = (prov[0].page_no if prov and prov[0].page_no else None) or 1
+            page = (prov[0].page_no if prov else None) or 1
 
-            start = cursor
-            end = start + len(text)
+            char_start = cursor
+            char_end = char_start + len(text)
             blocks.append(
                 Block(
-                    id=f"b{i}",
+                    id=f"b{index}",
                     type=_LABEL_TO_BLOCK_TYPE.get(label, BlockType.OTHER),
                     text=text,
                     page=page,
-                    char_start=start,
-                    char_end=end,
+                    char_start=char_start,
+                    char_end=char_end,
                     level=getattr(item, "level", None),
                 )
             )
             parts.append(text)
-            cursor = end + len(_SEPARATOR)
+            cursor = char_end + len(_SEPARATOR)
 
         return CanonicalDocument(
-            doc_id=Path(source).stem,
+            doc_id=source.stem,
             text=_SEPARATOR.join(parts),
             blocks=blocks,
             source_path=str(source),
