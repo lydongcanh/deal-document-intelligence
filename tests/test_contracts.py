@@ -16,6 +16,7 @@ from deal_document_intelligence.contracts import (
     ClauseType,
     ClauseUnit,
     DealIntelligence,
+    DocumentClassification,
     Entity,
     EntityType,
     EvidenceBackedResult,
@@ -73,9 +74,8 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
             return doc
 
     class FakeLanguageDetector:
-        def detect(self, document: CanonicalDocument) -> CanonicalDocument:
-            document.language = "en"
-            return document
+        def detect(self, document: CanonicalDocument) -> DocumentClassification:
+            return DocumentClassification(language="en")
 
     class FakeSegmenter:
         def segment(self, document: CanonicalDocument) -> list[ClauseUnit]:
@@ -114,7 +114,7 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
                     FakeClassifier(), FakeEntityExtractor(), FakeRelationExtractor(),
                     FakeResolver())
     result = pipe.run(Path("dummy.md"))
-    assert result.document.language == "en"
+    assert result.classification.language == "en"
     assert result.clauses[0].clause_type == ClauseType.GOVERNING_LAW
     assert result.entities[0].text == "Delaware"
     assert result.relations[0].source_id == "e1"
@@ -188,8 +188,8 @@ def test_strict_pipeline_raises_on_invalid_result() -> None:
             return doc
 
     class FakeLang:
-        def detect(self, d: CanonicalDocument) -> CanonicalDocument:
-            return d
+        def detect(self, d: CanonicalDocument) -> DocumentClassification:
+            return DocumentClassification(language="en")
 
     class FakeSeg:
         def segment(self, d: CanonicalDocument) -> list[ClauseUnit]:

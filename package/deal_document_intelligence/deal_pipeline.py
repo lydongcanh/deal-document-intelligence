@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deal_document_intelligence.aggregation.deal_aggregator import DealAggregator
+from deal_document_intelligence.interfaces import DealAggregator
 from deal_document_intelligence.contracts import DealIntelligence
 from deal_document_intelligence.pipeline import Pipeline
 

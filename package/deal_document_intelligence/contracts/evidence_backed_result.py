@@ -14,6 +14,9 @@ from pydantic import BaseModel, Field
 
 from deal_document_intelligence.contracts.canonical_document import CanonicalDocument
 from deal_document_intelligence.contracts.clause_type import ClauseType
+from deal_document_intelligence.contracts.document_classification import (
+    DocumentClassification,
+)
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
 from deal_document_intelligence.contracts.entity import Entity
 from deal_document_intelligence.contracts.event import Event
@@ -28,6 +31,7 @@ class EvidenceBackedResult(BaseModel):
 
     doc_id: str
     document: CanonicalDocument
+    classification: DocumentClassification | None = None
     clauses: list[ClauseUnit] = Field(default_factory=list)
     entities: list[Entity] = Field(default_factory=list)
     obligations: list[Obligation] = Field(default_factory=list)

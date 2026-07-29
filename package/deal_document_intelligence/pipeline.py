@@ -20,15 +20,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deal_document_intelligence.classification.classifier import Classifier
 from deal_document_intelligence.contracts import EvidenceBackedResult
 from deal_document_intelligence.integrity_error import IntegrityError
-from deal_document_intelligence.extraction.entity_extractor import EntityExtractor
-from deal_document_intelligence.language.language_detector import LanguageDetector
-from deal_document_intelligence.linking.relation_extractor import RelationExtractor
-from deal_document_intelligence.parsing.parser import Parser
-from deal_document_intelligence.resolution.resolver import Resolver
-from deal_document_intelligence.segmentation.segmenter import Segmenter
+from deal_document_intelligence.interfaces import (
+    Classifier,
+    EntityExtractor,
+    LanguageDetector,
+    Parser,
+    RelationExtractor,
+    Resolver,
+    Segmenter,
+)
 
 
 class Pipeline:
@@ -58,7 +60,9 @@ class Pipeline:
 
     def run(self, source: Path) -> EvidenceBackedResult:
         document = self.parser.parse(source)
-        document = self.language_detector.detect(document)
+        # Detection is a separate object now; thread it into stages that need
+        # language/type as we build them.
+        classification = self.language_detector.detect(document)
         clauses = self.segmenter.segment(document)
         clauses = self.classifier.classify(clauses, document)
         entities = self.entity_extractor.extract(document, clauses)
@@ -67,6 +71,7 @@ class Pipeline:
         result = EvidenceBackedResult(
             doc_id=document.doc_id,
             document=document,
+            classification=classification,
             clauses=clauses,
             entities=entities,
             obligations=rel.obligations,
