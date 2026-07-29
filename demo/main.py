@@ -3,10 +3,9 @@
 Usage:
     python demo/main.py [path-to-document]
 
-With no argument it parses the sample lease in demo/documents/. Right now this
-just runs the canonicalise stage (docling parse -> CanonicalDocument) and prints
-the whole document back out, block by block. As we add pipeline stages, this is
-where we will wire them together.
+With no argument it parses the sample lease in demo/documents/. It runs the
+stages we have built so far (canonicalise, then detect language) and prints the
+result. As we add pipeline stages, this is where we wire them together.
 """
 
 from __future__ import annotations
@@ -17,6 +16,7 @@ from pathlib import Path
 # Let this script import its sibling demo modules when run directly.
 sys.path.insert(0, str(Path(__file__).parent))
 from docling_parser import DoclingParser  # noqa: E402
+from lingua_language_detector import LinguaLanguageDetector  # noqa: E402
 
 DEFAULT_DOC = Path(__file__).parent / "documents" / "Commercial_Lease_Agreement.pdf"
 
@@ -29,6 +29,11 @@ def main() -> None:
     print(f"pages      : {doc.page_count}")
     print(f"blocks     : {len(doc.blocks)}")
     print(f"text length: {len(doc.text)}")
+
+    # Language stage: detect the document language from the canonical text.
+    detected = LinguaLanguageDetector().detect(doc)
+    confidence = f"{detected.confidence:.2f}" if detected.confidence is not None else "n/a"
+    print(f"language   : {detected.language} (confidence {confidence})")
     print()
 
     # Print every block, full text, in document order. Because offsets are

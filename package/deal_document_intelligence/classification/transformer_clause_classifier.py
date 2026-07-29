@@ -20,7 +20,7 @@ from pathlib import Path
 
 from deal_document_intelligence.contracts import (
     LABEL_SCHEMA,
-    CanonicalDocument,
+    ParsedDocument,
     ClausePrediction,
     ClauseType,
     ClauseUnit,
@@ -119,7 +119,7 @@ class TransformerClauseClassifier:
         return self.label_thresholds.get(label, self.threshold)
 
     def classify(
-        self, clauses: list[ClauseUnit], document: CanonicalDocument
+        self, clauses: list[ClauseUnit], document: ParsedDocument
     ) -> list[ClauseUnit]:
         torch = self._torch
         with torch.no_grad():

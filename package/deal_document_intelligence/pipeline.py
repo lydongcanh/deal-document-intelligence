@@ -6,8 +6,8 @@ walking-skeleton pipeline (library baselines) and a production pipeline (custom
 models) are the same class with different constructor arguments; consumers bring
 their own parser/language-detector without the package depending on any vendor.
 
-    1-2  Parser           source file → CanonicalDocument
-    3    LanguageDetector language + document_type
+    1-2  Parser           source file → ParsedDocument
+    3    LanguageDetector document → DetectedLanguage
     4    Segmenter        document → clauses
     5    Classifier       clauses → typed clauses
     6    EntityExtractor  document + clauses → entities
@@ -61,8 +61,8 @@ class Pipeline:
     def run(self, source: Path) -> EvidenceBackedResult:
         document = self.parser.parse(source)
         # Detection is a separate object now; thread it into stages that need
-        # language/type as we build them.
-        classification = self.language_detector.detect(document)
+        # the language as we build them.
+        language = self.language_detector.detect(document)
         clauses = self.segmenter.segment(document)
         clauses = self.classifier.classify(clauses, document)
         entities = self.entity_extractor.extract(document, clauses)
@@ -71,7 +71,7 @@ class Pipeline:
         result = EvidenceBackedResult(
             doc_id=document.doc_id,
             document=document,
-            classification=classification,
+            language=language,
             clauses=clauses,
             entities=entities,
             obligations=rel.obligations,

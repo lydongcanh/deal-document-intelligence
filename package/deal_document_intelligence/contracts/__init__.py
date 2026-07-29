@@ -1,13 +1,13 @@
 """Typed data contracts passed between pipeline stages — the backbone.
 
 One class per module; this package re-exports them so imports stay ergonomic:
-`from deal_document_intelligence.contracts import CanonicalDocument, ClauseUnit`.
+`from deal_document_intelligence.contracts import ParsedDocument, ClauseUnit`.
 """
 
 from deal_document_intelligence.contracts.bbox import BBox
 from deal_document_intelligence.contracts.block import Block
 from deal_document_intelligence.contracts.block_type import BlockType
-from deal_document_intelligence.contracts.canonical_document import CanonicalDocument
+from deal_document_intelligence.contracts.parsed_document import ParsedDocument
 from deal_document_intelligence.contracts.canonical_entity import CanonicalEntity
 from deal_document_intelligence.contracts.clause_category import (
     METADATA_TYPES,
@@ -19,8 +19,8 @@ from deal_document_intelligence.contracts.clause_prediction import ClausePredict
 from deal_document_intelligence.contracts.clause_type import LABEL_SCHEMA, ClauseType
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
 from deal_document_intelligence.contracts.deal_intelligence import DealIntelligence
-from deal_document_intelligence.contracts.document_classification import (
-    DocumentClassification,
+from deal_document_intelligence.contracts.detected_language import (
+    DetectedLanguage,
 )
 from deal_document_intelligence.contracts.document_type import DocumentType
 from deal_document_intelligence.contracts.entity import Entity
@@ -44,7 +44,7 @@ __all__ = [
     "LABEL_SCHEMA",
     "METADATA_TYPES",
     "PROVISION_TYPES",
-    "CanonicalDocument",
+    "ParsedDocument",
     "CanonicalEntity",
     "ClauseCategory",
     "ClausePrediction",
@@ -52,7 +52,7 @@ __all__ = [
     "ClauseUnit",
     "category_of",
     "DealIntelligence",
-    "DocumentClassification",
+    "DetectedLanguage",
     "DocumentType",
     "Entity",
     "EntityMention",

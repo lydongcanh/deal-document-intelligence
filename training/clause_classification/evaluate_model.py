@@ -18,7 +18,7 @@ from metrics import OTHER, report, score
 from deal_document_intelligence.classification.transformer_clause_classifier import (
     TransformerClauseClassifier,
 )
-from deal_document_intelligence.contracts import CanonicalDocument, ClauseType, ClauseUnit
+from deal_document_intelligence.contracts import ParsedDocument, ClauseType, ClauseUnit
 
 MODEL_DIR = Path("artifacts/models/clause_classifier")
 DATA = Path("artifacts/data/clause_classification")
@@ -40,7 +40,7 @@ def main() -> None:
         ClauseUnit(id=str(i), text=text, char_start=0, char_end=len(text))
         for i, text in enumerate(texts)
     ]
-    clf.classify(clauses, CanonicalDocument(doc_id="test", text=""))
+    clf.classify(clauses, ParsedDocument(doc_id="test", text=""))
 
     pred: list[set[ClauseType]] = []
     for clause in clauses:

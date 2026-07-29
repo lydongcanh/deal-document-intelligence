@@ -43,6 +43,7 @@ optional = true
 
 [tool.poetry.group.demo.dependencies]
 docling = "==2.113.0"
+lingua-language-detector = "==2.2.0"
 
 # Dev tooling — optional so consumer/core installs stay minimal.
 # Install with:  poetry install --with dev

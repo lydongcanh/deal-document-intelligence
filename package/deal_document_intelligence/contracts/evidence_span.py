@@ -2,7 +2,7 @@
 
 The `text` field is denormalised (a copy of the source substring) so a result is
 human-readable on its own; `char_start:char_end` remains the authoritative
-reference into `CanonicalDocument.text`.
+reference into `ParsedDocument.text`.
 """
 
 from __future__ import annotations

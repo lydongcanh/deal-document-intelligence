@@ -1,6 +1,6 @@
 """One structural unit of a document (a paragraph, heading, table, …).
 
-`char_start`/`char_end` index into `CanonicalDocument.text`, so a block's text
+`char_start`/`char_end` index into `ParsedDocument.text`, so a block's text
 is exactly `document.text[char_start:char_end]`.
 """
 

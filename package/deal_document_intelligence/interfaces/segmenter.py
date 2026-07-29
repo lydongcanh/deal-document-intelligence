@@ -1,6 +1,6 @@
 """Segmenter interface — stage 4 (clause segmentation).
 
-    Input : a CanonicalDocument.
+    Input : a ParsedDocument.
     Output: a list of ClauseUnit (with offsets/evidence; clause_type left None).
 
 IMPLEMENTED in this package — contract-aware segmentation is a differentiator.
@@ -11,9 +11,9 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
-from deal_document_intelligence.contracts import CanonicalDocument, ClauseUnit
+from deal_document_intelligence.contracts import ParsedDocument, ClauseUnit
 
 
 @runtime_checkable
 class Segmenter(Protocol):
-    def segment(self, document: CanonicalDocument) -> list[ClauseUnit]: ...
+    def segment(self, document: ParsedDocument) -> list[ClauseUnit]: ...

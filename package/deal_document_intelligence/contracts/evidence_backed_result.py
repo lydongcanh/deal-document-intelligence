@@ -1,6 +1,6 @@
 """The pipeline's final output contract (stage 8).
 
-Bundles every extracted layer together with the `CanonicalDocument` they
+Bundles every extracted layer together with the `ParsedDocument` they
 reference, so consumers can resolve any offset back to source text.
 `verify_evidence()` enforces the core invariant: every stored evidence span
 still matches the canonical text it points at.
@@ -12,10 +12,10 @@ from collections.abc import Iterator
 
 from pydantic import BaseModel, Field
 
-from deal_document_intelligence.contracts.canonical_document import CanonicalDocument
+from deal_document_intelligence.contracts.parsed_document import ParsedDocument
 from deal_document_intelligence.contracts.clause_type import ClauseType
-from deal_document_intelligence.contracts.document_classification import (
-    DocumentClassification,
+from deal_document_intelligence.contracts.detected_language import (
+    DetectedLanguage,
 )
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
 from deal_document_intelligence.contracts.entity import Entity
@@ -30,8 +30,8 @@ class EvidenceBackedResult(BaseModel):
     """Structured, traceable intelligence for one document."""
 
     doc_id: str
-    document: CanonicalDocument
-    classification: DocumentClassification | None = None
+    document: ParsedDocument
+    language: DetectedLanguage | None = None
     clauses: list[ClauseUnit] = Field(default_factory=list)
     entities: list[Entity] = Field(default_factory=list)
     obligations: list[Obligation] = Field(default_factory=list)

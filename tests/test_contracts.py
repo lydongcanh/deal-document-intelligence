@@ -12,11 +12,11 @@ from pathlib import Path
 from deal_document_intelligence.contracts import (
     Block,
     BlockType,
-    CanonicalDocument,
+    ParsedDocument,
     ClauseType,
     ClauseUnit,
     DealIntelligence,
-    DocumentClassification,
+    DetectedLanguage,
     Entity,
     EntityType,
     EvidenceBackedResult,
@@ -31,8 +31,8 @@ from deal_document_intelligence.pipeline import IntegrityError, Pipeline
 SAMPLE = "This Agreement is governed by the laws of the State of Delaware."
 
 
-def _doc() -> CanonicalDocument:
-    return CanonicalDocument(
+def _doc() -> ParsedDocument:
+    return ParsedDocument(
         doc_id="doc-1",
         text=SAMPLE,
         blocks=[
@@ -70,15 +70,15 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
     doc = _doc()
 
     class FakeParser:
-        def parse(self, source: Path) -> CanonicalDocument:
+        def parse(self, source: Path) -> ParsedDocument:
             return doc
 
     class FakeLanguageDetector:
-        def detect(self, document: CanonicalDocument) -> DocumentClassification:
-            return DocumentClassification(language="en")
+        def detect(self, document: ParsedDocument) -> DetectedLanguage:
+            return DetectedLanguage(language="en")
 
     class FakeSegmenter:
-        def segment(self, document: CanonicalDocument) -> list[ClauseUnit]:
+        def segment(self, document: ParsedDocument) -> list[ClauseUnit]:
             return [ClauseUnit(
                 id="c1", text=document.text, char_start=0, char_end=len(document.text),
                 evidence=[EvidenceSpan(page=1, char_start=0,
@@ -114,7 +114,7 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
                     FakeClassifier(), FakeEntityExtractor(), FakeRelationExtractor(),
                     FakeResolver())
     result = pipe.run(Path("dummy.md"))
-    assert result.classification.language == "en"
+    assert result.language.language == "en"
     assert result.clauses[0].clause_type == ClauseType.GOVERNING_LAW
     assert result.entities[0].text == "Delaware"
     assert result.relations[0].source_id == "e1"
@@ -184,15 +184,15 @@ def test_strict_pipeline_raises_on_invalid_result() -> None:
     doc = _doc()
 
     class FakeParser:
-        def parse(self, source: Path) -> CanonicalDocument:
+        def parse(self, source: Path) -> ParsedDocument:
             return doc
 
     class FakeLang:
-        def detect(self, d: CanonicalDocument) -> DocumentClassification:
-            return DocumentClassification(language="en")
+        def detect(self, d: ParsedDocument) -> DetectedLanguage:
+            return DetectedLanguage(language="en")
 
     class FakeSeg:
-        def segment(self, d: CanonicalDocument) -> list[ClauseUnit]:
+        def segment(self, d: ParsedDocument) -> list[ClauseUnit]:
             return []
 
     class FakeClf:

@@ -20,7 +20,7 @@ from docling.datamodel.base_models import InputFormat
 from docling.datamodel.pipeline_options import PdfPipelineOptions
 from docling.document_converter import DocumentConverter, PdfFormatOption
 
-from deal_document_intelligence.contracts import Block, BlockType, CanonicalDocument
+from deal_document_intelligence.contracts import Block, BlockType, ParsedDocument
 
 # docling labels its text items; map the ones we care about onto our BlockType.
 # Anything unmapped falls back to OTHER, so an unexpected label never crashes us.
@@ -40,7 +40,7 @@ _SEPARATOR = "\n\n"
 
 
 class DoclingParser:
-    """Parses a file into a CanonicalDocument using docling."""
+    """Parses a file into a ParsedDocument using docling."""
 
     def __init__(self, ocr: bool = False) -> None:
         # OCR is only needed for scanned/image PDFs. Our lease is born-digital
@@ -53,7 +53,7 @@ class DoclingParser:
             format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pdf_options)}
         )
 
-    def parse(self, source: Path) -> CanonicalDocument:
+    def parse(self, source: Path) -> ParsedDocument:
         source = Path(source)
         docling_doc = self._converter.convert(str(source)).document
 
@@ -88,7 +88,7 @@ class DoclingParser:
             parts.append(text)
             cursor = char_end + len(_SEPARATOR)
 
-        return CanonicalDocument(
+        return ParsedDocument(
             doc_id=source.stem,
             text=_SEPARATOR.join(parts),
             blocks=blocks,

@@ -3,8 +3,9 @@
 `text` is the single normalised string for the whole document; every downstream
 fact points back into it by character offset. That is what makes results
 evidence-backed. Everything here is produced by parsing, so `parse()` never
-returns a half-filled document. Language and document type are predicted later
-and live in a separate `DocumentClassification`, not on this object.
+returns a half-filled document. Predicted properties such as language (see
+`DetectedLanguage`) and document type are produced by later stages and live in
+their own result objects, not on this one.
 """
 
 from __future__ import annotations
@@ -15,7 +16,7 @@ from deal_document_intelligence.contracts.block import Block
 from deal_document_intelligence.contracts.evidence_span import EvidenceSpan
 
 
-class CanonicalDocument(BaseModel):
+class ParsedDocument(BaseModel):
     doc_id: str
     text: str
     blocks: list[Block] = Field(default_factory=list)

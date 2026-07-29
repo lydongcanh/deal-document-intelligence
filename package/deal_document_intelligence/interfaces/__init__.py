@@ -5,8 +5,8 @@ any vendor. Commodity stages (parse/OCR, language ID, value normalisation) are
 usually satisfied by wrapping a library; the deal-specific stages are where we
 add value.
 
-    Parser            source file      -> CanonicalDocument         [buy]
-    LanguageDetector  document         -> DocumentClassification    [buy/light]
+    Parser            source file      -> ParsedDocument         [buy]
+    LanguageDetector  document         -> DetectedLanguage    [buy/light]
     Segmenter         document         -> clause units              [build]
     Classifier        clauses          -> typed clauses             [build]
     EntityExtractor   document+clauses -> entities                  [hybrid]
