@@ -14,6 +14,9 @@ from pydantic import BaseModel, Field
 
 from deal_document_intelligence.contracts.parsed_document import ParsedDocument
 from deal_document_intelligence.contracts.clause_type import ClauseType
+from deal_document_intelligence.contracts.detected_document_type import (
+    DetectedDocumentType,
+)
 from deal_document_intelligence.contracts.detected_language import (
     DetectedLanguage,
 )
@@ -32,6 +35,7 @@ class EvidenceBackedResult(BaseModel):
     doc_id: str
     document: ParsedDocument
     language: DetectedLanguage | None = None
+    document_type: DetectedDocumentType | None = None  # stage deferred; see docs/03
     clauses: list[ClauseUnit] = Field(default_factory=list)
     entities: list[Entity] = Field(default_factory=list)
     obligations: list[Obligation] = Field(default_factory=list)

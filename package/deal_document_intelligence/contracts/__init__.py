@@ -19,6 +19,9 @@ from deal_document_intelligence.contracts.clause_prediction import ClausePredict
 from deal_document_intelligence.contracts.clause_type import LABEL_SCHEMA, ClauseType
 from deal_document_intelligence.contracts.clause_unit import ClauseUnit
 from deal_document_intelligence.contracts.deal_intelligence import DealIntelligence
+from deal_document_intelligence.contracts.detected_document_type import (
+    DetectedDocumentType,
+)
 from deal_document_intelligence.contracts.detected_language import (
     DetectedLanguage,
 )
@@ -52,6 +55,7 @@ __all__ = [
     "ClauseUnit",
     "category_of",
     "DealIntelligence",
+    "DetectedDocumentType",
     "DetectedLanguage",
     "DocumentType",
     "Entity",
