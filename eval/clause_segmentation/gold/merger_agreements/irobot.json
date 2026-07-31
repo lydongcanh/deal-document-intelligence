@@ -1,0 +1,292 @@
+{
+  "source": "merger_agreements/iRobot Corp. Merger Agreement.Pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE I",
+      "depth": 0,
+      "heading": "THE MERGER\u037e CLOSING\u037e EFFECTIVE TIME"
+    },
+    {
+      "number": "1.1",
+      "depth": 1,
+      "heading": "The Merger"
+    },
+    {
+      "number": "1.2",
+      "depth": 1,
+      "heading": "Closing"
+    },
+    {
+      "number": "1.3",
+      "depth": 1,
+      "heading": "Effective Time"
+    },
+    {
+      "number": "ARTICLE II",
+      "depth": 0,
+      "heading": "CERTIFICATE OF INCORPORATION AND BYLAWS OF THE SURVIVING CORPORATION"
+    },
+    {
+      "number": "2.1",
+      "depth": 1,
+      "heading": "Certificate of Incorporation of the Surviving Corporation"
+    },
+    {
+      "number": "2.2",
+      "depth": 1,
+      "heading": "Bylaws of the Surviving Corporation"
+    },
+    {
+      "number": "ARTICLE III",
+      "depth": 0,
+      "heading": "DIRECTORS AND OFFICERS OF THE SURVIVING CORPORATION"
+    },
+    {
+      "number": "3.1",
+      "depth": 1,
+      "heading": "Directors of the Surviving Corporation"
+    },
+    {
+      "number": "3.2",
+      "depth": 1,
+      "heading": "Officers of the Surviving Corporation"
+    },
+    {
+      "number": "ARTICLE IV",
+      "depth": 0,
+      "heading": "EFFECT OF THE MERGER ON CAPITAL STOCK\u037e EXCHANGE OF SHARE CERTIFICATES"
+    },
+    {
+      "number": "4.1",
+      "depth": 1,
+      "heading": "Effect on Capital Stock"
+    },
+    {
+      "number": "4.2",
+      "depth": 1,
+      "heading": "Exchange of Share Certificates and Book-Entry Shares"
+    },
+    {
+      "number": "4.3",
+      "depth": 1,
+      "heading": "Treatment of Stock-Based Awards\u037e ESPP"
+    },
+    {
+      "number": "4.4",
+      "depth": 1,
+      "heading": "Adjustments to Prevent Dilution"
+    },
+    {
+      "number": "ARTICLE V",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES"
+    },
+    {
+      "number": "5.1",
+      "depth": 1,
+      "heading": "Representations and Warranties of the Company"
+    },
+    {
+      "number": "5.2",
+      "depth": 1,
+      "heading": "Representations and Warranties of Parent and Merger Sub"
+    },
+    {
+      "number": "ARTICLE VI",
+      "depth": 0,
+      "heading": "COVENANTS"
+    },
+    {
+      "number": "6.1",
+      "depth": 1,
+      "heading": "Interim Operations"
+    },
+    {
+      "number": "6.2",
+      "depth": 1,
+      "heading": "Acquisition Proposals\u037e Change of Recommendation"
+    },
+    {
+      "number": "6.3",
+      "depth": 1,
+      "heading": "Proxy Statement Filing\u037e Information Supplied"
+    },
+    {
+      "number": "6.4",
+      "depth": 1,
+      "heading": "Company Stockholders Meeting"
+    },
+    {
+      "number": "6.5",
+      "depth": 1,
+      "heading": "Cooperation\u037e Antitrust and Foreign Investment Law Matters\u037e Status"
+    },
+    {
+      "number": "6.6",
+      "depth": 1,
+      "heading": "Information\u037e Access and Reports"
+    },
+    {
+      "number": "6.7",
+      "depth": 1,
+      "heading": "Stock Exchange Delisting"
+    },
+    {
+      "number": "6.8",
+      "depth": 1,
+      "heading": "Publicity"
+    },
+    {
+      "number": "6.9",
+      "depth": 1,
+      "heading": "Employee Benefits"
+    },
+    {
+      "number": "6.10",
+      "depth": 1,
+      "heading": "Expenses"
+    },
+    {
+      "number": "6.11",
+      "depth": 1,
+      "heading": "Indemnification\u037e Directors\u2019 and Officers\u2019 Insurance"
+    },
+    {
+      "number": "6.12",
+      "depth": 1,
+      "heading": "Resignations"
+    },
+    {
+      "number": "6.13",
+      "depth": 1,
+      "heading": "Transaction Litigation"
+    },
+    {
+      "number": "6.14",
+      "depth": 1,
+      "heading": "Other Actions by the Company"
+    },
+    {
+      "number": "6.15",
+      "depth": 1,
+      "heading": "Approval of Sole Stockholder of Merger Sub\u037e No Acquisition of Shares"
+    },
+    {
+      "number": "6.16",
+      "depth": 1,
+      "heading": "Debt Payoff"
+    },
+    {
+      "number": "ARTICLE VII",
+      "depth": 0,
+      "heading": "CONDITIONS"
+    },
+    {
+      "number": "7.1",
+      "depth": 1,
+      "heading": "Conditions to Each Party\u2019s Obligation to Effect the Merger"
+    },
+    {
+      "number": "7.2",
+      "depth": 1,
+      "heading": "Conditions to Obligations of Parent and Merger Sub"
+    },
+    {
+      "number": "7.3",
+      "depth": 1,
+      "heading": "Conditions to Obligation of the Company"
+    },
+    {
+      "number": "ARTICLE VIII",
+      "depth": 0,
+      "heading": "TERMINATION"
+    },
+    {
+      "number": "8.1",
+      "depth": 1,
+      "heading": "Termination"
+    },
+    {
+      "number": "8.2",
+      "depth": 1,
+      "heading": "Effect of Termination and Abandonment"
+    },
+    {
+      "number": "ARTICLE IX",
+      "depth": 0,
+      "heading": "MISCELLANEOUS AND GENERAL"
+    },
+    {
+      "number": "9.1",
+      "depth": 1,
+      "heading": "Survival"
+    },
+    {
+      "number": "9.2",
+      "depth": 1,
+      "heading": "Modification or Amendment"
+    },
+    {
+      "number": "9.3",
+      "depth": 1,
+      "heading": "Waiver"
+    },
+    {
+      "number": "9.4",
+      "depth": 1,
+      "heading": "Counterparts"
+    },
+    {
+      "number": "9.5",
+      "depth": 1,
+      "heading": "Governing Law and Venue\u037e Waiver of Jury Trial\u037e Specific Performance"
+    },
+    {
+      "number": "9.6",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "9.7",
+      "depth": 1,
+      "heading": "Entire Agreement"
+    },
+    {
+      "number": "9.8",
+      "depth": 1,
+      "heading": "No Third Party Beneficiaries"
+    },
+    {
+      "number": "9.9",
+      "depth": 1,
+      "heading": "Obligations of Parent and of the Company"
+    },
+    {
+      "number": "9.10",
+      "depth": 1,
+      "heading": "Transfer Taxes"
+    },
+    {
+      "number": "9.11",
+      "depth": 1,
+      "heading": "Definitions"
+    },
+    {
+      "number": "9.12",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "9.13",
+      "depth": 1,
+      "heading": "Interpretation\u037e Construction"
+    },
+    {
+      "number": "9.14",
+      "depth": 1,
+      "heading": "Successors and Assigns"
+    }
+  ]
+}

@@ -1,9 +1,3 @@
-"""One structural unit of a document (a paragraph, heading, table, …).
-
-`char_start`/`char_end` index into `ParsedDocument.text`, so a block's text
-is exactly `document.text[char_start:char_end]`.
-"""
-
 from __future__ import annotations
 
 from pydantic import BaseModel, Field, model_validator
@@ -13,6 +7,12 @@ from deal_document_intelligence.contracts.block_type import BlockType
 
 
 class Block(BaseModel):
+    """One structural unit of a document (a paragraph, heading, table, …).
+
+    `char_start`/`char_end` index into `ParsedDocument.text`, so a block's text
+    is exactly `document.text[char_start:char_end]`.
+    """
+
     id: str
     type: BlockType = BlockType.PARAGRAPH
     text: str

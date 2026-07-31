@@ -10,7 +10,7 @@ DATASET := artifacts/data/clause_classification/train.jsonl
 .DEFAULT_GOAL := help
 .PHONY: help install install-training install-demo test \
         clause-explore clause-dataset clause-baseline clause-train \
-        clause-tune-thresholds clause-eval clause-gold-eval demo
+        clause-tune-thresholds clause-eval clause-gold-eval seg-measure seg-score demo
 
 help:  ## List available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -51,8 +51,14 @@ clause-eval:  ## 4. Score the trained model on the test split
 	$(PY) training/clause_classification/evaluate_model.py
 
 clause-gold-eval:  ## 5. End-to-end gold eval on real docs (doc-level presence)
-	$(PY) eval/gold_clause_eval.py
+	$(PY) eval/clause_classification/gold_clause_eval.py
+
+# ---- segmentation ----
+seg-measure:  ## Measure segmentation over the corpus (consistency + coverage). PAGES=N to limit.
+	$(PY) eval/clause_segmentation/measure.py $(if $(PAGES),--pages $(PAGES),)
+seg-score:  ## Score segmentation vs the dev/acceptance labels (correctness signal)
+	$(PY) eval/clause_segmentation/score.py
 
 # ---- demo ----
-demo:  ## Run the demo (default: the sample lease). Pass DOC=path to override.
+demo:  ## Run the demo (default: a sample merger agreement). Pass DOC=path to override.
 	$(PY) demo/main.py $(DOC)

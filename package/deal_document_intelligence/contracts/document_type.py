@@ -1,11 +1,11 @@
-"""Kind of deal document (detected at stage 3) — routes downstream processing."""
-
 from __future__ import annotations
 
 from enum import StrEnum
 
 
 class DocumentType(StrEnum):
+    """Kind of deal document"""
+
     NDA = "nda"
     SHARE_PURCHASE = "share_purchase"
     ASSET_PURCHASE = "asset_purchase"

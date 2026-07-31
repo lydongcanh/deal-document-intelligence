@@ -19,8 +19,11 @@ import json
 import sys
 from pathlib import Path
 
+# NOTE: STALE. This imports walking-skeleton demo modules that were removed
+# (rule_based_segmenter, regex_entity_extractor, ...). It needs rebuilding against
+# the current interfaces before it runs. Paths below are already updated.
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent / "demo"))  # reuse the demo's library baselines
+sys.path.insert(0, str(HERE.parents[1] / "demo"))  # reuse the demo's library baselines
 
 from baseline_relation_extractor import BaselineRelationExtractor  # noqa: E402
 from docling_parser import DoclingParser  # noqa: E402
