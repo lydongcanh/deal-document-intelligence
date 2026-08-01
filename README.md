@@ -74,9 +74,9 @@ This package is meant to be **consumed** without dictating vendors. Two rules:
 
 ```
 package/deal_document_intelligence/    # the library (one package)
-├── contracts/                     #   one Pydantic model per file (19 models)
+├── contracts/                     #   one Pydantic model per file (~27 models)
 │   ├── canonical_document.py      #   + block, bbox, block_type, evidence_span, document_type
-│   ├── clause_unit.py             #   + clause_type
+│   ├── segmented_clause.py        #   stage-4 clause; + clause_classification, clause_role
 │   ├── entity.py                  #   + entity_type, obligation, event, relation*
 │   ├── relation_extraction.py     #   stage-7 output bundle
 │   ├── evidence_backed_result.py  #   stage-9a (per-document) + verify_evidence()
@@ -103,7 +103,7 @@ artifacts/  #   gitignored: data/ (datasets) · models/ (checkpoints) · outputs
 ## Build strategy — walking skeleton first
 
 1. **Phase 0 — contracts.** Define the Pydantic schemas (`CanonicalDocument`,
-   `ClauseUnit`, `EvidenceSpan`, `EvidenceBackedResult`). Nails every stage's in/out.
+   `SegmentedClause`, `EvidenceSpan`, `EvidenceBackedResult`). Nails every stage's in/out.
 2. **Phase 1 — walking skeleton.** One real document flows through *all* stages
    using libraries / generic baselines end-to-end. Produces real output **and** a
    measured baseline to beat.

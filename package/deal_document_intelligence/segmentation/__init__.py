@@ -11,7 +11,7 @@ from deal_document_intelligence.segmentation.confidence import (
     REVIEW_THRESHOLD,
     assess_confidence,
 )
-from deal_document_intelligence.segmentation.clause_segmenter import ClauseSegmenter
+from deal_document_intelligence.segmentation.deterministic_clause_segmenter import DeterministicClauseSegmenter
 from deal_document_intelligence.segmentation.decoder import body_start_index, decode
 from deal_document_intelligence.segmentation.numbering import (
     is_child_start,
@@ -32,7 +32,7 @@ __all__ = [
     "is_child_start",
     "starts_sequence",
     "ClauseNode",
-    "ClauseSegmenter",
+    "DeterministicClauseSegmenter",
     "decode",
     "body_start_index",
     "materialize_spans",

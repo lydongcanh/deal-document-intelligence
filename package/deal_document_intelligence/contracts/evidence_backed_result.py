@@ -20,7 +20,8 @@ from deal_document_intelligence.contracts.detected_document_type import (
 from deal_document_intelligence.contracts.detected_language import (
     DetectedLanguage,
 )
-from deal_document_intelligence.contracts.clause_unit import ClauseUnit
+from deal_document_intelligence.contracts.clause_classification import ClauseClassification
+from deal_document_intelligence.contracts.segmented_clause import SegmentedClause
 from deal_document_intelligence.contracts.entity import Entity
 from deal_document_intelligence.contracts.event import Event
 from deal_document_intelligence.contracts.evidence_span import EvidenceSpan
@@ -36,7 +37,8 @@ class EvidenceBackedResult(BaseModel):
     document: ParsedDocument
     language: DetectedLanguage | None = None
     document_type: DetectedDocumentType | None = None  # stage deferred; see docs/03
-    clauses: list[ClauseUnit] = Field(default_factory=list)
+    clauses: list[SegmentedClause] = Field(default_factory=list)
+    classifications: list[ClauseClassification] = Field(default_factory=list)
     entities: list[Entity] = Field(default_factory=list)
     obligations: list[Obligation] = Field(default_factory=list)
     events: list[Event] = Field(default_factory=list)
@@ -116,13 +118,8 @@ class EvidenceBackedResult(BaseModel):
                 add("clause_span_oob", f"clause {clause.id!r} char-span out of bounds", clause.id)
             elif doc.slice(clause.char_start, clause.char_end) != clause.text:
                 add("clause_text_mismatch", f"clause {clause.id!r} text != document slice", clause.id)
-            deal_preds = [p for p in clause.predictions if p.clause_type != ClauseType.UNKNOWN]
-            if deal_preds and clause.clause_type not in (None, ClauseType.UNKNOWN):
-                top = max(deal_preds, key=lambda p: p.score).clause_type
-                if clause.clause_type != top:
-                    add("primary_type_disagree",
-                        f"clause {clause.id!r} primary {clause.clause_type.value} "
-                        f"!= top prediction {top.value}", clause.id)
+
+        issues.extend(self._classification_issues(clause_ids))
 
         for kind, items in facts[1:]:  # entity, obligation, event
             for item in items:
@@ -135,4 +132,25 @@ class EvidenceBackedResult(BaseModel):
                 if ref not in known_ids:
                     add("dangling_ref", f"relation {relation.id!r} references unknown id {ref!r}", relation.id)
 
+        return issues
+
+    def _classification_issues(self, clause_ids: set[str]) -> list[ValidationIssue]:
+        """Each classification must reference a real clause, and its primary type
+        must agree with its own top prediction."""
+        issues: list[ValidationIssue] = []
+        for clf in self.classifications:
+            if clf.clause_id not in clause_ids:
+                issues.append(ValidationIssue(
+                    code="dangling_clause_id",
+                    message=f"classification clause_id {clf.clause_id!r} unknown",
+                    ref=clf.clause_id))
+            deal_preds = [p for p in clf.predictions if p.clause_type != ClauseType.UNKNOWN]
+            if deal_preds and clf.clause_type not in (None, ClauseType.UNKNOWN):
+                top = max(deal_preds, key=lambda p: p.score).clause_type
+                if clf.clause_type != top:
+                    issues.append(ValidationIssue(
+                        code="primary_type_disagree",
+                        message=f"clause {clf.clause_id!r} primary {clf.clause_type.value} "
+                                f"!= top prediction {top.value}",
+                        ref=clf.clause_id))
         return issues

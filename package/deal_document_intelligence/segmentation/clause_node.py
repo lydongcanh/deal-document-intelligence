@@ -10,12 +10,15 @@ class ClauseNode(BaseModel):
     hierarchy (depth, parent), and, once materialised, its extent:
 
     - inclusive span [source_offset, char_end): the clause plus all descendants.
-    - direct_spans: the clause's OWN text, descendants removed; a list because a
+    - direct_spans: the clause's OWN text, descendants removed, a list because a
       parent's sentence can resume after a sub-list.
     """
 
     id: str
     marker_text: str
+    marker_family: str = Field(
+        default="", description="numbering family of the marker, e.g. 'article', 'section'"
+    )
     path: tuple[int, ...]
     depth: int = Field(ge=0)
     parent_id: str | None = None

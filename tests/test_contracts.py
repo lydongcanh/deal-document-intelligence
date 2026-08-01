@@ -13,8 +13,9 @@ from deal_document_intelligence.contracts import (
     Block,
     BlockType,
     ParsedDocument,
+    ClauseClassification,
     ClauseType,
-    ClauseUnit,
+    SegmentedClause,
     DealIntelligence,
     DetectedLanguage,
     Entity,
@@ -50,10 +51,12 @@ def test_evidence_integrity_holds() -> None:
                         text="Delaware", block_id="b1")
     entity = Entity(id="e1", type=EntityType.JURISDICTION, text="Delaware",
                     normalized_value="US-DE", evidence=[span], clause_id="c1")
-    clause = ClauseUnit(id="c1", text=SAMPLE, char_start=0, char_end=len(SAMPLE),
-                        clause_type=ClauseType.GOVERNING_LAW, classification_confidence=0.9,
+    clause = SegmentedClause(id="c1", text=SAMPLE, char_start=0, char_end=len(SAMPLE),
                         evidence=[EvidenceSpan(page=1, char_start=0, char_end=len(SAMPLE), text=SAMPLE)])
-    result = EvidenceBackedResult(doc_id="doc-1", document=doc, clauses=[clause], entities=[entity])
+    clf = ClauseClassification(clause_id="c1", clause_type=ClauseType.GOVERNING_LAW,
+                               classification_confidence=0.9)
+    result = EvidenceBackedResult(doc_id="doc-1", document=doc, clauses=[clause],
+                                  classifications=[clf], entities=[entity])
     assert result.verify_evidence() == []
 
 
@@ -78,8 +81,8 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
             return DetectedLanguage(language="en")
 
     class FakeSegmenter:
-        def segment(self, document: ParsedDocument) -> list[ClauseUnit]:
-            return [ClauseUnit(
+        def segment(self, document: ParsedDocument) -> list[SegmentedClause]:
+            return [SegmentedClause(
                 id="c1", text=document.text, char_start=0, char_end=len(document.text),
                 evidence=[EvidenceSpan(page=1, char_start=0,
                                        char_end=len(document.text), text=document.text)],
@@ -87,9 +90,8 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
 
     class FakeClassifier:
         def classify(self, clauses, document):
-            for c in clauses:
-                c.clause_type = ClauseType.GOVERNING_LAW
-            return clauses
+            return [ClauseClassification(clause_id=c.id, clause_type=ClauseType.GOVERNING_LAW)
+                    for c in clauses]
 
     class FakeEntityExtractor:
         def extract(self, document, clauses) -> list[Entity]:
@@ -115,7 +117,8 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
                     FakeResolver())
     result = pipe.run(Path("dummy.md"))
     assert result.language.language == "en"
-    assert result.clauses[0].clause_type == ClauseType.GOVERNING_LAW
+    assert result.classifications[0].clause_type == ClauseType.GOVERNING_LAW
+    assert result.classifications[0].clause_id == result.clauses[0].id
     assert result.entities[0].text == "Delaware"
     assert result.relations[0].source_id == "e1"
     assert result.verify_evidence() == []
@@ -192,12 +195,13 @@ def test_strict_pipeline_raises_on_invalid_result() -> None:
             return DetectedLanguage(language="en")
 
     class FakeSeg:
-        def segment(self, d: ParsedDocument) -> list[ClauseUnit]:
+        def segment(self, d: ParsedDocument) -> list[SegmentedClause]:
             return []
 
     class FakeClf:
         def classify(self, clauses, d):
-            return clauses
+            return [ClauseClassification(clause_id=c.id, clause_type=ClauseType.UNKNOWN)
+                    for c in clauses]
 
     class FakeEnt:
         def extract(self, d, clauses) -> list[Entity]:

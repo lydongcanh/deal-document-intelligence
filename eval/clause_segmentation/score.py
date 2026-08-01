@@ -27,7 +27,7 @@ sys.path.insert(0, str(REPO / "demo"))
 from docling_parser import DoclingParser  # noqa: E402
 
 from deal_document_intelligence.contracts import ParsedDocument  # noqa: E402
-from deal_document_intelligence.segmentation import ClauseSegmenter  # noqa: E402
+from deal_document_intelligence.segmentation import DeterministicClauseSegmenter  # noqa: E402
 from deal_document_intelligence.segmentation.numbering import parse_roman  # noqa: E402
 
 GOLD_DIR = Path(__file__).parent / "gold"
@@ -61,14 +61,14 @@ def _parse_cached(source_rel: str) -> ParsedDocument:
 def score_file(path: Path) -> dict:
     gold = json.loads(path.read_text())
     doc = _parse_cached(gold["source"])
-    units = ClauseSegmenter().segment(doc)
+    units = DeterministicClauseSegmenter().segment(doc)
 
     want = {_norm(c["number"]): (c["number"], c["depth"])
             for c in gold["clauses"] if c["depth"] <= 1}
     pred: dict = {}
     duplicates: list[str] = []
     for u in units:
-        depth = u.meta.get("depth", 9)
+        depth = u.depth
         if not u.number or depth > 1:
             continue
         key = _norm(u.number)

@@ -1,4 +1,4 @@
-"""Resolver interface — stage 8.
+"""EntityResolver interface — stage 8.
 
     Input : a ParsedDocument + its extracted entities.
     Output: the entities with `normalized_value` filled and within-document
@@ -13,7 +13,7 @@ from deal_document_intelligence.contracts import ParsedDocument, Entity
 
 
 @runtime_checkable
-class Resolver(Protocol):
+class EntityResolver(Protocol):
     def resolve(
         self, document: ParsedDocument, entities: list[Entity]
     ) -> list[Entity]: ...

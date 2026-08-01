@@ -191,6 +191,7 @@ def decode(document: ParsedDocument) -> list[ClauseNode]:
         node = ClauseNode(
             id=f"cl-{len(nodes)}",
             marker_text=candidate.marker_text,
+            marker_family=candidate.marker_family,
             path=marker.path,
             depth=depth,
             parent_id=parent_id,

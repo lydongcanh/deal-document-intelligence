@@ -1,4 +1,4 @@
-"""A Classifier backed by a fine-tuned transformer checkpoint (stage 5).
+"""A ClauseClassifier backed by a fine-tuned transformer checkpoint (stage 5).
 
 Loads a multi-label sequence-classification model (e.g. the Legal-XLM-R model
 trained in `training/clause_classification/`) and assigns clause types. This is a
@@ -7,9 +7,9 @@ OPTIONAL dependency: `pip install deal-document-intelligence[classification]`.
 The import of torch/transformers is deferred to construction so that core
 installs (contracts + interfaces + pipeline) never need them.
 
-The model is multi-label; `ClauseUnit.clause_type` is the primary (top) type,
-and the full scored multi-label set is exposed as typed `clause.predictions`
-(`list[ClausePrediction]`).
+The model is multi-label; `ClauseClassification.clause_type` is the primary (top)
+type, and the full scored multi-label set is exposed as typed
+`ClauseClassification.predictions` (`list[ClausePrediction]`).
 """
 
 from __future__ import annotations
@@ -20,10 +20,11 @@ from pathlib import Path
 
 from deal_document_intelligence.contracts import (
     LABEL_SCHEMA,
-    ParsedDocument,
+    ClauseClassification,
     ClausePrediction,
     ClauseType,
-    ClauseUnit,
+    SegmentedClause,
+    ParsedDocument,
 )
 
 
@@ -119,9 +120,10 @@ class TransformerClauseClassifier:
         return self.label_thresholds.get(label, self.threshold)
 
     def classify(
-        self, clauses: list[ClauseUnit], document: ParsedDocument
-    ) -> list[ClauseUnit]:
+        self, clauses: list[SegmentedClause], document: ParsedDocument
+    ) -> list[ClauseClassification]:
         torch = self._torch
+        results: list[ClauseClassification] = []
         with torch.no_grad():
             for start in range(0, len(clauses), self.batch_size):
                 batch = clauses[start:start + self.batch_size]
@@ -130,11 +132,10 @@ class TransformerClauseClassifier:
                     padding=True, return_tensors="pt",
                 ).to(self.device)
                 probs = torch.sigmoid(self.model(**enc).logits).cpu().tolist()
-                for clause, row in zip(batch, probs):
-                    self._assign(clause, row)
-        return clauses
+                results.extend(self._classify(clause, row) for clause, row in zip(batch, probs))
+        return results
 
-    def _assign(self, clause: ClauseUnit, probs: list[float]) -> None:
+    def _classify(self, clause: SegmentedClause, probs: list[float]) -> ClauseClassification:
         # The model outputs deal types only (schema guarantees no OTHER output).
         # A clause is OTHER exactly when no deal type clears its cutoff.
         scored = sorted(
@@ -143,11 +144,15 @@ class TransformerClauseClassifier:
             key=lambda x: -x[1],
         )
         if scored:
-            clause.clause_type, best = scored[0]
+            top_type, best = scored[0]
         else:
-            clause.clause_type, best = ClauseType.UNKNOWN, None  # derived OTHER
-        clause.classification_confidence = round(best, 4) if best is not None else None
-        clause.model_version = self.version
-        clause.predictions = [
-            ClausePrediction(clause_type=label, score=round(p, 4)) for label, p in scored
-        ]
+            top_type, best = ClauseType.UNKNOWN, None  # derived OTHER
+        return ClauseClassification(
+            clause_id=clause.id,
+            clause_type=top_type,
+            classification_confidence=round(best, 4) if best is not None else None,
+            model_version=self.version,
+            predictions=[
+                ClausePrediction(clause_type=label, score=round(p, 4)) for label, p in scored
+            ],
+        )

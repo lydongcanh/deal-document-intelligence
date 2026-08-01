@@ -207,8 +207,9 @@ defined population rather than a claim about all documents.
 
 Built in `package/.../segmentation/`: candidate anchors, numbering grammar, a
 greedy stack decoder, span materialisation (inclusive and direct), validation
-invariants, and a `ClauseSegmenter` emitting `ClauseUnit`s (hierarchy in `meta`).
-The demo runs parse, language, and segment end to end.
+invariants, and a `ClauseSegmenter` emitting `SegmentedClause`s with the full hierarchy
+as typed fields (depth, parent, path, role), each clause's own `direct_spans`, and
+page-level evidence. The demo runs parse, language, and segment end to end.
 
 Evaluation: gold is section-level inventories auto-derived from each document's
 own table of contents (`build_gold_from_toc.py`), independent of the body the
@@ -257,9 +258,10 @@ Known defects (some found by external review, verified, and being worked):
 - Regions (schedules, annexes, exhibits) are recognised as markers but have no
   numbering-grammar branch, so they get an empty path and are discarded; separate
   schedule/exhibit namespaces are not implemented.
-- Output loses structure: `ClauseUnit` carries inclusive text only (parent and
-  child overlap); direct spans, node role, region namespace, and confidence are
-  not surfaced. Evidence records one page/block even when a clause spans several.
+- Per-node confidence and region namespace are still not surfaced on `SegmentedClause`
+  (the rest of the output contract is now in place: typed hierarchy, direct spans,
+  role, and page-level evidence). Per-node boundary/hierarchy confidence needs a
+  scoring decoder or the learned model, so it stays deferred with those.
 - Markers are English-only (not multilingual yet); the parser does not populate
   block geometry.
 
@@ -274,7 +276,10 @@ short block is still recognised; it then backs up over the opening lead-in (shor
 article and section headers, plus the sub-parts between them), so a Definitions
 article opening with short headings is no longer skipped. The
 scorer evaluates only section-level markers (parenthesised sub-parts are scored at
-their own level, not counted as false sections).
+their own level, not counted as false sections). The output contract now surfaces
+the full clause tree: typed depth, parent, path, and role, each clause's own
+direct spans, and page-level evidence (a clause spanning a page break records each
+page), so consumers no longer dig hierarchy out of an untyped `meta`.
 
 Phase 3 (a learned boundary model) is not started and is not justified until the
 deterministic core and the evaluation are solid.

@@ -10,7 +10,7 @@ from typing import Protocol, runtime_checkable
 
 from deal_document_intelligence.contracts import (
     ParsedDocument,
-    ClauseUnit,
+    SegmentedClause,
     Entity,
     RelationExtraction,
 )
@@ -21,6 +21,6 @@ class RelationExtractor(Protocol):
     def extract(
         self,
         document: ParsedDocument,
-        clauses: list[ClauseUnit],
+        clauses: list[SegmentedClause],
         entities: list[Entity],
     ) -> RelationExtraction: ...

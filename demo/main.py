@@ -22,7 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from docling_parser import DoclingParser  # noqa: E402
 from lingua_language_detector import LinguaLanguageDetector  # noqa: E402
 
-from deal_document_intelligence.segmentation import ClauseSegmenter  # noqa: E402
+from deal_document_intelligence.segmentation import DeterministicClauseSegmenter  # noqa: E402
 
 DEFAULT_DOC = (Path(__file__).parent / "documents" / "merger_agreements"
                / "Moneygram International Inc. Merger Agreement.Pdf")
@@ -34,7 +34,7 @@ def main() -> None:
 
     doc = DoclingParser(page_range=PAGES).parse(source)
     detected = LinguaLanguageDetector().detect(doc)
-    clauses = ClauseSegmenter().segment(doc)
+    clauses = DeterministicClauseSegmenter().segment(doc)
 
     conf = f"{detected.confidence:.2f}" if detected.confidence is not None else "n/a"
     print(f"doc_id     : {doc.doc_id}  (first {PAGES[1]} pages)")
@@ -47,7 +47,7 @@ def main() -> None:
     # The clause tree: indent by depth, show number and heading.
     print("clause tree (first 30):")
     for c in clauses[:30]:
-        indent = "   " * c.meta.get("depth", 0)
+        indent = "   " * c.depth
         heading = f": {c.heading}" if c.heading else ""
         print(f"  {indent}{c.number}{heading}")
 

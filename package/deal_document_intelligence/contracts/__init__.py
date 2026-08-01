@@ -1,7 +1,7 @@
 """Typed data contracts passed between pipeline stages — the backbone.
 
 One class per module; this package re-exports them so imports stay ergonomic:
-`from deal_document_intelligence.contracts import ParsedDocument, ClauseUnit`.
+`from deal_document_intelligence.contracts import ParsedDocument, SegmentedClause`.
 """
 
 from deal_document_intelligence.contracts.bbox import BBox
@@ -15,9 +15,11 @@ from deal_document_intelligence.contracts.clause_category import (
     ClauseCategory,
     category_of,
 )
+from deal_document_intelligence.contracts.clause_classification import ClauseClassification
 from deal_document_intelligence.contracts.clause_prediction import ClausePrediction
+from deal_document_intelligence.contracts.clause_role import ClauseRole
 from deal_document_intelligence.contracts.clause_type import LABEL_SCHEMA, ClauseType
-from deal_document_intelligence.contracts.clause_unit import ClauseUnit
+from deal_document_intelligence.contracts.segmented_clause import SegmentedClause
 from deal_document_intelligence.contracts.deal_intelligence import DealIntelligence
 from deal_document_intelligence.contracts.detected_document_type import (
     DetectedDocumentType,
@@ -53,9 +55,11 @@ __all__ = [
     "ParsedDocument",
     "CanonicalEntity",
     "ClauseCategory",
+    "ClauseClassification",
     "ClausePrediction",
+    "ClauseRole",
     "ClauseType",
-    "ClauseUnit",
+    "SegmentedClause",
     "category_of",
     "DealIntelligence",
     "DetectedDocumentType",

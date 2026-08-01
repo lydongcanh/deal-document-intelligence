@@ -8,11 +8,11 @@ versus inline, and keeps every offset exactly source-aligned.
 from __future__ import annotations
 
 from deal_document_intelligence.contracts import Block, BlockType, ParsedDocument
-from deal_document_intelligence.contracts import ClauseUnit
-from deal_document_intelligence.interfaces import Segmenter
+from deal_document_intelligence.contracts import ClauseRole, SegmentedClause
+from deal_document_intelligence.interfaces import ClauseSegmenter
 from deal_document_intelligence.segmentation import (
     Candidate,
-    ClauseSegmenter,
+    DeterministicClauseSegmenter,
     assess_confidence,
     clause_tree,
     decode,
@@ -274,18 +274,25 @@ def test_clause_segmenter_satisfies_interface_and_contract() -> None:
         f"1.2. Rent. {body}",
         f"(a) sub-part {body}",
     ])
-    seg = ClauseSegmenter()
-    assert isinstance(seg, Segmenter)  # structural conformance to the Protocol
+    seg = DeterministicClauseSegmenter()
+    assert isinstance(seg, ClauseSegmenter)  # structural conformance to the Protocol
 
     units = seg.segment(doc)
-    assert units and all(isinstance(u, ClauseUnit) for u in units)
+    assert units and all(isinstance(u, SegmentedClause) for u in units)
     for u in units:
-        # each unit's text and evidence slice back to source exactly
+        # each unit's inclusive text slices back to source exactly
         assert doc.text[u.char_start:u.char_end] == u.text
-        assert u.evidence and doc.text[u.evidence[0].char_start:u.evidence[0].char_end] == u.text
-        assert u.clause_type is None  # segmentation does not classify
-        assert "depth" in u.meta and "parent_id" in u.meta
+        # every evidence span is source-aligned by offset
+        assert u.evidence and all(doc.text[e.char_start:e.char_end] == e.text for e in u.evidence)
+        # direct spans are the unit's own text, and reconstruct it
+        assert u.direct_spans and all(u.char_start <= s < e <= u.char_end for s, e in u.direct_spans)
+        # SegmentedClause is structural only: no classification fields to guess about
+        assert not hasattr(u, "clause_type")
 
     by_num = {u.number: u for u in units}
     assert by_num["1.1"].heading == "Term"
-    assert by_num["(a)"].meta["depth"] == 2
+    # hierarchy is first-class now, not buried in meta
+    assert by_num["ARTICLE I"].role is ClauseRole.ARTICLE and by_num["ARTICLE I"].depth == 0
+    assert by_num["1.1"].role is ClauseRole.SECTION and by_num["1.1"].path == [1, 1]
+    assert by_num["(a)"].role is ClauseRole.SUBCLAUSE and by_num["(a)"].depth == 2
+    assert by_num["(a)"].parent_id == by_num["1.2"].id

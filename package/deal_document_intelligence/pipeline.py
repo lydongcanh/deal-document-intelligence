@@ -8,11 +8,11 @@ their own parser/language-detector without the package depending on any vendor.
 
     1-2  Parser           source file → ParsedDocument
     3    LanguageDetector document → DetectedLanguage
-    4    Segmenter        document → clauses
-    5    Classifier       clauses → typed clauses
+    4    ClauseSegmenter        document → clauses
+    5    ClauseClassifier       clauses → classifications (keyed by clause id)
     6    EntityExtractor  document + clauses → entities
     7    RelationExtractor entities → obligations/events/relations
-    8    Resolver         normalise values + resolve aliases
+    8    EntityResolver         normalise values + resolve aliases
     9a   assembled here into an EvidenceBackedResult
 """
 
@@ -23,13 +23,13 @@ from pathlib import Path
 from deal_document_intelligence.contracts import EvidenceBackedResult
 from deal_document_intelligence.integrity_error import IntegrityError
 from deal_document_intelligence.interfaces import (
-    Classifier,
+    ClauseClassifier,
     EntityExtractor,
     LanguageDetector,
     Parser,
     RelationExtractor,
-    Resolver,
-    Segmenter,
+    EntityResolver,
+    ClauseSegmenter,
 )
 
 
@@ -38,11 +38,11 @@ class Pipeline:
         self,
         parser: Parser,
         language_detector: LanguageDetector,
-        segmenter: Segmenter,
-        classifier: Classifier,
+        segmenter: ClauseSegmenter,
+        classifier: ClauseClassifier,
         entity_extractor: EntityExtractor,
         relation_extractor: RelationExtractor,
-        resolver: Resolver,
+        resolver: EntityResolver,
         pipeline_version: str = "0.1.0",
         validation: str = "warn",
     ) -> None:
@@ -64,7 +64,7 @@ class Pipeline:
         # the language as we build them.
         language = self.language_detector.detect(document)
         clauses = self.segmenter.segment(document)
-        clauses = self.classifier.classify(clauses, document)
+        classifications = self.classifier.classify(clauses, document)
         entities = self.entity_extractor.extract(document, clauses)
         rel = self.relation_extractor.extract(document, clauses, entities)
         entities = self.resolver.resolve(document, entities)
@@ -73,6 +73,7 @@ class Pipeline:
             document=document,
             language=language,
             clauses=clauses,
+            classifications=classifications,
             entities=entities,
             obligations=rel.obligations,
             events=rel.events,
