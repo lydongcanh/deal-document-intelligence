@@ -224,11 +224,13 @@ Current score: mean F1 0.93 (recall 0.93, precision 0.98) over the 15. Eight
 documents are exact, four at 0.98-0.99, and two remain low for the specific,
 understood reasons in Known defects below (Staffing 0.89, FRESH 0.19).
 
-Fail-safe review gate: `assess_confidence` scores each document's tree from
-gold-free structural signals (article order, section-number uniqueness, and the
-validation invariants) and returns a `SegmentationConfidence` with a
-`needs_review` flag, so an out-of-distribution document is routed to review or a
-coarser fallback instead of being silently mis-segmented. On the graded set the
+Fail-safe review gate: `segment` returns a `SegmentationResult` that bundles the
+clauses with a `SegmentationConfidence`, scored from gold-free structural signals
+(article order, section-number uniqueness, and the validation invariants), so a
+caller cannot take the clauses without seeing the `needs_review` flag; the
+pipeline carries it onto `EvidenceBackedResult.segmentation_confidence`. An
+out-of-distribution document is routed to review or a coarser fallback instead of
+being silently mis-segmented. On the graded set the
 gate flags FRESH (0.31, the restart-per-article numbering) and PS (0.67, real
 duplicate numbers) and clears every exact document, with no clean document
 false-flagged. It is deliberately conservative: coverage (were real sections

@@ -21,6 +21,7 @@ from deal_document_intelligence.contracts.detected_language import (
     DetectedLanguage,
 )
 from deal_document_intelligence.contracts.clause_classification import ClauseClassification
+from deal_document_intelligence.contracts.segmentation_confidence import SegmentationConfidence
 from deal_document_intelligence.contracts.segmented_clause import SegmentedClause
 from deal_document_intelligence.contracts.entity import Entity
 from deal_document_intelligence.contracts.event import Event
@@ -38,6 +39,7 @@ class EvidenceBackedResult(BaseModel):
     language: DetectedLanguage | None = None
     document_type: DetectedDocumentType | None = None  # stage deferred; see docs/03
     clauses: list[SegmentedClause] = Field(default_factory=list)
+    segmentation_confidence: SegmentationConfidence | None = None
     classifications: list[ClauseClassification] = Field(default_factory=list)
     entities: list[Entity] = Field(default_factory=list)
     obligations: list[Obligation] = Field(default_factory=list)

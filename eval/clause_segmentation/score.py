@@ -61,7 +61,7 @@ def _parse_cached(source_rel: str) -> ParsedDocument:
 def score_file(path: Path) -> dict:
     gold = json.loads(path.read_text())
     doc = _parse_cached(gold["source"])
-    units = DeterministicClauseSegmenter().segment(doc)
+    units = DeterministicClauseSegmenter().segment(doc).clauses
 
     want = {_norm(c["number"]): (c["number"], c["depth"])
             for c in gold["clauses"] if c["depth"] <= 1}

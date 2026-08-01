@@ -4,11 +4,13 @@ import bisect
 
 from deal_document_intelligence.contracts import (
     ClauseRole,
-    SegmentedClause,
     EvidenceSpan,
     ParsedDocument,
+    SegmentationResult,
+    SegmentedClause,
 )
 from deal_document_intelligence.segmentation.clause_node import ClauseNode
+from deal_document_intelligence.segmentation.confidence import assess_confidence
 from deal_document_intelligence.segmentation.spans import clause_tree
 
 _ROLE_BY_FAMILY = {
@@ -77,10 +79,11 @@ class DeterministicClauseSegmenter:
     the tree or pick a granularity without re-parsing numbers.
     """
 
-    def segment(self, document: ParsedDocument) -> list[SegmentedClause]:
+    def segment(self, document: ParsedDocument) -> SegmentationResult:
         block_starts = [b.char_start for b in document.blocks]
+        nodes = clause_tree(document)
         units: list[SegmentedClause] = []
-        for node in clause_tree(document):
+        for node in nodes:
             start, end = node.source_offset, node.char_end or node.source_offset
             units.append(
                 SegmentedClause(
@@ -98,4 +101,5 @@ class DeterministicClauseSegmenter:
                     evidence=_evidence(document, block_starts, start, end),
                 )
             )
-        return units
+        # Bundle the trust score so a caller cannot take the clauses without it.
+        return SegmentationResult(clauses=units, confidence=assess_confidence(document, nodes))

@@ -15,6 +15,8 @@ from deal_document_intelligence.contracts import (
     ParsedDocument,
     ClauseClassification,
     ClauseType,
+    SegmentationConfidence,
+    SegmentationResult,
     SegmentedClause,
     DealIntelligence,
     DetectedLanguage,
@@ -81,12 +83,16 @@ def test_pipeline_and_deal_wiring_with_fakes() -> None:
             return DetectedLanguage(language="en")
 
     class FakeSegmenter:
-        def segment(self, document: ParsedDocument) -> list[SegmentedClause]:
-            return [SegmentedClause(
+        def segment(self, document: ParsedDocument) -> SegmentationResult:
+            clause = SegmentedClause(
                 id="c1", text=document.text, char_start=0, char_end=len(document.text),
                 evidence=[EvidenceSpan(page=1, char_start=0,
                                        char_end=len(document.text), text=document.text)],
-            )]
+            )
+            return SegmentationResult(
+                clauses=[clause],
+                confidence=SegmentationConfidence(score=1.0, needs_review=False),
+            )
 
     class FakeClassifier:
         def classify(self, clauses, document):
@@ -195,8 +201,9 @@ def test_strict_pipeline_raises_on_invalid_result() -> None:
             return DetectedLanguage(language="en")
 
     class FakeSeg:
-        def segment(self, d: ParsedDocument) -> list[SegmentedClause]:
-            return []
+        def segment(self, d: ParsedDocument) -> SegmentationResult:
+            return SegmentationResult(
+                clauses=[], confidence=SegmentationConfidence(score=1.0, needs_review=False))
 
     class FakeClf:
         def classify(self, clauses, d):

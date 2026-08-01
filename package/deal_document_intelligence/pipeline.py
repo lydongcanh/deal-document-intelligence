@@ -63,7 +63,8 @@ class Pipeline:
         # Detection is a separate object now; thread it into stages that need
         # the language as we build them.
         language = self.language_detector.detect(document)
-        clauses = self.segmenter.segment(document)
+        segmentation = self.segmenter.segment(document)
+        clauses = segmentation.clauses
         classifications = self.classifier.classify(clauses, document)
         entities = self.entity_extractor.extract(document, clauses)
         rel = self.relation_extractor.extract(document, clauses, entities)
@@ -73,6 +74,7 @@ class Pipeline:
             document=document,
             language=language,
             clauses=clauses,
+            segmentation_confidence=segmentation.confidence,
             classifications=classifications,
             entities=entities,
             obligations=rel.obligations,

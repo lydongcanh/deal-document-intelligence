@@ -34,14 +34,18 @@ def main() -> None:
 
     doc = DoclingParser(page_range=PAGES).parse(source)
     detected = LinguaLanguageDetector().detect(doc)
-    clauses = DeterministicClauseSegmenter().segment(doc)
+    segmentation = DeterministicClauseSegmenter().segment(doc)
+    clauses = segmentation.clauses
+    seg_conf = segmentation.confidence
 
     conf = f"{detected.confidence:.2f}" if detected.confidence is not None else "n/a"
+    review = "  REVIEW" if seg_conf.needs_review else ""
     print(f"doc_id     : {doc.doc_id}  (first {PAGES[1]} pages)")
     print(f"pages      : {doc.page_count}")
     print(f"blocks     : {len(doc.blocks)}")
     print(f"language   : {detected.language} (confidence {conf})")
     print(f"clauses    : {len(clauses)}")
+    print(f"seg trust  : {seg_conf.score:.2f}{review}  {seg_conf.reasons}")
     print()
 
     # The clause tree: indent by depth, show number and heading.

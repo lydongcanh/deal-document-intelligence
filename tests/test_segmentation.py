@@ -277,7 +277,11 @@ def test_clause_segmenter_satisfies_interface_and_contract() -> None:
     seg = DeterministicClauseSegmenter()
     assert isinstance(seg, ClauseSegmenter)  # structural conformance to the Protocol
 
-    units = seg.segment(doc)
+    result = seg.segment(doc)
+    # the trust score is bundled with the clauses, not returned separately
+    assert 0.0 <= result.confidence.score <= 1.0
+    assert isinstance(result.confidence.needs_review, bool)
+    units = result.clauses
     assert units and all(isinstance(u, SegmentedClause) for u in units)
     for u in units:
         # each unit's inclusive text slices back to source exactly
