@@ -138,6 +138,21 @@ def test_decode_builds_hierarchy_and_skips_toc() -> None:
     assert by_marker["2.1."].parent_id == by_marker["ARTICLE II"].id
 
 
+def test_missing_ordinal_does_not_reject_the_rest() -> None:
+    # A dropped 1.2 must not cause 1.3 and 1.4 to be rejected (regression).
+    body = "x" * 400
+    doc = _doc(["ARTICLE I", f"1.1. A {body}", f"1.3. C {body}", f"1.4. D {body}"])
+    depths = {n.marker_text: n.depth for n in decode(doc)}
+    assert depths.get("1.3.") == 1 and depths.get("1.4.") == 1
+
+
+def test_section_ending_in_one_is_not_over_nested() -> None:
+    # "2.1"/"3.1" must not become runaway children of "1.1" just for ending in 1.
+    body = "x" * 400
+    doc = _doc(["ARTICLE I", f"1.1. A {body}", f"2.1. B {body}", f"3.1. C {body}"])
+    assert all(n.depth <= 1 for n in decode(doc))  # no 0,1,2,3 runaway
+
+
 def test_spans_materialise_and_validate() -> None:
     body = "x" * 400
     doc = _doc([

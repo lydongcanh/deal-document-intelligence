@@ -87,11 +87,15 @@ def _readings(m: ParsedMarker) -> list[tuple[int, ...]]:
     return [p for p in (m.path, m.alt_path) if p]
 
 
-def is_sibling_successor(a: ParsedMarker, b: ParsedMarker) -> bool:
-    """True if b is the immediate next sibling of a (same depth, last +1)."""
+def is_sibling_successor(a: ParsedMarker, b: ParsedMarker, max_skip: int = 0) -> bool:
+    """True if b continues a's sibling sequence (same depth, same prefix).
+
+    max_skip tolerates that many dropped ordinals, so with max_skip=1 both
+    1.1 -> 1.2 and 1.1 -> 1.3 (a missing 1.2) count. The default is strict (+1)."""
     for pa in _readings(a):
         for pb in _readings(b):
-            if len(pa) == len(pb) >= 1 and pa[:-1] == pb[:-1] and pb[-1] == pa[-1] + 1:
+            if (len(pa) == len(pb) >= 1 and pa[:-1] == pb[:-1]
+                    and 1 <= pb[-1] - pa[-1] <= 1 + max_skip):
                 return True
 
     return False

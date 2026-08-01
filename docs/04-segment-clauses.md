@@ -150,10 +150,12 @@ invariant the parser already guarantees.
 
 ## Build plan (staged, measurement-driven)
 
-Phase 1 (now): the deterministic core. Candidate anchors, numbering grammar,
-constrained decoder, exact-span materializer, and the validation invariants. No
-training data needed. This is production-grade for the well-structured majority
-of formal agreements. Wire the metrics in from the start.
+Phase 1 (in progress): the deterministic core. Candidate anchors, numbering
+grammar, a greedy stack decoder (not yet the scored constrained decoder described
+above), exact-span materializer, and the validation invariants. No training data
+needed. It handles the well-structured majority of formal agreements but is not
+production-grade yet: see the known defects in Status. Wire the metrics in from
+the start.
 
 Phase 2: measure on real documents (the merger and SPA sets, plus a small
 labelled evaluation set). See where the core actually fails.
@@ -201,45 +203,41 @@ defined population rather than a claim about all documents.
   justified only when segmentation genuinely needs raw page-image features; we
   already have text, reading order, and geometry.
 
-## Status
+## Status: Phase 1 IN PROGRESS (not production-grade)
 
-Phase 1 (deterministic core) is implemented in `package/.../segmentation/`:
-candidate anchors, numbering grammar, stack decoder, span materialisation
-(inclusive and direct), validation invariants, and a `ClauseSegmenter` that
-satisfies the Segmenter interface and emits `ClauseUnit`s (hierarchy in `meta`).
-The demo runs parse, language, and segment end to end. On the first 20 pages of a
-real merger agreement it recovers the Article/section/sub-part tree with clean
-spans and zero validation issues.
+Built in `package/.../segmentation/`: candidate anchors, numbering grammar, a
+greedy stack decoder, span materialisation (inclusive and direct), validation
+invariants, and a `ClauseSegmenter` emitting `ClauseUnit`s (hierarchy in `meta`).
+The demo runs parse, language, and segment end to end.
 
-Body-start is family-agnostic (v2): the first content-bearing numbered block,
-backing up one step to an introducing article. It keys on content and structure,
-not on specific numbering tokens, so it handles "1.1.", "Section 1.1", and
-"Clause 5" alike. An article always resets to the top level, so a stray
-table-of-contents article cannot swallow the body. Robust multi-signal TOC
-detection (page-number patterns, many markers per block, titles repeated later)
-is still a follow-up.
+Evaluation: gold is section-level inventories auto-derived from each document's
+own table of contents (`build_gold_from_toc.py`), independent of the body the
+segmenter parses. 15 of 20 documents have gold (7 mergers, 6 SPAs); 5 use TOC
+layouts the builder cannot parse and are excluded. `make seg-score` scores at the
+section level, counting a clause correct only when number AND depth match,
+aggregates, saves `artifacts/eval/clause_segmentation/score.json`, and fails below
+a mean-F1 threshold. `make seg-measure` reports internal consistency and coverage
+only, not correctness.
 
-Phase 2 (measurement) run via `make seg-measure` over the 20-document merger and
-SPA corpus: 20/20 parse, 0 validation issues, average ~364 clauses. The
-family-agnostic body-start fixed three previously under-segmented documents at
-once (iRobot 23->317, BurgerFi 99->433, PS Business Parks 116->522), a general
-fix rather than a per-document patch.
+Known defects (some found by external review, verified, and being worked):
+- Greedy decoder, not the scored constrained decoder this doc describes. It has
+  no proper skip tolerance beyond one dropped ordinal, and it drops rather than
+  re-nests markers it cannot place.
+- Inline sections are dropped. When the parser merges an article header with its
+  first section into one block, that section is inline and not recovered (a
+  general-inline attempt regressed the well-structured docs and was reverted).
+- Regions (schedules, annexes, exhibits) are recognised as markers but have no
+  numbering-grammar branch, so they get an empty path and are discarded; separate
+  schedule/exhibit namespaces are not implemented.
+- Output loses structure: `ClauseUnit` carries inclusive text only (parent and
+  child overlap); direct spans, node role, region namespace, and confidence are
+  not surfaced. Evidence records one page/block even when a clause spans several.
+- Body-start still uses block length; markers are English-only (not multilingual
+  yet); the parser does not populate block geometry.
 
-Correctness (not just coverage) via `make seg-score`: gold is derived from each
-document's own table of contents (independent of the segmenter, which parses the
-body), scored at the section level. Moneygram and iRobot both reach recall 1.00,
-precision 1.00, F1 1.00. Getting there found and fixed a real bug the scorer
-surfaced: a sub-part "(i)" (alpha i = 9) was matching "ARTICLE VIII" (8) as a
-sibling, because sibling-matching ignored the numbering family. The fix, siblings
-must be the same numbering kind, is general. Notably the measurement redirected
-us away from building a TOC detector, which would not have moved the number.
+Fixed so far: sibling matching respects numbering kind and tolerates one dropped
+ordinal; `starts_sequence` no longer over-nests decimal sections; orphan
+parenthesised sub-parts are not promoted to top level.
 
-Honest limits: two documents, both mergers, one numbering style each, section
-level only (sub-parts not yet scored), SPAs not yet labelled. Gold and scorer
-live in `eval/clause_segmentation/` (labels mirror `demo/documents/` subfolders).
-
-Still tracked: robust multi-signal TOC detection (removes iRobot's spurious
-leading article, which the section-level metric does not penalise); a deeper
-stack-robustness pass so orphan sub-parts are re-nested rather than skipped;
-extending gold to SPAs. Phase 3 (a learned boundary model) is justified only if
-the gold numbers show a real gap the rules cannot close, and so far they do not.
+Phase 3 (a learned boundary model) is not started and is not justified until the
+deterministic core and the evaluation are solid.

@@ -3,15 +3,21 @@
 This is a small development and acceptance set, not a golden benchmark. Be honest
 about what it is and is not.
 
-What it is: hand-labelled clause structure for a few documents, written from the
-source PDF, used to get a first correctness signal and to catch regressions when
-we change the segmentation rules.
+What it is: section-level inventories (articles and N.M sections) derived
+automatically from each document's own table of contents by
+`build_gold_from_toc.py`. The TOC is the drafter's authoritative list and is
+independent of the segmenter (which parses the body, not the TOC), so it is a
+usable, non-circular reference for the section level. It is used to get a
+correctness signal and catch regressions.
 
-What it is NOT: representative. Every document here is a US SEC public-company
-filing (merger or SPA), born-digital, English. Good scores prove we do well on
-this slice, not that we are production-ready on leases, employment agreements,
-NDAs, scanned or messy documents, non-US drafting, or other languages. A true
-golden dataset (diverse, larger, multiple reviewers, held out from tuning) is a
+What it is NOT: a full segmentation gold, and not representative. It is
+section-level only (no sub-parts, no schedules/exhibits, no body offsets or
+parent-child edges below the section level), it is auto-derived rather than
+human-verified, and every document is a US SEC public-company filing (merger or
+SPA), born-digital, English. Good scores prove we do well on that slice at the
+section level, not that we are production-ready. Not every TOC parses (5 of 20
+documents use layouts the builder does not handle and are excluded). A true
+golden dataset (human-verified, diverse, with sub-part and region labels) is a
 later program.
 
 ## Label format

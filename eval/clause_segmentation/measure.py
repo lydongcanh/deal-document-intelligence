@@ -1,7 +1,8 @@
 """Measure the deterministic clause segmenter across a document corpus.
 
-Phase 2 of segmentation (see docs/04). We have no gold labels yet, so this
-measures what we can without them:
+Phase 2 of segmentation (see docs/04). This measures internal consistency and
+coverage only, NOT correctness (for correctness against section-level gold, use
+score.py). It reports:
 
 - parse success rate,
 - validation pass rate against the invariants in validation.py

@@ -82,10 +82,12 @@ def _place(
 ) -> tuple[int | None, str | None]:
     """Decide (depth, parent_id) for a marker, or (None, None) to skip it."""
 
-    # Sibling of an open level (deepest first), same numbering kind only.
+    # Sibling of an open level (deepest first), same numbering kind only. One
+    # dropped ordinal is tolerated so a single missing marker does not reject the
+    # whole rest of the run (1.1 -> 1.3 still continues the sequence).
     for level in range(len(stack) - 1, -1, -1):
         same_kind = _kind(stack[level][1].family) == _kind(candidate.marker_family)
-        if same_kind and is_sibling_successor(stack[level][1], marker):
+        if same_kind and is_sibling_successor(stack[level][1], marker, max_skip=1):
             parent_id = stack[level - 1][0].id if level > 0 else None
             return level, parent_id
 
@@ -94,8 +96,14 @@ def _place(
     if candidate.marker_family == "article":
         return 0, None
 
-    # Child of the current top, or a fresh sub-list opening under it.
-    if stack and (is_child_start(stack[-1][1], marker) or starts_sequence(marker)):
+    # Child of the current top: a decimal section nests only by path (2 -> 2.1);
+    # only a parenthesised sub-part may open a fresh sub-list under its section
+    # ((a), (i)). This stops "2.1" from becoming a child of "1.1" just because it
+    # ends in 1.
+    if stack and (
+        is_child_start(stack[-1][1], marker)
+        or (starts_sequence(marker) and candidate.marker_family.startswith("paren"))
+    ):
         return len(stack), stack[-1][0].id
 
     # With no open clause: a decimal/section can open the document, but a
