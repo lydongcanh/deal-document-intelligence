@@ -1,0 +1,672 @@
+{
+  "source": "merger_agreements/Alkuri Global Acquisition Corp. Merger Agreement.Pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE I",
+      "depth": 0,
+      "heading": "THE MERGER\u037e CLOSING"
+    },
+    {
+      "number": "1.01",
+      "depth": 1,
+      "heading": "The Merger"
+    },
+    {
+      "number": "1.02",
+      "depth": 1,
+      "heading": "Effect on Outstanding Shares"
+    },
+    {
+      "number": "1.03",
+      "depth": 1,
+      "heading": "Organizational Documents"
+    },
+    {
+      "number": "1.04",
+      "depth": 1,
+      "heading": "Directors and Officers"
+    },
+    {
+      "number": "1.05",
+      "depth": 1,
+      "heading": "Withholding"
+    },
+    {
+      "number": "1.06",
+      "depth": 1,
+      "heading": "Payment Methodology"
+    },
+    {
+      "number": "1.07",
+      "depth": 1,
+      "heading": "The Closing"
+    },
+    {
+      "number": "1.08",
+      "depth": 1,
+      "heading": "Earnout"
+    },
+    {
+      "number": "1.09",
+      "depth": 1,
+      "heading": "Adjustment to the Per Share Merger Consideration"
+    },
+    {
+      "number": "ARTICLE II",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE SPAC"
+    },
+    {
+      "number": "2.01",
+      "depth": 1,
+      "heading": "Organization and Power"
+    },
+    {
+      "number": "2.02",
+      "depth": 1,
+      "heading": "Authorization"
+    },
+    {
+      "number": "2.03",
+      "depth": 1,
+      "heading": "No Violations"
+    },
+    {
+      "number": "2.04",
+      "depth": 1,
+      "heading": "Capitalization\u037e Subsidiaries"
+    },
+    {
+      "number": "2.05",
+      "depth": 1,
+      "heading": "Governmental Consents, Etc"
+    },
+    {
+      "number": "2.06",
+      "depth": 1,
+      "heading": "Legal Proceedings"
+    },
+    {
+      "number": "2.07",
+      "depth": 1,
+      "heading": "SEC Filings and Financial Statements"
+    },
+    {
+      "number": "2.08",
+      "depth": 1,
+      "heading": "Absence of Certain Changes"
+    },
+    {
+      "number": "2.09",
+      "depth": 1,
+      "heading": "SPAC Trust Amount"
+    },
+    {
+      "number": "2.10",
+      "depth": 1,
+      "heading": "Broker"
+    },
+    {
+      "number": "2.11",
+      "depth": 1,
+      "heading": "Solvency"
+    },
+    {
+      "number": "2.12",
+      "depth": 1,
+      "heading": "SPAC Information"
+    },
+    {
+      "number": "2.13",
+      "depth": 1,
+      "heading": "Listing"
+    },
+    {
+      "number": "2.14",
+      "depth": 1,
+      "heading": "Affiliate Transactions"
+    },
+    {
+      "number": "2.15",
+      "depth": 1,
+      "heading": "SPAC Contracts"
+    },
+    {
+      "number": "2.16",
+      "depth": 1,
+      "heading": "Intellectual Property"
+    },
+    {
+      "number": "2.17",
+      "depth": 1,
+      "heading": "Employees"
+    },
+    {
+      "number": "2.18",
+      "depth": 1,
+      "heading": "Employee Benefits"
+    },
+    {
+      "number": "2.19",
+      "depth": 1,
+      "heading": "Real Property"
+    },
+    {
+      "number": "2.20",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "2.21",
+      "depth": 1,
+      "heading": "Laws and Permits"
+    },
+    {
+      "number": "2.22",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "2.23",
+      "depth": 1,
+      "heading": "Vote Required"
+    },
+    {
+      "number": "2.24",
+      "depth": 1,
+      "heading": "Investment Company"
+    },
+    {
+      "number": "2.25",
+      "depth": 1,
+      "heading": "Minute Books"
+    },
+    {
+      "number": "2.26",
+      "depth": 1,
+      "heading": "Absence of Certain Payments"
+    },
+    {
+      "number": "2.27",
+      "depth": 1,
+      "heading": "SPAC Investigations"
+    },
+    {
+      "number": "2.28",
+      "depth": 1,
+      "heading": "Defense Production Act"
+    },
+    {
+      "number": "2.29",
+      "depth": 1,
+      "heading": "NO ADDITIONAL REPRESENTATIONS\u037e NO RELIANCE"
+    },
+    {
+      "number": "ARTICLE III",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF COMPANY AND MERGER SUB"
+    },
+    {
+      "number": "3.01",
+      "depth": 1,
+      "heading": "Existence and Good Standing"
+    },
+    {
+      "number": "3.02",
+      "depth": 1,
+      "heading": "Authority\u037e Enforceability"
+    },
+    {
+      "number": "3.03",
+      "depth": 1,
+      "heading": "Consents and Requisite Governmental Approvals\u037e No Violations"
+    },
+    {
+      "number": "3.04",
+      "depth": 1,
+      "heading": "Capitalization\u037e Subsidiaries\u037e Professional Practices."
+    },
+    {
+      "number": "3.05",
+      "depth": 1,
+      "heading": "Financial Statements and Other Financial Matters\u037e No Undisclosed Liabilities"
+    },
+    {
+      "number": "3.06",
+      "depth": 1,
+      "heading": "Absence of Certain Changes"
+    },
+    {
+      "number": "3.07",
+      "depth": 1,
+      "heading": "Permits."
+    },
+    {
+      "number": "3.08",
+      "depth": 1,
+      "heading": "Real Property"
+    },
+    {
+      "number": "3.09",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "3.10",
+      "depth": 1,
+      "heading": "Contracts"
+    },
+    {
+      "number": "3.11",
+      "depth": 1,
+      "heading": "Compliance with Applicable Law"
+    },
+    {
+      "number": "3.12",
+      "depth": 1,
+      "heading": "Intellectual Property"
+    },
+    {
+      "number": "3.13",
+      "depth": 1,
+      "heading": "Privacy"
+    },
+    {
+      "number": "3.14",
+      "depth": 1,
+      "heading": "Legal Proceedings\u037e Orders"
+    },
+    {
+      "number": "3.15",
+      "depth": 1,
+      "heading": "Consents"
+    },
+    {
+      "number": "3.16",
+      "depth": 1,
+      "heading": "Employee Benefits"
+    },
+    {
+      "number": "3.17",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "3.18",
+      "depth": 1,
+      "heading": "Environmental Matters"
+    },
+    {
+      "number": "3.19",
+      "depth": 1,
+      "heading": "Relationships with Related Persons"
+    },
+    {
+      "number": "3.20",
+      "depth": 1,
+      "heading": "Employees\u037e Employment Matters and Independent Contractors"
+    },
+    {
+      "number": "3.21",
+      "depth": 1,
+      "heading": "Coronavirus Job Retention Scheme."
+    },
+    {
+      "number": "3.22",
+      "depth": 1,
+      "heading": "Healthcare Regulatory Compliance."
+    },
+    {
+      "number": "3.23",
+      "depth": 1,
+      "heading": "Brokers"
+    },
+    {
+      "number": "3.24",
+      "depth": 1,
+      "heading": "Compliance with International Trade & Anti-Corruption Laws"
+    },
+    {
+      "number": "3.25",
+      "depth": 1,
+      "heading": "Books and Records"
+    },
+    {
+      "number": "3.26",
+      "depth": 1,
+      "heading": "Vote Required"
+    },
+    {
+      "number": "3.27",
+      "depth": 1,
+      "heading": "Information Supplied"
+    },
+    {
+      "number": "3.28",
+      "depth": 1,
+      "heading": "Investigations"
+    },
+    {
+      "number": "3.29",
+      "depth": 1,
+      "heading": "NO ADDITIONAL REPRESENTATIONS\u037e NO RELIANCE"
+    },
+    {
+      "number": "ARTICLE IV",
+      "depth": 0,
+      "heading": "COVENANTS OF THE SPAC"
+    },
+    {
+      "number": "4.01",
+      "depth": 1,
+      "heading": "Operations of the SPAC Prior to the Closing"
+    },
+    {
+      "number": "4.02",
+      "depth": 1,
+      "heading": "Access to Books and Records"
+    },
+    {
+      "number": "4.03",
+      "depth": 1,
+      "heading": "SPAC Confidentiality"
+    },
+    {
+      "number": "4.04",
+      "depth": 1,
+      "heading": "Efforts to Consummate"
+    },
+    {
+      "number": "4.05",
+      "depth": 1,
+      "heading": "Exclusive Dealing"
+    },
+    {
+      "number": "4.06",
+      "depth": 1,
+      "heading": "PIPE Investment"
+    },
+    {
+      "number": "4.07",
+      "depth": 1,
+      "heading": "Sponsor Support"
+    },
+    {
+      "number": "4.08",
+      "depth": 1,
+      "heading": "Notification"
+    },
+    {
+      "number": "ARTICLE V",
+      "depth": 0,
+      "heading": "COVENANTS OF COMPANY AND MERGER SUB"
+    },
+    {
+      "number": "5.01",
+      "depth": 1,
+      "heading": "Operations of the Company and Merger Sub Prior to Closing"
+    },
+    {
+      "number": "5.02",
+      "depth": 1,
+      "heading": "Access to Books and Records"
+    },
+    {
+      "number": "5.03",
+      "depth": 1,
+      "heading": "Company Confidentiality"
+    },
+    {
+      "number": "5.04",
+      "depth": 1,
+      "heading": "Exclusive Dealing"
+    },
+    {
+      "number": "5.05",
+      "depth": 1,
+      "heading": "Notification"
+    },
+    {
+      "number": "5.06",
+      "depth": 1,
+      "heading": "Merger Sub Stockholder Approval"
+    },
+    {
+      "number": "5.07",
+      "depth": 1,
+      "heading": "Efforts to Consummate"
+    },
+    {
+      "number": "ARTICLE VI",
+      "depth": 0,
+      "heading": "ACTIONS PRIOR TO THE CLOSING"
+    },
+    {
+      "number": "6.01",
+      "depth": 1,
+      "heading": "The Registration Statements and Proxy Statement"
+    },
+    {
+      "number": "6.02",
+      "depth": 1,
+      "heading": "Regulatory Filings"
+    },
+    {
+      "number": "6.03",
+      "depth": 1,
+      "heading": "Financial Statements."
+    },
+    {
+      "number": "6.04",
+      "depth": 1,
+      "heading": "Shareholder Vote\u037e Recommendation of the SPAC Board"
+    },
+    {
+      "number": "6.05",
+      "depth": 1,
+      "heading": "SPAC Shareholders\u2019 Meeting"
+    },
+    {
+      "number": "6.06",
+      "depth": 1,
+      "heading": "Listing\u037e Public Filings"
+    },
+    {
+      "number": "6.07",
+      "depth": 1,
+      "heading": "Non-Transfer of Certain SPAC Intellectual Property"
+    },
+    {
+      "number": "6.08",
+      "depth": 1,
+      "heading": "No Claim Against SPAC Trust"
+    },
+    {
+      "number": "6.09",
+      "depth": 1,
+      "heading": "Equity Plans"
+    },
+    {
+      "number": "ARTICLE VII",
+      "depth": 0,
+      "heading": "CONDITIONS TO CLOSING"
+    },
+    {
+      "number": "7.01",
+      "depth": 1,
+      "heading": "Mutual Conditions to the Parties\u2019 Obligations"
+    },
+    {
+      "number": "7.02",
+      "depth": 1,
+      "heading": "Conditions to Company\u2019s and Merger Sub\u2019s Obligations"
+    },
+    {
+      "number": "7.03",
+      "depth": 1,
+      "heading": "Conditions to the SPAC\u2019s Obligations"
+    },
+    {
+      "number": "ARTICLE VIII",
+      "depth": 0,
+      "heading": "INDEMNIFICATION OF OFFICERS AND DIRECTORS OF THE SPAC"
+    },
+    {
+      "number": "8.01",
+      "depth": 1,
+      "heading": "Indemnification of Officers and Directors of the SPAC"
+    },
+    {
+      "number": "8.02",
+      "depth": 1,
+      "heading": "Indemnification by Successors and Assigns"
+    },
+    {
+      "number": "8.03",
+      "depth": 1,
+      "heading": "Tail Policy"
+    },
+    {
+      "number": "8.04",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "ARTICLE IX",
+      "depth": 0,
+      "heading": "TERMINATION"
+    },
+    {
+      "number": "9.01",
+      "depth": 1,
+      "heading": "Termination"
+    },
+    {
+      "number": "9.02",
+      "depth": 1,
+      "heading": "Effect of Termination"
+    },
+    {
+      "number": "ARTICLE X",
+      "depth": 0,
+      "heading": "DEFINITIONS"
+    },
+    {
+      "number": "10.01",
+      "depth": 1,
+      "heading": "Definitions"
+    },
+    {
+      "number": "10.02",
+      "depth": 1,
+      "heading": "Other Definitional Provisions"
+    },
+    {
+      "number": "ARTICLE XI",
+      "depth": 0,
+      "heading": "MISCELLANEOUS"
+    },
+    {
+      "number": "11.01",
+      "depth": 1,
+      "heading": "Press Releases and Public Announcements"
+    },
+    {
+      "number": "11.02",
+      "depth": 1,
+      "heading": "Expenses"
+    },
+    {
+      "number": "11.03",
+      "depth": 1,
+      "heading": "Survival"
+    },
+    {
+      "number": "11.04",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "11.05",
+      "depth": 1,
+      "heading": "Succession and Assignment"
+    },
+    {
+      "number": "11.06",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "11.07",
+      "depth": 1,
+      "heading": "References"
+    },
+    {
+      "number": "11.08",
+      "depth": 1,
+      "heading": "Construction"
+    },
+    {
+      "number": "11.09",
+      "depth": 1,
+      "heading": "Amendment and Waiver"
+    },
+    {
+      "number": "11.10",
+      "depth": 1,
+      "heading": "Entire Agreement"
+    },
+    {
+      "number": "11.11",
+      "depth": 1,
+      "heading": "Third-Party Beneficiaries"
+    },
+    {
+      "number": "11.12",
+      "depth": 1,
+      "heading": "WAIVER OF TRIAL BY JURY"
+    },
+    {
+      "number": "11.13",
+      "depth": 1,
+      "heading": "Counterparts"
+    },
+    {
+      "number": "11.14",
+      "depth": 1,
+      "heading": "Governing Law"
+    },
+    {
+      "number": "11.15",
+      "depth": 1,
+      "heading": "Submission to Jurisdiction\u037e Consent to Service of Process"
+    },
+    {
+      "number": "11.16",
+      "depth": 1,
+      "heading": "Remedies Cumulative"
+    },
+    {
+      "number": "11.17",
+      "depth": 1,
+      "heading": "Specific Performance"
+    },
+    {
+      "number": "11.18",
+      "depth": 1,
+      "heading": "No Recourse"
+    },
+    {
+      "number": "11.19",
+      "depth": 1,
+      "heading": "Conflicts and Privilege."
+    },
+    {
+      "number": "11.20",
+      "depth": 1,
+      "heading": "Tax Matters."
+    }
+  ]
+}

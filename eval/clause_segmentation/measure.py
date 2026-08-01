@@ -54,27 +54,38 @@ def measure(docs_dir: Path, page_range: tuple[int, int] | None) -> list[dict]:
             nodes = clause_tree(doc)
             issues = validate_tree(nodes, doc)
             starts = [c for c in generate_candidates(doc) if c.at_block_start]
-            record.update({
-                "ok": True,
-                "pages": doc.page_count,
-                "blocks": len(doc.blocks),
-                "block_start_candidates": len(starts),
-                "clauses": len(nodes),
-                "articles": sum(1 for n in nodes if n.depth == 0),
-                "max_depth": max((n.depth for n in nodes), default=-1),
-                "validation_issues": len(issues),
-                "issue_sample": issues[:5],
-                "body_start": nodes[0].marker_text if nodes else None,
-            })
-        except Exception as exc:  # record and continue; one bad doc must not stop the run
-            record.update({"ok": False, "error": f"{type(exc).__name__}: {exc}",
-                           "trace": traceback.format_exc()[-400:]})
+            record.update(
+                {
+                    "ok": True,
+                    "pages": doc.page_count,
+                    "blocks": len(doc.blocks),
+                    "block_start_candidates": len(starts),
+                    "clauses": len(nodes),
+                    "articles": sum(1 for n in nodes if n.depth == 0),
+                    "max_depth": max((n.depth for n in nodes), default=-1),
+                    "validation_issues": len(issues),
+                    "issue_sample": issues[:5],
+                    "body_start": nodes[0].marker_text if nodes else None,
+                }
+            )
+        except (
+            Exception
+        ) as exc:  # record and continue; one bad doc must not stop the run
+            record.update(
+                {
+                    "ok": False,
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "trace": traceback.format_exc()[-400:],
+                }
+            )
         results.append(record)
         OUT.parent.mkdir(parents=True, exist_ok=True)
         OUT.write_text(json.dumps(results, indent=2))
-        print(f"[{i}/{len(pdfs)}] {record['file']}  ok={record['ok']}  "
-              f"clauses={record.get('clauses')}  issues={record.get('validation_issues')}",
-              flush=True)
+        print(
+            f"[{i}/{len(pdfs)}] {record['file']}  ok={record['ok']}  "
+            f"clauses={record.get('clauses')}  issues={record.get('validation_issues')}",
+            flush=True,
+        )
     return results
 
 
@@ -83,17 +94,27 @@ def _summary(results: list[dict]) -> None:
     print("\n==== SUMMARY ====", flush=True)
     print(f"parsed ok        : {len(ok)}/{len(results)}", flush=True)
     print(f"zero-clause docs : {sum(1 for r in ok if r['clauses'] == 0)}", flush=True)
-    print(f"docs w/ issues   : {sum(1 for r in ok if r['validation_issues'] > 0)}", flush=True)
+    print(
+        f"docs w/ issues   : {sum(1 for r in ok if r['validation_issues'] > 0)}",
+        flush=True,
+    )
     if ok:
-        print(f"avg clauses/doc  : {sum(r['clauses'] for r in ok) / len(ok):.0f}", flush=True)
+        print(
+            f"avg clauses/doc  : {sum(r['clauses'] for r in ok) / len(ok):.0f}",
+            flush=True,
+        )
     print(f"results: {OUT}", flush=True)
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("docs_dir", nargs="?", default=str(DEFAULT_DOCS))
-    ap.add_argument("--pages", type=int, default=None,
-                    help="parse only the first N pages of each document (default: all)")
+    ap.add_argument(
+        "--pages",
+        type=int,
+        default=None,
+        help="parse only the first N pages of each document (default: all)",
+    )
     args = ap.parse_args()
     page_range = (1, args.pages) if args.pages else None
     _summary(measure(Path(args.docs_dir), page_range))

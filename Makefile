@@ -1,7 +1,7 @@
-# Makefile — one command per pipeline step. Run `make` (or `make help`) to list.
+# Makefile - one command per pipeline step. Run `make` (or `make help`) to list.
 #
 # POETRY defensively unsets any inherited VIRTUAL_ENV so Poetry uses THIS
-# project's .venv (harmless if none is set; fixes a shell that auto-activates
+# project's .venv (harmless if none is set, fixes a shell that auto-activates
 # a different venv).
 POETRY := env -u VIRTUAL_ENV poetry
 PY := $(POETRY) run python

@@ -104,7 +104,7 @@ def test_sibling_and_child_relations() -> None:
 
 
 def test_decode_builds_hierarchy_and_skips_toc() -> None:
-    body = "x" * 120  # real clause bodies are long; TOC entries are short titles
+    body = "x" * 400  # real clause bodies are long; TOC entries are short titles
     doc = _doc([
         "ARTICLE V",    # a table-of-contents entry: an article title, no body
         "ARTICLE IX",   # another TOC entry
@@ -139,7 +139,7 @@ def test_decode_builds_hierarchy_and_skips_toc() -> None:
 
 
 def test_spans_materialise_and_validate() -> None:
-    body = "x" * 120
+    body = "x" * 400
     doc = _doc([
         "ARTICLE I",
         f"1.1. Term. {body}",
@@ -173,7 +173,7 @@ def test_spans_materialise_and_validate() -> None:
 
 
 def test_clause_segmenter_satisfies_interface_and_contract() -> None:
-    body = "x" * 120
+    body = "x" * 400
     doc = _doc([
         "ARTICLE I",
         f"1.1. Term. {body}",

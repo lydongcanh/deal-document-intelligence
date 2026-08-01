@@ -1,0 +1,577 @@
+{
+  "source": "spa/Curo Stock Purchase Agreement.pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE 1",
+      "depth": 0,
+      "heading": "PURCHASE AND SALE"
+    },
+    {
+      "number": "1.1",
+      "depth": 1,
+      "heading": "Purchase and Sale"
+    },
+    {
+      "number": "1.2",
+      "depth": 1,
+      "heading": "Closing"
+    },
+    {
+      "number": "1.3",
+      "depth": 1,
+      "heading": "Closing Deliverables of the Seller"
+    },
+    {
+      "number": "1.4",
+      "depth": 1,
+      "heading": "Closing Deliveries of the Buyer"
+    },
+    {
+      "number": "1.5",
+      "depth": 1,
+      "heading": "Closing Payments and Estimated Closing Statement"
+    },
+    {
+      "number": "1.6",
+      "depth": 1,
+      "heading": "Payoff Letters"
+    },
+    {
+      "number": "1.7",
+      "depth": 1,
+      "heading": "Withholding"
+    },
+    {
+      "number": "1.8",
+      "depth": 1,
+      "heading": "Post-Closing Adjustment to Estimated Cash Consideration"
+    },
+    {
+      "number": "1.9",
+      "depth": 1,
+      "heading": "Escrow Funds"
+    },
+    {
+      "number": "ARTICLE 2",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES WITH RESPECT TO THE ACQUIRED COMPANIES AND THE SELLER"
+    },
+    {
+      "number": "2.1",
+      "depth": 1,
+      "heading": "Authority; Binding Nature of Agreement"
+    },
+    {
+      "number": "2.2",
+      "depth": 1,
+      "heading": "Subsidiaries; Due Incorporation"
+    },
+    {
+      "number": "2.3",
+      "depth": 1,
+      "heading": "Organizational Documents"
+    },
+    {
+      "number": "2.4",
+      "depth": 1,
+      "heading": "Capitalization"
+    },
+    {
+      "number": "2.5",
+      "depth": 1,
+      "heading": "Non-Contravention; Consents"
+    },
+    {
+      "number": "2.6",
+      "depth": 1,
+      "heading": "Financial Statements"
+    },
+    {
+      "number": "2.7",
+      "depth": 1,
+      "heading": "Absence of Certain Changes"
+    },
+    {
+      "number": "2.8",
+      "depth": 1,
+      "heading": "Title to Assets"
+    },
+    {
+      "number": "2.9",
+      "depth": 1,
+      "heading": "Real Property; Leasehold"
+    },
+    {
+      "number": "2.10",
+      "depth": 1,
+      "heading": "Intellectual Property; Data Privacy and Security"
+    },
+    {
+      "number": "2.11",
+      "depth": 1,
+      "heading": "Regulatory Matters"
+    },
+    {
+      "number": "2.12",
+      "depth": 1,
+      "heading": "Material Contracts"
+    },
+    {
+      "number": "2.13",
+      "depth": 1,
+      "heading": "Liabilities"
+    },
+    {
+      "number": "2.14",
+      "depth": 1,
+      "heading": "Compliance with Laws"
+    },
+    {
+      "number": "2.15",
+      "depth": 1,
+      "heading": "Certain Business Practices"
+    },
+    {
+      "number": "2.16",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "2.17",
+      "depth": 1,
+      "heading": "Employee Benefit Plans and Employee Matters"
+    },
+    {
+      "number": "2.18",
+      "depth": 1,
+      "heading": "Environmental Matters"
+    },
+    {
+      "number": "2.19",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "2.20",
+      "depth": 1,
+      "heading": "Legal Proceedings; Orders"
+    },
+    {
+      "number": "2.21",
+      "depth": 1,
+      "heading": "Financial Advisor"
+    },
+    {
+      "number": "2.22",
+      "depth": 1,
+      "heading": "Related Party Transactions"
+    },
+    {
+      "number": "2.23",
+      "depth": 1,
+      "heading": "Vendors"
+    },
+    {
+      "number": "2.24",
+      "depth": 1,
+      "heading": "Bank Accounts; Liquidity"
+    },
+    {
+      "number": "2.25",
+      "depth": 1,
+      "heading": "COVID-19 Matters"
+    },
+    {
+      "number": "ARTICLE 3",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES WITH RESPECT TO THE SELLER"
+    },
+    {
+      "number": "3.1",
+      "depth": 1,
+      "heading": "Formation"
+    },
+    {
+      "number": "3.2",
+      "depth": 1,
+      "heading": "Authority; Binding Nature of Agreement"
+    },
+    {
+      "number": "3.3",
+      "depth": 1,
+      "heading": "Non-Contravention"
+    },
+    {
+      "number": "3.4",
+      "depth": 1,
+      "heading": "Title to Securities"
+    },
+    {
+      "number": "3.5",
+      "depth": 1,
+      "heading": "Legal Proceedings"
+    },
+    {
+      "number": "3.6",
+      "depth": 1,
+      "heading": "Financial Advisor"
+    },
+    {
+      "number": "3.7",
+      "depth": 1,
+      "heading": "Investment Representations"
+    },
+    {
+      "number": "ARTICLE 4",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES WITH RESPECT TO THE BUYER PARTIES"
+    },
+    {
+      "number": "4.1",
+      "depth": 1,
+      "heading": "Due Incorporation; Subsidiaries"
+    },
+    {
+      "number": "4.2",
+      "depth": 1,
+      "heading": "Authority; Binding Nature of Agreement"
+    },
+    {
+      "number": "4.3",
+      "depth": 1,
+      "heading": "Non-Contravention; Consents"
+    },
+    {
+      "number": "4.4",
+      "depth": 1,
+      "heading": "Litigation"
+    },
+    {
+      "number": "4.5",
+      "depth": 1,
+      "heading": "No Vote Required"
+    },
+    {
+      "number": "4.6",
+      "depth": 1,
+      "heading": "Capitalization"
+    },
+    {
+      "number": "4.7",
+      "depth": 1,
+      "heading": "Parent SEC Reports"
+    },
+    {
+      "number": "ARTICLE 5",
+      "depth": 0,
+      "heading": "CERTAIN COVENANTS OF THE COMPANY"
+    },
+    {
+      "number": "5.1",
+      "depth": 1,
+      "heading": "Access"
+    },
+    {
+      "number": "5.2",
+      "depth": 1,
+      "heading": "Conduct of the Business of the Company"
+    },
+    {
+      "number": "5.3",
+      "depth": 1,
+      "heading": "No Solicitation"
+    },
+    {
+      "number": "5.4",
+      "depth": 1,
+      "heading": "Affiliated Transactions"
+    },
+    {
+      "number": "5.5",
+      "depth": 1,
+      "heading": "Financing"
+    },
+    {
+      "number": "5.6",
+      "depth": 1,
+      "heading": "Investigation Cooperation"
+    },
+    {
+      "number": "ARTICLE 6",
+      "depth": 0,
+      "heading": "ADDITIONAL COVENANTS OF THE PARTIES"
+    },
+    {
+      "number": "6.1",
+      "depth": 1,
+      "heading": "Regulatory Filings; Notices and Consents"
+    },
+    {
+      "number": "6.2",
+      "depth": 1,
+      "heading": "Indemnification of Officers and Directors"
+    },
+    {
+      "number": "6.3",
+      "depth": 1,
+      "heading": "280G Shareholder Approval"
+    },
+    {
+      "number": "6.4",
+      "depth": 1,
+      "heading": "Disclosure; Confidentiality"
+    },
+    {
+      "number": "6.5",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "6.6",
+      "depth": 1,
+      "heading": "Notification of Certain Events"
+    },
+    {
+      "number": "6.7",
+      "depth": 1,
+      "heading": "NYSE Listing"
+    },
+    {
+      "number": "6.8",
+      "depth": 1,
+      "heading": "Cooperation; Efforts"
+    },
+    {
+      "number": "ARTICLE 7",
+      "depth": 0,
+      "heading": "CONDITIONS PRECEDENT TO OBLIGATIONS OF THE BUYER PARTIES"
+    },
+    {
+      "number": "7.1",
+      "depth": 1,
+      "heading": "Accuracy of Representations and Warranties"
+    },
+    {
+      "number": "7.2",
+      "depth": 1,
+      "heading": "Performance of Covenants"
+    },
+    {
+      "number": "7.3",
+      "depth": 1,
+      "heading": "HSR Clearance"
+    },
+    {
+      "number": "7.4",
+      "depth": 1,
+      "heading": "Consents"
+    },
+    {
+      "number": "7.5",
+      "depth": 1,
+      "heading": "No Restraints"
+    },
+    {
+      "number": "7.6",
+      "depth": 1,
+      "heading": "No Governmental Litigation"
+    },
+    {
+      "number": "7.7",
+      "depth": 1,
+      "heading": "Material Adverse Effect"
+    },
+    {
+      "number": "7.8",
+      "depth": 1,
+      "heading": "Financing"
+    },
+    {
+      "number": "7.9",
+      "depth": 1,
+      "heading": "Minimum Liquidity"
+    },
+    {
+      "number": "ARTICLE 8",
+      "depth": 0,
+      "heading": "CONDITIONS PRECEDENT TO OBLIGATIONS OF THE COMPANY AND THE SELLER AND THE COMPANY"
+    },
+    {
+      "number": "8.1",
+      "depth": 1,
+      "heading": "Accuracy of Representations and Warranties"
+    },
+    {
+      "number": "8.2",
+      "depth": 1,
+      "heading": "Performance of Covenants"
+    },
+    {
+      "number": "8.3",
+      "depth": 1,
+      "heading": "HSR Clearance"
+    },
+    {
+      "number": "8.4",
+      "depth": 1,
+      "heading": "No Restraints"
+    },
+    {
+      "number": "8.5",
+      "depth": 1,
+      "heading": "No Governmental Litigation"
+    },
+    {
+      "number": "8.6",
+      "depth": 1,
+      "heading": "Escrow Agreement"
+    },
+    {
+      "number": "8.7",
+      "depth": 1,
+      "heading": "Closing Certificate"
+    },
+    {
+      "number": "ARTICLE 9",
+      "depth": 0,
+      "heading": "TERMINATION"
+    },
+    {
+      "number": "9.1",
+      "depth": 1,
+      "heading": "Termination"
+    },
+    {
+      "number": "9.2",
+      "depth": 1,
+      "heading": "Effect of Termination"
+    },
+    {
+      "number": "ARTICLE 10",
+      "depth": 0,
+      "heading": "SURVIVAL; INDEMNIFICATION"
+    },
+    {
+      "number": "10.1",
+      "depth": 1,
+      "heading": "Survival"
+    },
+    {
+      "number": "10.2",
+      "depth": 1,
+      "heading": "Indemnification by the Seller"
+    },
+    {
+      "number": "10.3",
+      "depth": 1,
+      "heading": "Indemnification by the Buyer"
+    },
+    {
+      "number": "10.4",
+      "depth": 1,
+      "heading": "Indemnification Procedures"
+    },
+    {
+      "number": "10.5",
+      "depth": 1,
+      "heading": "Escrow; Order of Recovery; Remedies Exclusive"
+    },
+    {
+      "number": "10.6",
+      "depth": 1,
+      "heading": "Determination of Loss Amount; Mitigation; Subrogation"
+    },
+    {
+      "number": "10.7",
+      "depth": 1,
+      "heading": "Treatment of Indemnity Payments"
+    },
+    {
+      "number": "ARTICLE 11",
+      "depth": 0,
+      "heading": "MISCELLANEOUS PROVISIONS"
+    },
+    {
+      "number": "11.1",
+      "depth": 1,
+      "heading": "Amendment"
+    },
+    {
+      "number": "11.2",
+      "depth": 1,
+      "heading": "Expenses"
+    },
+    {
+      "number": "11.3",
+      "depth": 1,
+      "heading": "Waiver"
+    },
+    {
+      "number": "11.4",
+      "depth": 1,
+      "heading": "Entire Agreement; Counterparts"
+    },
+    {
+      "number": "11.5",
+      "depth": 1,
+      "heading": "Applicable Law; Jurisdiction"
+    },
+    {
+      "number": "11.6",
+      "depth": 1,
+      "heading": "Assignment; Successors"
+    },
+    {
+      "number": "11.7",
+      "depth": 1,
+      "heading": "Third Party Beneficiaries"
+    },
+    {
+      "number": "11.8",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "11.9",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "11.10",
+      "depth": 1,
+      "heading": "Conflict of Interest"
+    },
+    {
+      "number": "11.11",
+      "depth": 1,
+      "heading": "Attorney-Client Privilege"
+    },
+    {
+      "number": "11.12",
+      "depth": 1,
+      "heading": "No Implied Representations; Non-Reliance"
+    },
+    {
+      "number": "11.13",
+      "depth": 1,
+      "heading": "Specific Performance"
+    },
+    {
+      "number": "11.14",
+      "depth": 1,
+      "heading": "Seller Release"
+    },
+    {
+      "number": "11.15",
+      "depth": 1,
+      "heading": "Construction"
+    },
+    {
+      "number": "11.16",
+      "depth": 1,
+      "heading": "Disclosure Schedules"
+    }
+  ]
+}

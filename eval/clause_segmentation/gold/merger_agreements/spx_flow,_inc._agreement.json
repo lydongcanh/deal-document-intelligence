@@ -1,0 +1,337 @@
+{
+  "source": "merger_agreements/SPX FLOW, Inc. AGREEMENT.Pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE I",
+      "depth": 0,
+      "heading": "The Merger"
+    },
+    {
+      "number": "1.1",
+      "depth": 1,
+      "heading": "The Merger"
+    },
+    {
+      "number": "1.2",
+      "depth": 1,
+      "heading": "Closing"
+    },
+    {
+      "number": "1.3",
+      "depth": 1,
+      "heading": "Effective Time"
+    },
+    {
+      "number": "1.4",
+      "depth": 1,
+      "heading": "Effects of the Merger"
+    },
+    {
+      "number": "1.5",
+      "depth": 1,
+      "heading": "Charter and By-laws of the Surviving Corporation"
+    },
+    {
+      "number": "1.6",
+      "depth": 1,
+      "heading": "Officers and Directors of the Surviving Corporation"
+    },
+    {
+      "number": "ARTICLE II",
+      "depth": 0,
+      "heading": "Effect of the Merger on Capital Stock"
+    },
+    {
+      "number": "2.1",
+      "depth": 1,
+      "heading": "Effect on Capital Stock"
+    },
+    {
+      "number": "2.2",
+      "depth": 1,
+      "heading": "Exchange of Certificates"
+    },
+    {
+      "number": "2.3",
+      "depth": 1,
+      "heading": "Treatment of Stock Plan."
+    },
+    {
+      "number": "2.4",
+      "depth": 1,
+      "heading": "Adjustments to Prevent Dilution"
+    },
+    {
+      "number": "2.5",
+      "depth": 1,
+      "heading": "Withholding"
+    },
+    {
+      "number": "ARTICLE III",
+      "depth": 0,
+      "heading": "Representations and Warranties"
+    },
+    {
+      "number": "3.1",
+      "depth": 1,
+      "heading": "Representations and Warranties of the Company"
+    },
+    {
+      "number": "3.2",
+      "depth": 1,
+      "heading": "Representations and Warranties of Parent and Merger Sub"
+    },
+    {
+      "number": "ARTICLE IV",
+      "depth": 0,
+      "heading": "Covenants"
+    },
+    {
+      "number": "4.1",
+      "depth": 1,
+      "heading": "Interim Operations"
+    },
+    {
+      "number": "4.2",
+      "depth": 1,
+      "heading": "Acquisition Proposals"
+    },
+    {
+      "number": "4.3",
+      "depth": 1,
+      "heading": "Information Supplied"
+    },
+    {
+      "number": "4.4",
+      "depth": 1,
+      "heading": "Stockholders Meeting"
+    },
+    {
+      "number": "4.5",
+      "depth": 1,
+      "heading": "Filings\u037e Other Actions\u037e Notification"
+    },
+    {
+      "number": "4.6",
+      "depth": 1,
+      "heading": "Access and Reports"
+    },
+    {
+      "number": "4.7",
+      "depth": 1,
+      "heading": "NYSE De-listing"
+    },
+    {
+      "number": "4.8",
+      "depth": 1,
+      "heading": "Publicity"
+    },
+    {
+      "number": "4.9",
+      "depth": 1,
+      "heading": "Employee Benefits"
+    },
+    {
+      "number": "4.10",
+      "depth": 1,
+      "heading": "Expenses"
+    },
+    {
+      "number": "4.11",
+      "depth": 1,
+      "heading": "Indemnification\u037e Directors\u2019 and Officers\u2019 Insurance"
+    },
+    {
+      "number": "4.12",
+      "depth": 1,
+      "heading": "Takeover Statutes"
+    },
+    {
+      "number": "4.13",
+      "depth": 1,
+      "heading": "Control of Operations"
+    },
+    {
+      "number": "4.14",
+      "depth": 1,
+      "heading": "Section 16 Matters"
+    },
+    {
+      "number": "4.15",
+      "depth": 1,
+      "heading": "Financing Matters"
+    },
+    {
+      "number": "4.16",
+      "depth": 1,
+      "heading": "Obligations of Merger Sub"
+    },
+    {
+      "number": "4.17",
+      "depth": 1,
+      "heading": "Parent Vote"
+    },
+    {
+      "number": "4.18",
+      "depth": 1,
+      "heading": "Additional Matters"
+    },
+    {
+      "number": "4.19",
+      "depth": 1,
+      "heading": "Stockholder Litigation"
+    },
+    {
+      "number": "4.20",
+      "depth": 1,
+      "heading": "Repatriation of Foreign Cash"
+    },
+    {
+      "number": "4.21",
+      "depth": 1,
+      "heading": "Information and Consultation"
+    },
+    {
+      "number": "4.22",
+      "depth": 1,
+      "heading": "Cash Payments at Closing"
+    },
+    {
+      "number": "ARTICLE V",
+      "depth": 0,
+      "heading": "Conditions"
+    },
+    {
+      "number": "5.1",
+      "depth": 1,
+      "heading": "Conditions to Each Party\u2019s Obligation to Effect the Merger"
+    },
+    {
+      "number": "5.2",
+      "depth": 1,
+      "heading": "Conditions to Obligations of Parent and Merger Sub"
+    },
+    {
+      "number": "5.3",
+      "depth": 1,
+      "heading": "Conditions to Obligation of the Company"
+    },
+    {
+      "number": "5.4",
+      "depth": 1,
+      "heading": "Frustration of Closing Conditions"
+    },
+    {
+      "number": "ARTICLE VI",
+      "depth": 0,
+      "heading": "Termination"
+    },
+    {
+      "number": "6.1",
+      "depth": 1,
+      "heading": "Termination by Mutual Consent"
+    },
+    {
+      "number": "6.2",
+      "depth": 1,
+      "heading": "Termination by Either Parent or the Company"
+    },
+    {
+      "number": "6.3",
+      "depth": 1,
+      "heading": "Termination by the Company"
+    },
+    {
+      "number": "6.4",
+      "depth": 1,
+      "heading": "Termination by Parent"
+    },
+    {
+      "number": "6.5",
+      "depth": 1,
+      "heading": "Effect of Termination and Abandonment"
+    },
+    {
+      "number": "ARTICLE VII",
+      "depth": 0,
+      "heading": "Miscellaneous"
+    },
+    {
+      "number": "7.1",
+      "depth": 1,
+      "heading": "Survival"
+    },
+    {
+      "number": "7.2",
+      "depth": 1,
+      "heading": "Modification or Amendment"
+    },
+    {
+      "number": "7.3",
+      "depth": 1,
+      "heading": "Waiver of Conditions"
+    },
+    {
+      "number": "7.4",
+      "depth": 1,
+      "heading": "Counterparts"
+    },
+    {
+      "number": "7.5",
+      "depth": 1,
+      "heading": "GOVERNING LAW AND VENUE\u037e WAIVER OF JURY TRIAL"
+    },
+    {
+      "number": "7.6",
+      "depth": 1,
+      "heading": "Specific Performance"
+    },
+    {
+      "number": "7.7",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "7.8",
+      "depth": 1,
+      "heading": "Entire Agreement"
+    },
+    {
+      "number": "7.9",
+      "depth": 1,
+      "heading": "No Third-Party Beneficiaries"
+    },
+    {
+      "number": "7.10",
+      "depth": 1,
+      "heading": "Obligations of Parent and of the Company"
+    },
+    {
+      "number": "7.11",
+      "depth": 1,
+      "heading": "Definitions"
+    },
+    {
+      "number": "7.12",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "7.13",
+      "depth": 1,
+      "heading": "Interpretation\u037e Construction"
+    },
+    {
+      "number": "7.14",
+      "depth": 1,
+      "heading": "Assignment"
+    },
+    {
+      "number": "7.15",
+      "depth": 1,
+      "heading": "Non-Recourse"
+    }
+  ]
+}

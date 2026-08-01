@@ -1,0 +1,552 @@
+{
+  "source": "spa/ROBCLIF, INC..pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE I",
+      "depth": 0,
+      "heading": "DEFINITIONS"
+    },
+    {
+      "number": "ARTICLE II",
+      "depth": 0,
+      "heading": "TRANSACTIONS; PURCHASE PRICE"
+    },
+    {
+      "number": "2.1",
+      "depth": 1,
+      "heading": "Sale of Shares and Durox Shares"
+    },
+    {
+      "number": "2.2",
+      "depth": 1,
+      "heading": "Purchase Price"
+    },
+    {
+      "number": "2.3",
+      "depth": 1,
+      "heading": "Payment of Closing Payment and Escrow Amount"
+    },
+    {
+      "number": "2.4",
+      "depth": 1,
+      "heading": "Tax Treatment of Sale of Shares and Durox Shares"
+    },
+    {
+      "number": "2.5",
+      "depth": 1,
+      "heading": "Allocation of Purchase Price"
+    },
+    {
+      "number": "ARTICLE III",
+      "depth": 0,
+      "heading": "ADJUSTMENTS TO PURCHASE PRICE"
+    },
+    {
+      "number": "3.1",
+      "depth": 1,
+      "heading": "Pre-Closing Calculation"
+    },
+    {
+      "number": "3.2",
+      "depth": 1,
+      "heading": "Post-Closing Calculation"
+    },
+    {
+      "number": "3.3",
+      "depth": 1,
+      "heading": "Dispute Notice"
+    },
+    {
+      "number": "3.4",
+      "depth": 1,
+      "heading": "Adjustments"
+    },
+    {
+      "number": "3.5",
+      "depth": 1,
+      "heading": "Payment"
+    },
+    {
+      "number": "ARTICLE IV",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE COMPANY"
+    },
+    {
+      "number": "4.1",
+      "depth": 1,
+      "heading": "Corporate Existence"
+    },
+    {
+      "number": "4.2",
+      "depth": 1,
+      "heading": "Corporate Authority"
+    },
+    {
+      "number": "4.3",
+      "depth": 1,
+      "heading": "Absence of Conflicts"
+    },
+    {
+      "number": "4.4",
+      "depth": 1,
+      "heading": "Capitalization"
+    },
+    {
+      "number": "4.5",
+      "depth": 1,
+      "heading": "Subsidiaries"
+    },
+    {
+      "number": "4.6",
+      "depth": 1,
+      "heading": "Governmental Approvals; Consents"
+    },
+    {
+      "number": "4.7",
+      "depth": 1,
+      "heading": "Financial Statements"
+    },
+    {
+      "number": "4.8",
+      "depth": 1,
+      "heading": "Absence of Changes"
+    },
+    {
+      "number": "4.9",
+      "depth": 1,
+      "heading": "Real Property"
+    },
+    {
+      "number": "4.10",
+      "depth": 1,
+      "heading": "Contracts"
+    },
+    {
+      "number": "4.11",
+      "depth": 1,
+      "heading": "Litigation; Orders"
+    },
+    {
+      "number": "4.12",
+      "depth": 1,
+      "heading": "Intellectual Property Rights"
+    },
+    {
+      "number": "4.13",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "4.14",
+      "depth": 1,
+      "heading": "Labor Matters"
+    },
+    {
+      "number": "4.15",
+      "depth": 1,
+      "heading": "Employee Benefit Plans; Employees"
+    },
+    {
+      "number": "4.16",
+      "depth": 1,
+      "heading": "Permits; Compliance with Laws"
+    },
+    {
+      "number": "4.17",
+      "depth": 1,
+      "heading": "Assets, Inventories and Receivables"
+    },
+    {
+      "number": "4.18",
+      "depth": 1,
+      "heading": "Environmental Matters"
+    },
+    {
+      "number": "4.19",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "4.20",
+      "depth": 1,
+      "heading": "Absence of Undisclosed Liabilities"
+    },
+    {
+      "number": "4.21",
+      "depth": 1,
+      "heading": "Related Party Transactions"
+    },
+    {
+      "number": "4.22",
+      "depth": 1,
+      "heading": "Product Warranties"
+    },
+    {
+      "number": "4.23",
+      "depth": 1,
+      "heading": "Product Liability"
+    },
+    {
+      "number": "4.24",
+      "depth": 1,
+      "heading": "Finders; Brokers"
+    },
+    {
+      "number": "ARTICLE V",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF SELLER"
+    },
+    {
+      "number": "5.1",
+      "depth": 1,
+      "heading": "Corporate Existence"
+    },
+    {
+      "number": "5.2",
+      "depth": 1,
+      "heading": "Corporate Authority and Ownership"
+    },
+    {
+      "number": "5.3",
+      "depth": 1,
+      "heading": "Absence of Conflicts"
+    },
+    {
+      "number": "5.4",
+      "depth": 1,
+      "heading": "Governmental Approvals; Consents"
+    },
+    {
+      "number": "ARTICLE VI",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE BUYING PARTIES"
+    },
+    {
+      "number": "6.1",
+      "depth": 1,
+      "heading": "Corporate Existence"
+    },
+    {
+      "number": "6.2",
+      "depth": 1,
+      "heading": "Corporate Authority"
+    },
+    {
+      "number": "6.3",
+      "depth": 1,
+      "heading": "Absence of Conflicts"
+    },
+    {
+      "number": "6.4",
+      "depth": 1,
+      "heading": "Governmental Approvals; Consents"
+    },
+    {
+      "number": "6.5",
+      "depth": 1,
+      "heading": "Finders; Brokers"
+    },
+    {
+      "number": "6.6",
+      "depth": 1,
+      "heading": "Purchase for Investment"
+    },
+    {
+      "number": "6.7",
+      "depth": 1,
+      "heading": "Financing"
+    },
+    {
+      "number": "6.8",
+      "depth": 1,
+      "heading": "Litigation"
+    },
+    {
+      "number": "6.9",
+      "depth": 1,
+      "heading": "Independent Investigation"
+    },
+    {
+      "number": "ARTICLE VII",
+      "depth": 0,
+      "heading": "AGREEMENTS OF ALL PARTIES"
+    },
+    {
+      "number": "7.1",
+      "depth": 1,
+      "heading": "Operation of the Business"
+    },
+    {
+      "number": "7.2",
+      "depth": 1,
+      "heading": "Mutual Cooperation; No Inconsistent Action"
+    },
+    {
+      "number": "7.3",
+      "depth": 1,
+      "heading": "Public Disclosures"
+    },
+    {
+      "number": "7.4",
+      "depth": 1,
+      "heading": "Access to Records and Personnel"
+    },
+    {
+      "number": "7.5",
+      "depth": 1,
+      "heading": "Employee Relations and Benefits"
+    },
+    {
+      "number": "7.6",
+      "depth": 1,
+      "heading": "Update to Disclosure"
+    },
+    {
+      "number": "7.7",
+      "depth": 1,
+      "heading": "Director and Officer Indemnification."
+    },
+    {
+      "number": "7.8",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "7.9",
+      "depth": 1,
+      "heading": "No Negotiation"
+    },
+    {
+      "number": "7.10",
+      "depth": 1,
+      "heading": "Divestiture"
+    },
+    {
+      "number": "ARTICLE VIII",
+      "depth": 0,
+      "heading": "CONDITIONS"
+    },
+    {
+      "number": "8.1",
+      "depth": 1,
+      "heading": "Conditions to the Obligations of the Buying Parties"
+    },
+    {
+      "number": "8.2",
+      "depth": 1,
+      "heading": "Conditions to the Obligations of Seller"
+    },
+    {
+      "number": "8.3",
+      "depth": 1,
+      "heading": "Conditions to Obligations of Buying Parties and Seller"
+    },
+    {
+      "number": "8.4",
+      "depth": 1,
+      "heading": "Frustration of Closing Conditions"
+    },
+    {
+      "number": "ARTICLE IX",
+      "depth": 0,
+      "heading": "CLOSING"
+    },
+    {
+      "number": "9.1",
+      "depth": 1,
+      "heading": "Closing Date"
+    },
+    {
+      "number": "9.2",
+      "depth": 1,
+      "heading": "The Buying Parties\u2019 Deliveries to Seller"
+    },
+    {
+      "number": "9.3",
+      "depth": 1,
+      "heading": "The Buying Parties\u2019 Delivery to Escrow Agent"
+    },
+    {
+      "number": "9.4",
+      "depth": 1,
+      "heading": "Seller\u2019s Deliveries"
+    },
+    {
+      "number": "ARTICLE X",
+      "depth": 0,
+      "heading": "INDEMNIFICATION"
+    },
+    {
+      "number": "10.1",
+      "depth": 1,
+      "heading": "Agreement to Indemnify"
+    },
+    {
+      "number": "10.2",
+      "depth": 1,
+      "heading": "Survival of Representations and Warranties"
+    },
+    {
+      "number": "10.3",
+      "depth": 1,
+      "heading": "Notice of Claims for Indemnification"
+    },
+    {
+      "number": "10.4",
+      "depth": 1,
+      "heading": "Defense of Claims"
+    },
+    {
+      "number": "10.5",
+      "depth": 1,
+      "heading": "Settlement or Compromise"
+    },
+    {
+      "number": "10.6",
+      "depth": 1,
+      "heading": "Subrogation and Mitigation"
+    },
+    {
+      "number": "10.7",
+      "depth": 1,
+      "heading": "Environmental Actions"
+    },
+    {
+      "number": "10.8",
+      "depth": 1,
+      "heading": "Indemnification Calculations"
+    },
+    {
+      "number": "10.9",
+      "depth": 1,
+      "heading": "Tax Treatment"
+    },
+    {
+      "number": "10.10",
+      "depth": 1,
+      "heading": "Escrow Amount"
+    },
+    {
+      "number": "10.11",
+      "depth": 1,
+      "heading": "Asbestos Losses, Designated Losses and Designated Environmental Losses"
+    },
+    {
+      "number": "10.12",
+      "depth": 1,
+      "heading": "Exclusive Remedy"
+    },
+    {
+      "number": "ARTICLE XI",
+      "depth": 0,
+      "heading": "TERMINATION"
+    },
+    {
+      "number": "11.1",
+      "depth": 1,
+      "heading": "Termination Events"
+    },
+    {
+      "number": "11.2",
+      "depth": 1,
+      "heading": "Effect of Termination"
+    },
+    {
+      "number": "ARTICLE XII",
+      "depth": 0,
+      "heading": "GUARANTEE"
+    },
+    {
+      "number": "12.1",
+      "depth": 1,
+      "heading": "Buyer Guarantee"
+    },
+    {
+      "number": "12.2",
+      "depth": 1,
+      "heading": "Joint and Several Obligations"
+    },
+    {
+      "number": "ARTICLE XIII",
+      "depth": 0,
+      "heading": "MISCELLANEOUS AGREEMENTS OF THE PARTIES"
+    },
+    {
+      "number": "13.1",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "13.2",
+      "depth": 1,
+      "heading": "Transfer Taxes"
+    },
+    {
+      "number": "13.3",
+      "depth": 1,
+      "heading": "Expenses"
+    },
+    {
+      "number": "13.4",
+      "depth": 1,
+      "heading": "Non-Assignability"
+    },
+    {
+      "number": "13.5",
+      "depth": 1,
+      "heading": "Amendment; Waiver"
+    },
+    {
+      "number": "13.6",
+      "depth": 1,
+      "heading": "Third Parties"
+    },
+    {
+      "number": "13.7",
+      "depth": 1,
+      "heading": "Currency"
+    },
+    {
+      "number": "13.8",
+      "depth": 1,
+      "heading": "Governing Law; Submission to Jurisdiction; Waivers"
+    },
+    {
+      "number": "13.9",
+      "depth": 1,
+      "heading": "Specific Performance"
+    },
+    {
+      "number": "13.10",
+      "depth": 1,
+      "heading": "Entire Agreement"
+    },
+    {
+      "number": "13.11",
+      "depth": 1,
+      "heading": "Interpretation and Rules of Construction"
+    },
+    {
+      "number": "13.12",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "13.13",
+      "depth": 1,
+      "heading": "Disclosure Letter"
+    },
+    {
+      "number": "13.14",
+      "depth": 1,
+      "heading": "Language"
+    },
+    {
+      "number": "13.15",
+      "depth": 1,
+      "heading": "Counterparts"
+    }
+  ]
+}

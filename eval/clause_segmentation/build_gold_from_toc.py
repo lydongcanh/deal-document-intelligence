@@ -4,15 +4,16 @@ The TOC is the drafter's authoritative list of articles and sections. It is
 independent of our segmenter (which parses the body and skips the TOC), so it is
 a legitimate, non-circular source of ground truth at the section level.
 
-Handles the two common styles seen so far:
-    "1.1. Title ..... A-3"          (bare decimal)
-    "Section 1.1 Title ..... A-1"   (word-Section)
-and article lines "ARTICLE I ... A-1" or "ARTICLE I" (title on its own line).
+Handles the common conventions seen across the corpus:
+    articles roman ("ARTICLE I") or arabic ("ARTICLE 1"),
+    sections "1.1 ..." or "Section 1.1 ...",
+    page references "A-3" or a plain number ("15"),
+and stops at the body (a section line with no trailing page reference).
 
 Usage:
     python eval/clause_segmentation/build_gold_from_toc.py <source-under-demo-docs> [out.json]
 
-Verify the result against the PDF; TOC parsing is best-effort.
+Not every TOC parses (layouts vary); verify the result against the PDF.
 """
 
 from __future__ import annotations
@@ -28,10 +29,67 @@ REPO = Path(__file__).resolve().parents[2]
 DOCS = REPO / "demo" / "documents"
 GOLD = Path(__file__).parent / "gold"
 
-ART = re.compile(r"^ARTICLE\s+([IVXLC]+)\b\.?\s*(.*)$")
-SEC = re.compile(r"^(?:Section\s+)?(\d+\.\d+)\.?\s+(.+?)\s+A-\w+\s*$")  # TOC line w/ page ref
-BODY_SEC = re.compile(r"^(?:Section\s+)?\d+\.\d+\.?\s+\S")  # section-like, prose (body)
-PAGE_REF = re.compile(r"\s+A-\w+\s*$")
+# Match only the marker head; the remainder is taken by slicing (avoids the
+# greedy-tail patterns that backtrack).
+ART = re.compile(r"^ARTICLE\s+(\S+)", re.IGNORECASE)
+SEC = re.compile(r"^(?:Section\s+)?(\d+\.\d+)\.?", re.IGNORECASE)
+ROMAN_OR_INT = re.compile(r"[IVXLC]+|\d+", re.IGNORECASE)
+PAGE_REF = re.compile(r"A-\w+|\d+", re.IGNORECASE)  # matched against the last token only
+
+
+def _split_page_ref(rest: str) -> tuple[str, bool]:
+    """Strip a trailing page-reference token; return (text, had_ref)."""
+    text = rest.strip()
+    parts = text.rsplit(" ", 1)
+    if len(parts) == 2 and PAGE_REF.fullmatch(parts[1]):
+        return parts[0].strip(), True
+    return text, False
+
+
+def _classify_section(line: str) -> tuple[str, str, str] | None:
+    """Return (number, heading, kind) where kind is 'toc' or 'body', or None.
+
+    A number with no trailing text is a TOC entry from a two-column layout (the
+    numbers are one column, the titles another). A number followed by a page ref
+    is a normal TOC entry. A number followed by prose is the body starting.
+    """
+    m = SEC.match(line)
+    if not m:
+        return None
+    rest = line[m.end():].strip()
+    if not rest:
+        return m.group(1), "", "toc"
+    heading, had_ref = _split_page_ref(rest)
+    return m.group(1), heading, ("toc" if had_ref else "body")
+
+
+def _as_article(line: str) -> tuple[str, str] | None:
+    m = ART.match(line)
+    if not m:
+        return None
+    token = m.group(1).rstrip(".")
+    if not ROMAN_OR_INT.fullmatch(token):
+        return None
+    heading, _ = _split_page_ref(line[m.end():])
+    return f"ARTICLE {token.upper()}", heading
+
+
+def _consume(line: str, clauses: list[dict], seen: set, in_toc: bool) -> tuple[bool, bool]:
+    """Fold one line into the collection. Returns (in_toc, stop)."""
+    sec = _classify_section(line)
+    if sec:
+        num, heading, kind = sec
+        if kind == "body":
+            return in_toc, in_toc  # a section with prose (not a page ref) = body has begun
+        if ("s", num) not in seen:
+            seen.add(("s", num))
+            clauses.append({"number": num, "depth": 1, "heading": heading})
+        return True, False
+    art = _as_article(line)
+    if art and ("a", art[0]) not in seen:
+        seen.add(("a", art[0]))
+        clauses.append({"number": art[0], "depth": 0, "heading": art[1]})
+    return in_toc, False
 
 
 def build(source_rel: str) -> dict:
@@ -40,23 +98,9 @@ def build(source_rel: str) -> dict:
     seen: set = set()
     in_toc = False
     for i in range(len(pdf)):
-        for line in pdf[i].get_textpage().get_text_range().splitlines():
-            s = line.strip()
-            m_sec = SEC.match(s)
-            m_art = ART.match(s)
-            if m_sec:
-                in_toc = True
-                num = m_sec.group(1)
-                if ("s", num) not in seen:
-                    seen.add(("s", num))
-                    clauses.append({"number": num, "depth": 1, "heading": m_sec.group(2).strip()})
-            elif m_art:
-                num = f"ARTICLE {m_art.group(1)}"
-                if ("a", num) not in seen:
-                    seen.add(("a", num))
-                    title = PAGE_REF.sub("", m_art.group(2)).strip()
-                    clauses.append({"number": num, "depth": 0, "heading": title})
-            elif in_toc and BODY_SEC.match(s):
+        for raw in pdf[i].get_textpage().get_text_range().splitlines():
+            in_toc, stop = _consume(raw.strip(), clauses, seen, in_toc)
+            if stop:
                 pdf.close()
                 return _wrap(source_rel, clauses)
     pdf.close()
@@ -79,14 +123,14 @@ def main() -> None:
     if len(sys.argv) > 2:
         out = Path(sys.argv[2])
     else:
-        # Mirror the source's subfolder, e.g. merger_agreements/moneygram.json
         stem = Path(source_rel).name.rsplit(".", 1)[0].lower().replace(" ", "_")
         out = GOLD / Path(source_rel).parent / (stem + ".json")
     out.parent.mkdir(parents=True, exist_ok=True)
     data = build(source_rel)
     out.write_text(json.dumps(data, indent=2))
-    arts = [c["number"] for c in data["clauses"] if c["depth"] == 0]
-    print(f"{out.name}: {len(data['clauses'])} clauses ({len(arts)} articles) -> {arts}")
+    arts = sum(1 for c in data["clauses"] if c["depth"] == 0)
+    secs = sum(1 for c in data["clauses"] if c["depth"] == 1)
+    print(f"{out.relative_to(GOLD)}: {arts} articles, {secs} sections")
 
 
 if __name__ == "__main__":

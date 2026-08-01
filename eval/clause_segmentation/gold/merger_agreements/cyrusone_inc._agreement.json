@@ -1,0 +1,482 @@
+{
+  "source": "merger_agreements/CyrusOne Inc. Agreement.Pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE I",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "1.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "1.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "1.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "1.04",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "1.05",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "1.06",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "ARTICLE II",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "2.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "2.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "2.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "2.04",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "2.05",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "2.06",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "2.07",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "2.08",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "ARTICLE III",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "3.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.04",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.05",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.06",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.07",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.08",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.09",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.10",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.11",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.12",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.13",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.14",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.15",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.16",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.17",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.18",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.19",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.20",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "3.21",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "ARTICLE IV",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "4.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.04",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.05",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.06",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.07",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.08",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.09",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.10",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.11",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.12",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.13",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.14",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "4.15",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "ARTICLE V",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "5.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.04",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.05",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.06",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.07",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.08",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.09",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.10",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.11",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.12",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.13",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.14",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.15",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "5.16",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "ARTICLE VI",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "6.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "6.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "6.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "ARTICLE VII",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "7.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "7.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "7.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "ARTICLE VIII",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "8.01",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.02",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.03",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.04",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.05",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.06",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.07",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.08",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.09",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.10",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.11",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.12",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.13",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.14",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.15",
+      "depth": 1,
+      "heading": ""
+    }
+  ]
+}

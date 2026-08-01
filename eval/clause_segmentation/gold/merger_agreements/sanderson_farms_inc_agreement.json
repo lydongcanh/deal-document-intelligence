@@ -1,0 +1,522 @@
+{
+  "source": "merger_agreements/SANDERSON FARMS INC AGREEMENT.Pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE 1",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "1.1",
+      "depth": 1,
+      "heading": "The Merger"
+    },
+    {
+      "number": "1.2",
+      "depth": 1,
+      "heading": "Closing"
+    },
+    {
+      "number": "1.3",
+      "depth": 1,
+      "heading": "Effective Time"
+    },
+    {
+      "number": "1.4",
+      "depth": 1,
+      "heading": "Effects of the Merger"
+    },
+    {
+      "number": "1.5",
+      "depth": 1,
+      "heading": "Organizational Documents of the Surviving Corporation"
+    },
+    {
+      "number": "1.6",
+      "depth": 1,
+      "heading": "Directors of the Surviving Corporation"
+    },
+    {
+      "number": "1.7",
+      "depth": 1,
+      "heading": "Officers of the Surviving Corporation"
+    },
+    {
+      "number": "ARTICLE 2",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "2.1",
+      "depth": 1,
+      "heading": "Effect on Capital Stock"
+    },
+    {
+      "number": "2.2",
+      "depth": 1,
+      "heading": "Exchange of Certificates"
+    },
+    {
+      "number": "2.3",
+      "depth": 1,
+      "heading": "Treatment of Company Equity Awards"
+    },
+    {
+      "number": "ARTICLE 3",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "3.1",
+      "depth": 1,
+      "heading": "Qualification, Organization, Subsidiaries"
+    },
+    {
+      "number": "3.2",
+      "depth": 1,
+      "heading": "Capitalization"
+    },
+    {
+      "number": "3.3",
+      "depth": 1,
+      "heading": "Corporate Authority Relative to This Agreement\u037e No Violation"
+    },
+    {
+      "number": "3.4",
+      "depth": 1,
+      "heading": "Reports and Financial Statements"
+    },
+    {
+      "number": "3.5",
+      "depth": 1,
+      "heading": "Internal Controls and Procedures"
+    },
+    {
+      "number": "3.6",
+      "depth": 1,
+      "heading": "No Undisclosed Liabilities"
+    },
+    {
+      "number": "3.7",
+      "depth": 1,
+      "heading": "Compliance with Law\u037e Permits"
+    },
+    {
+      "number": "3.8",
+      "depth": 1,
+      "heading": "Investigations\u037e Litigation"
+    },
+    {
+      "number": "3.9",
+      "depth": 1,
+      "heading": "FDA / USDA / FTC Product Matters"
+    },
+    {
+      "number": "3.10",
+      "depth": 1,
+      "heading": "Environmental Laws and Regulations"
+    },
+    {
+      "number": "3.11",
+      "depth": 1,
+      "heading": "Employee Benefit Plans\u037e Labor Matters"
+    },
+    {
+      "number": "3.12",
+      "depth": 1,
+      "heading": "Absence of Certain Changes or Events"
+    },
+    {
+      "number": "3.13",
+      "depth": 1,
+      "heading": "Proxy Statement\u037e Other Information"
+    },
+    {
+      "number": "3.14",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "3.15",
+      "depth": 1,
+      "heading": "Intellectual Property"
+    },
+    {
+      "number": "3.16",
+      "depth": 1,
+      "heading": "Real Property\u037e Personal Property"
+    },
+    {
+      "number": "3.17",
+      "depth": 1,
+      "heading": "Opinion of Financial Advisors"
+    },
+    {
+      "number": "3.18",
+      "depth": 1,
+      "heading": "Required Vote of the Company Stockholders"
+    },
+    {
+      "number": "3.19",
+      "depth": 1,
+      "heading": "Material Contracts"
+    },
+    {
+      "number": "3.20",
+      "depth": 1,
+      "heading": "Insurance Policies"
+    },
+    {
+      "number": "3.21",
+      "depth": 1,
+      "heading": "Affiliate Party Transactions"
+    },
+    {
+      "number": "3.22",
+      "depth": 1,
+      "heading": "Finders or Brokers"
+    },
+    {
+      "number": "3.23",
+      "depth": 1,
+      "heading": "Takeover Laws"
+    },
+    {
+      "number": "3.24",
+      "depth": 1,
+      "heading": "No Additional Representations"
+    },
+    {
+      "number": "ARTICLE 4",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "4.1",
+      "depth": 1,
+      "heading": "Qualification, Organization, Subsidiaries"
+    },
+    {
+      "number": "4.2",
+      "depth": 1,
+      "heading": "Corporate Authority Relative to This Agreement\u037e No Violation"
+    },
+    {
+      "number": "4.3",
+      "depth": 1,
+      "heading": "Investigations\u037e Litigation"
+    },
+    {
+      "number": "4.4",
+      "depth": 1,
+      "heading": "Proxy Statement\u037e Other Information"
+    },
+    {
+      "number": "4.5",
+      "depth": 1,
+      "heading": "Financing"
+    },
+    {
+      "number": "4.6",
+      "depth": 1,
+      "heading": "Capitalization of Merger Sub"
+    },
+    {
+      "number": "4.7",
+      "depth": 1,
+      "heading": "No Vote of Parent Stockholders"
+    },
+    {
+      "number": "4.8",
+      "depth": 1,
+      "heading": "Finders or Brokers"
+    },
+    {
+      "number": "4.9",
+      "depth": 1,
+      "heading": "No Additional Representations"
+    },
+    {
+      "number": "4.10",
+      "depth": 1,
+      "heading": "Certain Arrangements"
+    },
+    {
+      "number": "4.11",
+      "depth": 1,
+      "heading": "Ownership of Common Stock"
+    },
+    {
+      "number": "4.12",
+      "depth": 1,
+      "heading": "Solvency"
+    },
+    {
+      "number": "4.13",
+      "depth": 1,
+      "heading": "Guarantee"
+    },
+    {
+      "number": "4.14",
+      "depth": 1,
+      "heading": "Walnut Representations"
+    },
+    {
+      "number": "ARTICLE 5",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "5.1",
+      "depth": 1,
+      "heading": "Conduct of Business by the Company"
+    },
+    {
+      "number": "5.2",
+      "depth": 1,
+      "heading": "Walnut Matters"
+    },
+    {
+      "number": "5.3",
+      "depth": 1,
+      "heading": "Control of Operations"
+    },
+    {
+      "number": "5.4",
+      "depth": 1,
+      "heading": "Access"
+    },
+    {
+      "number": "5.5",
+      "depth": 1,
+      "heading": "No Solicitation"
+    },
+    {
+      "number": "5.6",
+      "depth": 1,
+      "heading": "Filings\u037e Other Actions"
+    },
+    {
+      "number": "5.7",
+      "depth": 1,
+      "heading": "Employee Matters"
+    },
+    {
+      "number": "5.8",
+      "depth": 1,
+      "heading": "Efforts"
+    },
+    {
+      "number": "5.9",
+      "depth": 1,
+      "heading": "Takeover Statute"
+    },
+    {
+      "number": "5.10",
+      "depth": 1,
+      "heading": "Public Announcements"
+    },
+    {
+      "number": "5.11",
+      "depth": 1,
+      "heading": "Indemnification and Insurance"
+    },
+    {
+      "number": "5.12",
+      "depth": 1,
+      "heading": "Financing"
+    },
+    {
+      "number": "5.13",
+      "depth": 1,
+      "heading": "Stockholder Litigation"
+    },
+    {
+      "number": "5.14",
+      "depth": 1,
+      "heading": "Other Investors"
+    },
+    {
+      "number": "5.15",
+      "depth": 1,
+      "heading": "Stock Exchange De-listing\u037e Exchange Act Deregistration"
+    },
+    {
+      "number": "5.16",
+      "depth": 1,
+      "heading": "Rule 16b-3"
+    },
+    {
+      "number": "5.17",
+      "depth": 1,
+      "heading": "Obligations of Parent"
+    },
+    {
+      "number": "5.18",
+      "depth": 1,
+      "heading": "Further Assurances"
+    },
+    {
+      "number": "5.19",
+      "depth": 1,
+      "heading": "Tax Certificate"
+    },
+    {
+      "number": "5.20",
+      "depth": 1,
+      "heading": "Tax Abatements"
+    },
+    {
+      "number": "ARTICLE 6",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "6.1",
+      "depth": 1,
+      "heading": "Conditions to Obligation of Each Party to Effect the Merger"
+    },
+    {
+      "number": "6.2",
+      "depth": 1,
+      "heading": "Conditions to Obligation of the Company to Effect the Merger"
+    },
+    {
+      "number": "6.3",
+      "depth": 1,
+      "heading": "Conditions to Obligations of Parent and Merger Sub to Effect the Merger"
+    },
+    {
+      "number": "6.4",
+      "depth": 1,
+      "heading": "Frustration of Closing Conditions"
+    },
+    {
+      "number": "ARTICLE 7",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "7.1",
+      "depth": 1,
+      "heading": "Termination or Abandonment"
+    },
+    {
+      "number": "7.2",
+      "depth": 1,
+      "heading": "Effect of Termination"
+    },
+    {
+      "number": "7.3",
+      "depth": 1,
+      "heading": "Termination Fees"
+    },
+    {
+      "number": "ARTICLE 8",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "8.1",
+      "depth": 1,
+      "heading": "No Survival of Representations and Warranties"
+    },
+    {
+      "number": "8.2",
+      "depth": 1,
+      "heading": "Expenses"
+    },
+    {
+      "number": "8.3",
+      "depth": 1,
+      "heading": "Counterparts\u037e Effectiveness"
+    },
+    {
+      "number": "8.4",
+      "depth": 1,
+      "heading": "Governing Law\u037e Jurisdiction"
+    },
+    {
+      "number": "8.5",
+      "depth": 1,
+      "heading": "Specific Enforcement"
+    },
+    {
+      "number": "8.6",
+      "depth": 1,
+      "heading": "WAIVER OF JURY TRIAL"
+    },
+    {
+      "number": "8.7",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "8.8",
+      "depth": 1,
+      "heading": "Assignment\u037e Binding Effect"
+    },
+    {
+      "number": "8.9",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "8.10",
+      "depth": 1,
+      "heading": "Entire Agreement\u037e No Third-Party Beneficiaries"
+    },
+    {
+      "number": "8.11",
+      "depth": 1,
+      "heading": "Amendments\u037e Waivers"
+    },
+    {
+      "number": "8.12",
+      "depth": 1,
+      "heading": "Headings"
+    },
+    {
+      "number": "8.13",
+      "depth": 1,
+      "heading": "Interpretation"
+    },
+    {
+      "number": "8.14",
+      "depth": 1,
+      "heading": "Obligations of Merger Sub"
+    },
+    {
+      "number": "8.15",
+      "depth": 1,
+      "heading": "Transfer Taxes"
+    },
+    {
+      "number": "8.16",
+      "depth": 1,
+      "heading": "Debt Financing Parties"
+    },
+    {
+      "number": "8.17",
+      "depth": 1,
+      "heading": "[Reserved]"
+    },
+    {
+      "number": "8.18",
+      "depth": 1,
+      "heading": "No Recourse"
+    },
+    {
+      "number": "8.19",
+      "depth": 1,
+      "heading": "Definitions"
+    },
+    {
+      "number": "8.20",
+      "depth": 1,
+      "heading": "Terms Defined Elsewhere"
+    }
+  ]
+}

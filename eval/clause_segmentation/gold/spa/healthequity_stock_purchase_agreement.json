@@ -1,0 +1,477 @@
+{
+  "source": "spa/HealthEquity Stock Purchase Agreement.pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE I",
+      "depth": 0,
+      "heading": "DEFINITIONS"
+    },
+    {
+      "number": "1.1",
+      "depth": 1,
+      "heading": "Certain Definitions"
+    },
+    {
+      "number": "1.2",
+      "depth": 1,
+      "heading": "Terms Generally"
+    },
+    {
+      "number": "ARTICLE II",
+      "depth": 0,
+      "heading": "SALE AND PURCHASE"
+    },
+    {
+      "number": "2.1",
+      "depth": 1,
+      "heading": "Agreement to Sell and Purchase"
+    },
+    {
+      "number": "2.2",
+      "depth": 1,
+      "heading": "Closing"
+    },
+    {
+      "number": "2.3",
+      "depth": 1,
+      "heading": "Closing Deliverables"
+    },
+    {
+      "number": "2.4",
+      "depth": 1,
+      "heading": "Purchase Price"
+    },
+    {
+      "number": "2.5",
+      "depth": 1,
+      "heading": "Closing Calculations"
+    },
+    {
+      "number": "2.6",
+      "depth": 1,
+      "heading": "Final Consideration Calculation"
+    },
+    {
+      "number": "2.7",
+      "depth": 1,
+      "heading": "Post-Closing Adjustment Payment"
+    },
+    {
+      "number": "2.8",
+      "depth": 1,
+      "heading": "Escrow Amounts"
+    },
+    {
+      "number": "2.9",
+      "depth": 1,
+      "heading": "Withholding Taxes"
+    },
+    {
+      "number": "2.10",
+      "depth": 1,
+      "heading": "Rights Not Transferable"
+    },
+    {
+      "number": "2.11",
+      "depth": 1,
+      "heading": "Company Options"
+    },
+    {
+      "number": "2.12",
+      "depth": 1,
+      "heading": "Earn-Out"
+    },
+    {
+      "number": "ARTICLE III",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE SELLERS"
+    },
+    {
+      "number": "3.1",
+      "depth": 1,
+      "heading": "Organization; Good Standing; Qualification and Power"
+    },
+    {
+      "number": "3.2",
+      "depth": 1,
+      "heading": "Authorization"
+    },
+    {
+      "number": "3.3",
+      "depth": 1,
+      "heading": "Title"
+    },
+    {
+      "number": "3.4",
+      "depth": 1,
+      "heading": "Non-contravention"
+    },
+    {
+      "number": "3.5",
+      "depth": 1,
+      "heading": "Consents and Approvals"
+    },
+    {
+      "number": "3.6",
+      "depth": 1,
+      "heading": "Capitalization of the Company"
+    },
+    {
+      "number": "3.7",
+      "depth": 1,
+      "heading": "Subsidiaries; Equity Investments"
+    },
+    {
+      "number": "3.8",
+      "depth": 1,
+      "heading": "Bankruptcy, Etc"
+    },
+    {
+      "number": "3.9",
+      "depth": 1,
+      "heading": "Financial Statements"
+    },
+    {
+      "number": "3.10",
+      "depth": 1,
+      "heading": "Liabilities"
+    },
+    {
+      "number": "3.11",
+      "depth": 1,
+      "heading": "Internal Accounting Controls"
+    },
+    {
+      "number": "3.12",
+      "depth": 1,
+      "heading": "Accounts Receivable"
+    },
+    {
+      "number": "3.13",
+      "depth": 1,
+      "heading": "Certain Business Practices"
+    },
+    {
+      "number": "3.14",
+      "depth": 1,
+      "heading": "Absence of Certain Developments"
+    },
+    {
+      "number": "3.15",
+      "depth": 1,
+      "heading": "Compliance with Law"
+    },
+    {
+      "number": "3.16",
+      "depth": 1,
+      "heading": "Sufficiency of Assets; Title to Properties"
+    },
+    {
+      "number": "3.17",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "3.18",
+      "depth": 1,
+      "heading": "Intellectual Property"
+    },
+    {
+      "number": "3.19",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "3.20",
+      "depth": 1,
+      "heading": "Litigation"
+    },
+    {
+      "number": "3.21",
+      "depth": 1,
+      "heading": "Bank Accounts"
+    },
+    {
+      "number": "3.22",
+      "depth": 1,
+      "heading": "Material Customers and Suppliers"
+    },
+    {
+      "number": "3.23",
+      "depth": 1,
+      "heading": "Labor Matters"
+    },
+    {
+      "number": "3.24",
+      "depth": 1,
+      "heading": "Employee Benefits"
+    },
+    {
+      "number": "3.25",
+      "depth": 1,
+      "heading": "Environmental and Safety"
+    },
+    {
+      "number": "3.26",
+      "depth": 1,
+      "heading": "Related Party Transactions"
+    },
+    {
+      "number": "3.27",
+      "depth": 1,
+      "heading": "Material Contracts"
+    },
+    {
+      "number": "3.28",
+      "depth": 1,
+      "heading": "Sufficiency of Assets"
+    },
+    {
+      "number": "3.29",
+      "depth": 1,
+      "heading": "Exclusivity of Representations"
+    },
+    {
+      "number": "3.30",
+      "depth": 1,
+      "heading": "Brokers or Finders"
+    },
+    {
+      "number": "3.31",
+      "depth": 1,
+      "heading": "Books and Records"
+    },
+    {
+      "number": "3.32",
+      "depth": 1,
+      "heading": "Privacy and Data Security"
+    },
+    {
+      "number": "ARTICLE IV",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE PURCHASER"
+    },
+    {
+      "number": "4.1",
+      "depth": 1,
+      "heading": "Organization; Good Standing; Qualification and Power"
+    },
+    {
+      "number": "4.2",
+      "depth": 1,
+      "heading": "Authorization"
+    },
+    {
+      "number": "4.3",
+      "depth": 1,
+      "heading": "Investment Intent"
+    },
+    {
+      "number": "4.4",
+      "depth": 1,
+      "heading": "Brokers or Finders"
+    },
+    {
+      "number": "4.5",
+      "depth": 1,
+      "heading": "Investigation; Reliance"
+    },
+    {
+      "number": "4.6",
+      "depth": 1,
+      "heading": "No Violations; Consents and Approvals"
+    },
+    {
+      "number": "4.7",
+      "depth": 1,
+      "heading": "Litigation"
+    },
+    {
+      "number": "ARTICLE V",
+      "depth": 0,
+      "heading": "SURVIVAL AND INDEMNIFICATION"
+    },
+    {
+      "number": "5.1",
+      "depth": 1,
+      "heading": "Survival of Representations, Warranties"
+    },
+    {
+      "number": "5.2",
+      "depth": 1,
+      "heading": "Indemnification by the Sellers"
+    },
+    {
+      "number": "5.3",
+      "depth": 1,
+      "heading": "Indemnification by the Purchaser"
+    },
+    {
+      "number": "5.4",
+      "depth": 1,
+      "heading": "Claim Procedures"
+    },
+    {
+      "number": "5.5",
+      "depth": 1,
+      "heading": "Calculation of Losses"
+    },
+    {
+      "number": "5.6",
+      "depth": 1,
+      "heading": "Treatment of Indemnification Payments"
+    },
+    {
+      "number": "5.7",
+      "depth": 1,
+      "heading": "Escrow Accounts; Order of Recovery"
+    },
+    {
+      "number": "5.8",
+      "depth": 1,
+      "heading": "Other Limitations and Agreements"
+    },
+    {
+      "number": "ARTICLE VI",
+      "depth": 0,
+      "heading": "AGREEMENTS"
+    },
+    {
+      "number": "6.1",
+      "depth": 1,
+      "heading": "Non-Competition; Non-Solicitation and Interference"
+    },
+    {
+      "number": "6.2",
+      "depth": 1,
+      "heading": "Termination of Related Party Contracts"
+    },
+    {
+      "number": "6.3",
+      "depth": 1,
+      "heading": "Representative; Power of Attorney"
+    },
+    {
+      "number": "6.4",
+      "depth": 1,
+      "heading": "Release"
+    },
+    {
+      "number": "6.5",
+      "depth": 1,
+      "heading": "R&W Insurance Policy"
+    },
+    {
+      "number": "6.6",
+      "depth": 1,
+      "heading": "Employee Matters"
+    },
+    {
+      "number": "6.7",
+      "depth": 1,
+      "heading": "Director and Officer Indemnification"
+    },
+    {
+      "number": "6.8",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "ARTICLE VII",
+      "depth": 0,
+      "heading": "MISCELLANEOUS"
+    },
+    {
+      "number": "7.1",
+      "depth": 1,
+      "heading": "No Third Party Beneficiaries"
+    },
+    {
+      "number": "7.2",
+      "depth": 1,
+      "heading": "Expenses"
+    },
+    {
+      "number": "7.3",
+      "depth": 1,
+      "heading": "Confidentiality"
+    },
+    {
+      "number": "7.4",
+      "depth": 1,
+      "heading": "Entire Agreement"
+    },
+    {
+      "number": "7.5",
+      "depth": 1,
+      "heading": "Successors and Assigns"
+    },
+    {
+      "number": "7.6",
+      "depth": 1,
+      "heading": "Counterparts"
+    },
+    {
+      "number": "7.7",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "7.8",
+      "depth": 1,
+      "heading": "Amendments and Waivers"
+    },
+    {
+      "number": "7.9",
+      "depth": 1,
+      "heading": "Incorporation of Annexes, Disclosure Schedules and Exhibits"
+    },
+    {
+      "number": "7.10",
+      "depth": 1,
+      "heading": "Disclosure Schedules"
+    },
+    {
+      "number": "7.11",
+      "depth": 1,
+      "heading": "Construction"
+    },
+    {
+      "number": "7.12",
+      "depth": 1,
+      "heading": "Independence of Representations and Warranties"
+    },
+    {
+      "number": "7.13",
+      "depth": 1,
+      "heading": "Remedies"
+    },
+    {
+      "number": "7.14",
+      "depth": 1,
+      "heading": "Further Assurances"
+    },
+    {
+      "number": "7.15",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "7.16",
+      "depth": 1,
+      "heading": "Governing Law"
+    },
+    {
+      "number": "7.17",
+      "depth": 1,
+      "heading": "Exclusive Jurisdiction and Service of Process"
+    },
+    {
+      "number": "7.18",
+      "depth": 1,
+      "heading": "Waiver of Jury Trial"
+    }
+  ]
+}

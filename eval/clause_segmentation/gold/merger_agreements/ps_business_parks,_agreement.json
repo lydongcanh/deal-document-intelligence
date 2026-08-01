@@ -1,0 +1,492 @@
+{
+  "source": "merger_agreements/PS BUSINESS PARKS, AGREEMENT.Pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE I",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "1.1",
+      "depth": 1,
+      "heading": "The Mergers"
+    },
+    {
+      "number": "1.2",
+      "depth": 1,
+      "heading": "Governing Documents"
+    },
+    {
+      "number": "1.3",
+      "depth": 1,
+      "heading": "Directors, Officers, General Partner and Limited Partners of the Surviving Entities"
+    },
+    {
+      "number": "1.4",
+      "depth": 1,
+      "heading": "Effective Times"
+    },
+    {
+      "number": "1.5",
+      "depth": 1,
+      "heading": "Closing of the Mergers"
+    },
+    {
+      "number": "1.6",
+      "depth": 1,
+      "heading": "Effects of the Mergers"
+    },
+    {
+      "number": "1.7",
+      "depth": 1,
+      "heading": "Tax Consequences"
+    },
+    {
+      "number": "ARTICLE II",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "2.1",
+      "depth": 1,
+      "heading": "Effect on Company Shares\u037e Effect on Company Preferred Shares"
+    },
+    {
+      "number": "2.2",
+      "depth": 1,
+      "heading": "Preferred Shares of the Company"
+    },
+    {
+      "number": "2.3",
+      "depth": 1,
+      "heading": "Partnership Unit Merger Consideration\u037e Effect on Partnership Units"
+    },
+    {
+      "number": "2.4",
+      "depth": 1,
+      "heading": "Treatment of Equity-Based Awards"
+    },
+    {
+      "number": "2.5",
+      "depth": 1,
+      "heading": "Exchange of Certificates"
+    },
+    {
+      "number": "2.6",
+      "depth": 1,
+      "heading": "Exchange Procedures"
+    },
+    {
+      "number": "2.7",
+      "depth": 1,
+      "heading": "Withholding Rights"
+    },
+    {
+      "number": "2.8",
+      "depth": 1,
+      "heading": "Dissenters\u2019 Rights"
+    },
+    {
+      "number": "2.9",
+      "depth": 1,
+      "heading": "Adjustment of Certain Merger Consideration"
+    },
+    {
+      "number": "ARTICLE III",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "3.1",
+      "depth": 1,
+      "heading": "Organization and Qualification\u037e Subsidiaries"
+    },
+    {
+      "number": "3.2",
+      "depth": 1,
+      "heading": "Capitalization"
+    },
+    {
+      "number": "3.3",
+      "depth": 1,
+      "heading": "Authority"
+    },
+    {
+      "number": "3.4",
+      "depth": 1,
+      "heading": "No Conflict\u037e Required Filings and Consents"
+    },
+    {
+      "number": "3.5",
+      "depth": 1,
+      "heading": "Company SEC Documents\u037e Financial Statements"
+    },
+    {
+      "number": "3.6",
+      "depth": 1,
+      "heading": "Information Supplied"
+    },
+    {
+      "number": "3.7",
+      "depth": 1,
+      "heading": "Absence of Certain Changes"
+    },
+    {
+      "number": "3.8",
+      "depth": 1,
+      "heading": "Undisclosed Liabilities"
+    },
+    {
+      "number": "3.9",
+      "depth": 1,
+      "heading": "Permits\u037e Compliance with Laws"
+    },
+    {
+      "number": "3.10",
+      "depth": 1,
+      "heading": "Litigation"
+    },
+    {
+      "number": "3.11",
+      "depth": 1,
+      "heading": "Employee Benefits"
+    },
+    {
+      "number": "3.12",
+      "depth": 1,
+      "heading": "Labor Matters"
+    },
+    {
+      "number": "3.13",
+      "depth": 1,
+      "heading": "Tax Matters"
+    },
+    {
+      "number": "3.14",
+      "depth": 1,
+      "heading": "Real Property"
+    },
+    {
+      "number": "3.15",
+      "depth": 1,
+      "heading": "Environmental Matters"
+    },
+    {
+      "number": "3.16",
+      "depth": 1,
+      "heading": "Intellectual Property"
+    },
+    {
+      "number": "3.17",
+      "depth": 1,
+      "heading": "Contracts"
+    },
+    {
+      "number": "3.18",
+      "depth": 1,
+      "heading": "Opinion of Financial Advisor"
+    },
+    {
+      "number": "3.19",
+      "depth": 1,
+      "heading": "Takeover Statutes"
+    },
+    {
+      "number": "3.20",
+      "depth": 1,
+      "heading": "Vote Required"
+    },
+    {
+      "number": "3.21",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "3.22",
+      "depth": 1,
+      "heading": "Investment Company Act"
+    },
+    {
+      "number": "3.23",
+      "depth": 1,
+      "heading": "Brokers"
+    },
+    {
+      "number": "3.24",
+      "depth": 1,
+      "heading": "Acknowledgement of No Other Representations or Warranties"
+    },
+    {
+      "number": "ARTICLE IV",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "4.1",
+      "depth": 1,
+      "heading": "Organization"
+    },
+    {
+      "number": "4.2",
+      "depth": 1,
+      "heading": "Authority"
+    },
+    {
+      "number": "4.3",
+      "depth": 1,
+      "heading": "No Conflict\u037e Required Filings and Consents"
+    },
+    {
+      "number": "4.4",
+      "depth": 1,
+      "heading": "Litigation"
+    },
+    {
+      "number": "4.5",
+      "depth": 1,
+      "heading": "Brokers"
+    },
+    {
+      "number": "4.6",
+      "depth": 1,
+      "heading": "Information Supplied"
+    },
+    {
+      "number": "4.7",
+      "depth": 1,
+      "heading": "Merger Sub I and Merger Sub II"
+    },
+    {
+      "number": "4.8",
+      "depth": 1,
+      "heading": "Sufficient Funds"
+    },
+    {
+      "number": "4.9",
+      "depth": 1,
+      "heading": "Guaranty"
+    },
+    {
+      "number": "4.10",
+      "depth": 1,
+      "heading": "Solvency"
+    },
+    {
+      "number": "4.11",
+      "depth": 1,
+      "heading": "Absence of Certain Arrangements"
+    },
+    {
+      "number": "4.12",
+      "depth": 1,
+      "heading": "Acknowledgement of No Other Representations and Warranties"
+    },
+    {
+      "number": "ARTICLE V",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "5.1",
+      "depth": 1,
+      "heading": "Conduct of Business by the Company Pending the Mergers"
+    },
+    {
+      "number": "5.2",
+      "depth": 1,
+      "heading": "Access to Information"
+    },
+    {
+      "number": "5.3",
+      "depth": 1,
+      "heading": "Proxy Statement"
+    },
+    {
+      "number": "5.4",
+      "depth": 1,
+      "heading": "Company Shareholders\u2019 Meeting"
+    },
+    {
+      "number": "5.5",
+      "depth": 1,
+      "heading": "Appropriate Action\u037e Consents\u037e Filings"
+    },
+    {
+      "number": "5.6",
+      "depth": 1,
+      "heading": "Solicitation\u037e Acquisition Proposals\u037e Adverse Recommendation Change"
+    },
+    {
+      "number": "5.7",
+      "depth": 1,
+      "heading": "Public Announcements"
+    },
+    {
+      "number": "5.8",
+      "depth": 1,
+      "heading": "Directors\u2019 and Officers\u2019 Indemnification"
+    },
+    {
+      "number": "5.9",
+      "depth": 1,
+      "heading": "Employee Matters"
+    },
+    {
+      "number": "5.10",
+      "depth": 1,
+      "heading": "Notification of Certain Matters"
+    },
+    {
+      "number": "5.11",
+      "depth": 1,
+      "heading": "Dividends"
+    },
+    {
+      "number": "5.12",
+      "depth": 1,
+      "heading": "Other Transactions"
+    },
+    {
+      "number": "5.13",
+      "depth": 1,
+      "heading": "Taxes"
+    },
+    {
+      "number": "5.14",
+      "depth": 1,
+      "heading": "Rule 16b-3 Matters"
+    },
+    {
+      "number": "5.15",
+      "depth": 1,
+      "heading": "Financing"
+    },
+    {
+      "number": "5.16",
+      "depth": 1,
+      "heading": "Partnership Conversion"
+    },
+    {
+      "number": "5.17",
+      "depth": 1,
+      "heading": "Certain Transactions"
+    },
+    {
+      "number": "ARTICLE VI",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "6.1",
+      "depth": 1,
+      "heading": "Conditions to Each Party\u2019s Obligations to Effect the Mergers"
+    },
+    {
+      "number": "6.2",
+      "depth": 1,
+      "heading": "Conditions to the Obligations of Parent, Merger Sub I and Merger Sub II"
+    },
+    {
+      "number": "6.3",
+      "depth": 1,
+      "heading": "Conditions to Obligations of the Company and the Partnership"
+    },
+    {
+      "number": "6.4",
+      "depth": 1,
+      "heading": "Frustration of Closing Conditions"
+    },
+    {
+      "number": "ARTICLE VII",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "7.1",
+      "depth": 1,
+      "heading": "Termination"
+    },
+    {
+      "number": "7.2",
+      "depth": 1,
+      "heading": "Effect of the Termination"
+    },
+    {
+      "number": "7.3",
+      "depth": 1,
+      "heading": "Fees and Expenses"
+    },
+    {
+      "number": "7.4",
+      "depth": 1,
+      "heading": "Payment of Amount or Expense"
+    },
+    {
+      "number": "ARTICLE VIII",
+      "depth": 0,
+      "heading": ""
+    },
+    {
+      "number": "8.1",
+      "depth": 1,
+      "heading": "Nonsurvival of Representations and Warranties"
+    },
+    {
+      "number": "8.2",
+      "depth": 1,
+      "heading": "Entire Agreement\u037e Assignment"
+    },
+    {
+      "number": "8.3",
+      "depth": 1,
+      "heading": "Notices"
+    },
+    {
+      "number": "8.4",
+      "depth": 1,
+      "heading": "Governing Law and Venue\u037e Waiver of Jury Trial"
+    },
+    {
+      "number": "8.5",
+      "depth": 1,
+      "heading": "Interpretation\u037e Certain Definitions"
+    },
+    {
+      "number": "8.6",
+      "depth": 1,
+      "heading": "Parties In Interest"
+    },
+    {
+      "number": "8.7",
+      "depth": 1,
+      "heading": "Severability"
+    },
+    {
+      "number": "8.8",
+      "depth": 1,
+      "heading": "Specific Performance"
+    },
+    {
+      "number": "8.9",
+      "depth": 1,
+      "heading": "Amendment"
+    },
+    {
+      "number": "8.10",
+      "depth": 1,
+      "heading": "Extension\u037e Waiver"
+    },
+    {
+      "number": "8.11",
+      "depth": 1,
+      "heading": "Counterparts"
+    },
+    {
+      "number": "8.12",
+      "depth": 1,
+      "heading": "Definitions"
+    }
+  ]
+}

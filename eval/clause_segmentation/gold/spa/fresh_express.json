@@ -1,0 +1,462 @@
+{
+  "source": "spa/FRESH EXPRESS.pdf",
+  "page_range": null,
+  "note": "Derived from the document's own table of contents (independent of the segmenter, which parses the body). Section level (Article + N.M). Verify against the PDF.",
+  "clauses": [
+    {
+      "number": "ARTICLE 1",
+      "depth": 0,
+      "heading": "DEFINITIONS"
+    },
+    {
+      "number": "1.01",
+      "depth": 1,
+      "heading": "Definitions"
+    },
+    {
+      "number": "1.02",
+      "depth": 1,
+      "heading": "Rules of Construction"
+    },
+    {
+      "number": "ARTICLE 2",
+      "depth": 0,
+      "heading": "PURCHASE AND SALE"
+    },
+    {
+      "number": "2.01",
+      "depth": 1,
+      "heading": "Purchase and Sale of the Shares"
+    },
+    {
+      "number": "2.02",
+      "depth": 1,
+      "heading": "Payment of the Purchase Price"
+    },
+    {
+      "number": "2.03",
+      "depth": 1,
+      "heading": "Closing"
+    },
+    {
+      "number": "2.04",
+      "depth": 1,
+      "heading": "Payments at Closing"
+    },
+    {
+      "number": "2.05",
+      "depth": 1,
+      "heading": "Closing Deliveries by the Seller"
+    },
+    {
+      "number": "2.06",
+      "depth": 1,
+      "heading": "Closing Deliveries by the Purchaser"
+    },
+    {
+      "number": "2.07",
+      "depth": 1,
+      "heading": "Pre-Closing Adjustment to Purchase Price"
+    },
+    {
+      "number": "2.08",
+      "depth": 1,
+      "heading": "Post-Closing Adjustment to Purchase Price"
+    },
+    {
+      "number": "2.09",
+      "depth": 1,
+      "heading": "Insurance Policy Cost Reimbursement"
+    },
+    {
+      "number": "2.10",
+      "depth": 1,
+      "heading": "Withholding"
+    },
+    {
+      "number": "ARTICLE 3",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE SELLER and the seller guarantor"
+    },
+    {
+      "number": "3.01",
+      "depth": 1,
+      "heading": "Organization"
+    },
+    {
+      "number": "3.02",
+      "depth": 1,
+      "heading": "Due Authorization; Enforceability"
+    },
+    {
+      "number": "3.03",
+      "depth": 1,
+      "heading": "Governmental Consents and Approvals"
+    },
+    {
+      "number": "3.04",
+      "depth": 1,
+      "heading": "Title to the Shares"
+    },
+    {
+      "number": "3.05",
+      "depth": 1,
+      "heading": "No Conflict"
+    },
+    {
+      "number": "3.06",
+      "depth": 1,
+      "heading": "Sufficient Cash"
+    },
+    {
+      "number": "ARTICLE 4",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE COMPANY"
+    },
+    {
+      "number": "4.01",
+      "depth": 1,
+      "heading": "Organization, Authority and Qualification of the Company"
+    },
+    {
+      "number": "4.02",
+      "depth": 1,
+      "heading": "Subsidiaries"
+    },
+    {
+      "number": "4.03",
+      "depth": 1,
+      "heading": "Due Authorization; Enforceability"
+    },
+    {
+      "number": "4.04",
+      "depth": 1,
+      "heading": "Capitalization; Officers and Directors."
+    },
+    {
+      "number": "4.05",
+      "depth": 1,
+      "heading": "Governmental Consents and Approvals"
+    },
+    {
+      "number": "4.06",
+      "depth": 1,
+      "heading": "No Conflict"
+    },
+    {
+      "number": "4.07",
+      "depth": 1,
+      "heading": "Financial Information"
+    },
+    {
+      "number": "4.08",
+      "depth": 1,
+      "heading": "Permits"
+    },
+    {
+      "number": "4.09",
+      "depth": 1,
+      "heading": "Absence of Certain Changes"
+    },
+    {
+      "number": "4.10",
+      "depth": 1,
+      "heading": "Absence of Litigation"
+    },
+    {
+      "number": "4.11",
+      "depth": 1,
+      "heading": "Compliance with Laws"
+    },
+    {
+      "number": "4.12",
+      "depth": 1,
+      "heading": "Food Safety Requirements"
+    },
+    {
+      "number": "4.13",
+      "depth": 1,
+      "heading": "Material Contracts"
+    },
+    {
+      "number": "4.14",
+      "depth": 1,
+      "heading": "Customers and Suppliers"
+    },
+    {
+      "number": "4.15",
+      "depth": 1,
+      "heading": "Intellectual Property"
+    },
+    {
+      "number": "4.16",
+      "depth": 1,
+      "heading": "Real Property"
+    },
+    {
+      "number": "4.17",
+      "depth": 1,
+      "heading": "Affiliate Transactions"
+    },
+    {
+      "number": "4.18",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "4.19",
+      "depth": 1,
+      "heading": "Taxes"
+    },
+    {
+      "number": "4.20",
+      "depth": 1,
+      "heading": "Environmental Matters"
+    },
+    {
+      "number": "4.21",
+      "depth": 1,
+      "heading": "Employee Benefit Plans"
+    },
+    {
+      "number": "4.22",
+      "depth": 1,
+      "heading": "Labor Matters."
+    },
+    {
+      "number": "4.23",
+      "depth": 1,
+      "heading": "No Brokers"
+    },
+    {
+      "number": "4.24",
+      "depth": 1,
+      "heading": "Tangible Personal Property; Inventory; Accounts Receivable."
+    },
+    {
+      "number": "ARTICLE 5",
+      "depth": 0,
+      "heading": "REPRESENTATIONS AND WARRANTIES OF THE PURCHASER AND THE Purchaser"
+    },
+    {
+      "number": "5.01",
+      "depth": 1,
+      "heading": "Organization"
+    },
+    {
+      "number": "5.02",
+      "depth": 1,
+      "heading": "Due Authorization; Enforceability"
+    },
+    {
+      "number": "5.03",
+      "depth": 1,
+      "heading": "Governmental Consents and Approvals"
+    },
+    {
+      "number": "5.04",
+      "depth": 1,
+      "heading": "No Conflict"
+    },
+    {
+      "number": "5.05",
+      "depth": 1,
+      "heading": "Absence of Litigation"
+    },
+    {
+      "number": "5.06",
+      "depth": 1,
+      "heading": "Investment Intention"
+    },
+    {
+      "number": "5.07",
+      "depth": 1,
+      "heading": "Solvency"
+    },
+    {
+      "number": "5.08",
+      "depth": 1,
+      "heading": "Availability of Funds"
+    },
+    {
+      "number": "5.09",
+      "depth": 1,
+      "heading": "No Other Information"
+    },
+    {
+      "number": "5.10",
+      "depth": 1,
+      "heading": "No Brokers"
+    },
+    {
+      "number": "ARTICLE 6",
+      "depth": 0,
+      "heading": "COVENANTS AND ADDITIONAL AGREEMENTS"
+    },
+    {
+      "number": "6.01",
+      "depth": 1,
+      "heading": "Conduct of Business Prior to the Closing"
+    },
+    {
+      "number": "6.02",
+      "depth": 1,
+      "heading": "Access to Information; Preservation of Records"
+    },
+    {
+      "number": "6.03",
+      "depth": 1,
+      "heading": "Confidentiality"
+    },
+    {
+      "number": "6.04",
+      "depth": 1,
+      "heading": "Reasonable Best Efforts; Regulatory and Other Authorizations; Consents"
+    },
+    {
+      "number": "6.05",
+      "depth": 1,
+      "heading": "Legal Privileges"
+    },
+    {
+      "number": "6.06",
+      "depth": 1,
+      "heading": "Employee Matters"
+    },
+    {
+      "number": "6.07",
+      "depth": 1,
+      "heading": "Further Action"
+    },
+    {
+      "number": "6.08",
+      "depth": 1,
+      "heading": "Insurance"
+    },
+    {
+      "number": "6.09",
+      "depth": 1,
+      "heading": "Cash at Closing"
+    },
+    {
+      "number": "6.10",
+      "depth": 1,
+      "heading": "R&W Policy"
+    },
+    {
+      "number": "6.11",
+      "depth": 1,
+      "heading": "Real Estate Covenants"
+    },
+    {
+      "number": "6.12",
+      "depth": 1,
+      "heading": "Certain Covenants."
+    },
+    {
+      "number": "6.13",
+      "depth": 1,
+      "heading": "Termination of Related Party Contracts"
+    },
+    {
+      "number": "6.14",
+      "depth": 1,
+      "heading": "Release"
+    },
+    {
+      "number": "6.15",
+      "depth": 1,
+      "heading": "Exclusivity."
+    },
+    {
+      "number": "6.16",
+      "depth": 1,
+      "heading": "Non-Assignable Assets"
+    },
+    {
+      "number": "6.17",
+      "depth": 1,
+      "heading": "Further Assurances; Unintentionally Omitted Assets; Parent Guarantees."
+    },
+    {
+      "number": "6.18",
+      "depth": 1,
+      "heading": "Transition Services"
+    },
+    {
+      "number": "ARTICLE 7",
+      "depth": 0,
+      "heading": "CONDITIONS TO CLOSING"
+    },
+    {
+      "number": "7.01",
+      "depth": 1,
+      "heading": "Conditions to Obligations of the Seller and the Company"
+    },
+    {
+      "number": "7.02",
+      "depth": 1,
+      "heading": "Conditions to Obligations of the Purchaser"
+    },
+    {
+      "number": "ARTICLE 8",
+      "depth": 0,
+      "heading": "SURVIVAL; INDEMNIFICATION"
+    },
+    {
+      "number": "8.01",
+      "depth": 1,
+      "heading": "Survival"
+    },
+    {
+      "number": "8.02",
+      "depth": 1,
+      "heading": "Indemnification of the Purchaser"
+    },
+    {
+      "number": "8.03",
+      "depth": 1,
+      "heading": "Indemnification of the Seller"
+    },
+    {
+      "number": "8.04",
+      "depth": 1,
+      "heading": "Procedures for Indemnification Claims."
+    },
+    {
+      "number": "8.05",
+      "depth": 1,
+      "heading": "Additional Limits on Rights to Indemnification"
+    },
+    {
+      "number": "8.06",
+      "depth": 1,
+      "heading": "Subrogation"
+    },
+    {
+      "number": "8.07",
+      "depth": 1,
+      "heading": "Payment of Indemnification Claims"
+    },
+    {
+      "number": "8.08",
+      "depth": 1,
+      "heading": ""
+    },
+    {
+      "number": "8.09",
+      "depth": 1,
+      "heading": "Exclusive Remedy"
+    },
+    {
+      "number": "ARTICLE 9",
+      "depth": 0,
+      "heading": "TERMINATION"
+    },
+    {
+      "number": "9.01",
+      "depth": 1,
+      "heading": ""
+    }
+  ]
+}
