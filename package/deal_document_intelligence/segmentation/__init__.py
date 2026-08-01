@@ -7,6 +7,10 @@ Next: numbering grammar, constrained decoder, exact-span materializer.
 from deal_document_intelligence.segmentation.candidate import Candidate
 from deal_document_intelligence.segmentation.candidate_anchors import generate_candidates
 from deal_document_intelligence.segmentation.clause_node import ClauseNode
+from deal_document_intelligence.segmentation.confidence import (
+    REVIEW_THRESHOLD,
+    assess_confidence,
+)
 from deal_document_intelligence.segmentation.clause_segmenter import ClauseSegmenter
 from deal_document_intelligence.segmentation.decoder import body_start_index, decode
 from deal_document_intelligence.segmentation.numbering import (
@@ -34,4 +38,6 @@ __all__ = [
     "materialize_spans",
     "clause_tree",
     "validate_tree",
+    "assess_confidence",
+    "REVIEW_THRESHOLD",
 ]

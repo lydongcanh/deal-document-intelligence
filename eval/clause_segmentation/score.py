@@ -69,12 +69,19 @@ def score_file(path: Path) -> dict:
     duplicates: list[str] = []
     for u in units:
         depth = u.meta.get("depth", 9)
-        if u.number and depth <= 1:
-            key = _norm(u.number)
-            if key in pred:
-                duplicates.append(u.number)
-            else:
-                pred[key] = (u.number, depth)
+        if not u.number or depth > 1:
+            continue
+        key = _norm(u.number)
+        # Gold is section level (articles and N.M sections). A parenthesised
+        # sub-part ((a), (i)) is never a section, so score it at the sub-part
+        # level, not here: _norm tags these "RAW". Counting them would penalise
+        # precision for a depth error the section-level gold cannot express.
+        if key[0] == "RAW":
+            continue
+        if key in pred:
+            duplicates.append(u.number)
+        else:
+            pred[key] = (u.number, depth)
 
     # A clause is correct only if BOTH its number and its depth match.
     correct = [k for k in want if k in pred and pred[k][1] == want[k][1]]

@@ -13,6 +13,7 @@ from deal_document_intelligence.interfaces import Segmenter
 from deal_document_intelligence.segmentation import (
     Candidate,
     ClauseSegmenter,
+    assess_confidence,
     clause_tree,
     decode,
     generate_candidates,
@@ -153,6 +154,62 @@ def test_section_ending_in_one_is_not_over_nested() -> None:
     assert all(n.depth <= 1 for n in decode(doc))  # no 0,1,2,3 runaway
 
 
+def test_article_adopts_section_when_opener_is_missing() -> None:
+    # An article's real first section (6.01) can be dropped or reordered by the
+    # parser. The article must still adopt 6.02 as its child, or the whole
+    # article's sections collapse (regression seen on a real SPA).
+    body = "x" * 400
+    doc = _doc([
+        "ARTICLE V", f"5.1 A {body}",
+        "ARTICLE VI", f"6.02 B {body}", f"6.03 C {body}",
+    ])
+    by = {n.marker_text: n for n in decode(doc)}
+    assert by["ARTICLE VI"].depth == 0
+    assert by["6.02"].depth == 1 and by["6.02"].parent_id == by["ARTICLE VI"].id
+    assert by["6.03"].depth == 1
+
+
+def test_body_start_backs_up_over_short_headers_and_subparts() -> None:
+    # The first substantial block is 1.02; ARTICLE I and 1.01 are short heading
+    # blocks and 1.01's (a) sub-part sits between them. Body-start must back up
+    # past the sub-part to open at ARTICLE I, not truncate to 1.02.
+    body = "x" * 400
+    doc = _doc([
+        "ARTICLE I",            # short header
+        "1.01 The Merger.",     # short opener
+        f"(a) sub-part {body}",  # 1.01's child, between 1.01 and 1.02
+        f"1.02 Effect. {body}",  # first block >= 100 chars
+    ])
+    nodes = decode(doc)
+    by = {n.marker_text: n for n in nodes}
+    assert nodes[0].marker_text == "ARTICLE I"
+    assert by["ARTICLE I"].depth == 0
+    assert by["1.01"].depth == 1 and by["1.02"].depth == 1
+    assert by["(a)"].depth == 2
+
+
+def test_body_start_uses_content_run_not_block_length() -> None:
+    # The body's first section heading ("1.1 Term.") is a short block; its body is
+    # a separate long block. A block-length test would skip the short heading; the
+    # content run (text until the next section) is long, so body-start keeps it and
+    # backs up to its article. The two leading short TOC articles are skipped.
+    body = "x" * 400
+    doc = _doc([
+        "ARTICLE I",   # table-of-contents entries: short, nothing between them
+        "ARTICLE II",
+        "ARTICLE I",   # the body article (short header)
+        "1.1 Term.",   # short section heading ...
+        body,          # ... whose body is a separate long block
+        "1.2 Rent.",
+        body,
+    ])
+    nodes = decode(doc)
+    by = {n.marker_text: n for n in nodes}
+    assert nodes[0].marker_text == "ARTICLE I"
+    assert by["1.1"].depth == 1 and by["1.2"].depth == 1
+    assert len(nodes) == 3  # body ARTICLE I, 1.1, 1.2; the TOC articles are skipped
+
+
 def test_spans_materialise_and_validate() -> None:
     body = "x" * 400
     doc = _doc([
@@ -185,6 +242,28 @@ def test_spans_materialise_and_validate() -> None:
         assert n.char_end is not None
         assert 0 <= n.source_offset < n.char_end <= len(doc.text)
     assert validate_tree(nodes, doc) == []
+
+
+def test_confidence_trusts_a_clean_tree() -> None:
+    body = "x" * 400
+    doc = _doc([
+        "ARTICLE I", f"1.1 Term. {body}", f"1.2 Rent. {body}",
+        "ARTICLE II", f"2.1 Foo. {body}", f"2.2 Bar. {body}",
+    ])
+    conf = assess_confidence(doc, clause_tree(doc))
+    assert conf.score > 0.95 and conf.needs_review is False
+    assert conf.reasons == []
+
+
+def test_confidence_flags_out_of_order_articles() -> None:
+    # Articles emitted out of order (a scrambled reading order) must be flagged,
+    # not silently trusted.
+    body = "x" * 400
+    doc = _doc([f"ARTICLE II {body}", f"ARTICLE I {body}"])
+    conf = assess_confidence(doc, clause_tree(doc))
+    assert conf.needs_review is True
+    assert conf.signals["article_order"] < 1.0
+    assert any("out of order" in r for r in conf.reasons)
 
 
 def test_clause_segmenter_satisfies_interface_and_contract() -> None:

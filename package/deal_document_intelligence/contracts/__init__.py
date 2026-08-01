@@ -38,6 +38,9 @@ from deal_document_intelligence.contracts.obligation import Obligation
 from deal_document_intelligence.contracts.relation import Relation
 from deal_document_intelligence.contracts.relation_extraction import RelationExtraction
 from deal_document_intelligence.contracts.relation_type import RelationType
+from deal_document_intelligence.contracts.segmentation_confidence import (
+    SegmentationConfidence,
+)
 from deal_document_intelligence.contracts.validation_issue import ValidationIssue
 
 __all__ = [
@@ -68,5 +71,6 @@ __all__ = [
     "Relation",
     "RelationExtraction",
     "RelationType",
+    "SegmentationConfidence",
     "ValidationIssue",
 ]

@@ -37,31 +37,84 @@ from deal_document_intelligence.segmentation.numbering import (
 from deal_document_intelligence.segmentation.parsed_marker import ParsedMarker
 
 
+def _lead_in_start(candidates: list[Candidate], first: int) -> int:
+    """Back up from `first` to the start of its opening numbering run.
+
+    The opening sections and the article that parents them are often short heading
+    blocks (title split from the body prose) whose own content run is short, so the
+    first marker body-start keeps is 1.02, not ARTICLE I / 1.01. Walk backwards chaining
+    section to section: an earlier sibling opener (1.01 before 1.02) or the article
+    that introduces the run (ARTICLE I -> 1.01), skipping the parenthesised
+    sub-parts between sections. Each step must match the run head by numbering, so
+    a table-of-contents tail (11.02, ARTICLE XI) that does not chain into this run
+    is never swept in.
+    """
+    head = parse_marker(candidates[first].marker_family, candidates[first].marker_text)
+    start = first
+    k = first - 1
+    while k >= 0:
+        if candidates[k].marker_family.startswith("paren"):
+            k -= 1  # a descendant sub-part of an earlier section in the run
+            continue
+        prev = parse_marker(candidates[k].marker_family, candidates[k].marker_text)
+        if is_child_start(prev, head):  # the article/section that opens the run
+            return k
+        if not is_sibling_successor(prev, head):  # not an earlier sibling opener
+            return start
+        start, head, k = k, prev, k - 1
+    return start
+
+
 def body_start_index(
-    candidates: list[Candidate], block_chars: dict[str, int], min_body_chars: int = 100
+    candidates: list[Candidate], text_len: int, min_content_chars: int = 100
 ) -> int:
     """Index of the first body clause among block-start candidates.
 
-    The body begins at the first block-start marker whose block carries real
-    clause content (not a short table-of-contents title), never a parenthesised
-    sub-part. If that first section is introduced by an article header immediately
-    before it, we back up one step to include the article. Robust multi-signal TOC
-    detection remains a tracked follow-up in docs/04.
+    The body begins at the first section-level marker (never a parenthesised
+    sub-part) whose content run is substantial, then backs up over its opening
+    lead-in (see `_lead_in_start`). The content run is the text from a marker to
+    the next section-level marker, that is the marker's own clause and its
+    sub-parts. This is the structural signal that separates a table-of-contents
+    entry from a real clause: a TOC line has almost no text before the next entry,
+    while a real clause runs for paragraphs even when its title was split into a
+    short heading block (so "1.1 Purchase and Sale." with the body in the next
+    block still qualifies, which a block-length test missed). Robust multi-signal
+    TOC detection remains a tracked follow-up in docs/04.
     """
-    first = None
+    # For each position, the offset of the next section-level (non-paren) marker,
+    # scanning right to left so each entry sees the nearest one after it.
+    next_section = [text_len] * len(candidates)
+    following = text_len
+    for j in range(len(candidates) - 1, -1, -1):
+        next_section[j] = following
+        if not candidates[j].marker_family.startswith("paren"):
+            following = candidates[j].source_offset
+
     for j, c in enumerate(candidates):
-        if (block_chars.get(c.block_id, 0) >= min_body_chars
-                and not c.marker_family.startswith("paren")):
-            first = j
-            break
+        if (not c.marker_family.startswith("paren")
+                and next_section[j] - c.source_offset >= min_content_chars):
+            return _lead_in_start(candidates, j)
+    return 0
 
-    if first is None:
-        return 0
 
-    if (candidates[first].marker_family != "article"
-            and first > 0 and candidates[first - 1].marker_family == "article"):
-        return first - 1
-    return first
+def _article_adopts_section(parent: ParsedMarker, marker: ParsedMarker) -> bool:
+    """True if an article should adopt a decimal section as its first child.
+
+    Normally the first section (2.1, 6.01) opens the level via `is_child_start`
+    because it ends in 1. But its real opener can be dropped or reordered: in one
+    document "Section 6.01" is extracted *before* its own "ARTICLE VI" header, so
+    the article first meets section 6.02. We still adopt it, provided the section's
+    leading ordinal matches the article number (6.x under ARTICLE VI), so a whole
+    article's sections are not lost for want of their .01. The leading-ordinal
+    match keeps this from nesting 2.1 under an unrelated ARTICLE I.
+    """
+    return (
+        parent.family == "article"
+        and marker.family in ("section", "hier-decimal", "decimal")
+        and len(marker.path) >= 2
+        and bool(parent.path)
+        and marker.path[0] == parent.path[0]
+    )
 
 
 def _kind(family: str) -> str:
@@ -102,6 +155,7 @@ def _place(
     # ends in 1.
     if stack and (
         is_child_start(stack[-1][1], marker)
+        or _article_adopts_section(stack[-1][1], marker)
         or (starts_sequence(marker) and candidate.marker_family.startswith("paren"))
     ):
         return len(stack), stack[-1][0].id
@@ -118,9 +172,8 @@ def _place(
 
 
 def decode(document: ParsedDocument) -> list[ClauseNode]:
-    block_chars = {b.id: len(b.text) for b in document.blocks}
     candidates = [c for c in generate_candidates(document) if c.at_block_start]
-    candidates = candidates[body_start_index(candidates, block_chars):]
+    candidates = candidates[body_start_index(candidates, len(document.text)):]
 
     stack: list[tuple[ClauseNode, ParsedMarker]] = []
     nodes: list[ClauseNode] = []

@@ -219,10 +219,38 @@ aggregates, saves `artifacts/eval/clause_segmentation/score.json`, and fails bel
 a mean-F1 threshold. `make seg-measure` reports internal consistency and coverage
 only, not correctness.
 
+Current score: mean F1 0.93 (recall 0.93, precision 0.98) over the 15. Eight
+documents are exact, four at 0.98-0.99, and two remain low for the specific,
+understood reasons in Known defects below (Staffing 0.89, FRESH 0.19).
+
+Fail-safe review gate: `assess_confidence` scores each document's tree from
+gold-free structural signals (article order, section-number uniqueness, and the
+validation invariants) and returns a `SegmentationConfidence` with a
+`needs_review` flag, so an out-of-distribution document is routed to review or a
+coarser fallback instead of being silently mis-segmented. On the graded set the
+gate flags FRESH (0.31, the restart-per-article numbering) and PS (0.67, real
+duplicate numbers) and clears every exact document, with no clean document
+false-flagged. It is deliberately conservative: coverage (were real sections
+dropped?) is not yet a signal, because the obvious proxy is dominated by in-clause
+numbered lists and false-flags clean documents (measured), so a subtle miss like
+Staffing (0.88) can still pass. A reliable coverage signal is a tracked follow-up.
+
 Known defects (some found by external review, verified, and being worked):
 - Greedy decoder, not the scored constrained decoder this doc describes. It has
   no proper skip tolerance beyond one dropped ordinal, and it drops rather than
   re-nests markers it cannot place.
+- Scrambled reading order. The parser can emit an article header after the
+  sections it introduces (Staffing: "ARTICLE VIII" arrives after "ARTICLE IX" and
+  after 9.1). The header then cannot parent those sections, because its own text
+  lives at a later source offset and an offset-enclosing span must start before
+  its children. This belongs to the parser's reading order, not the decoder;
+  reordering candidates here was tried and correctly rejected (it breaks the
+  evidence-by-offset invariant).
+- Article-relative section numbering. Some bodies restart section numbers per
+  article ("Section 1.01" under every article) while the TOC lists them
+  fully-qualified ("2.01"). The segmenter faithfully reads "1.01", so it neither
+  nests nor matches gold (FRESH). The fix is a numbering namespace that qualifies
+  a section by its enclosing article; it is a distinct feature, not a decoder bug.
 - Inline sections are dropped. When the parser merges an article header with its
   first section into one block, that section is inline and not recovered (a
   general-inline attempt regressed the well-structured docs and was reverted).
@@ -232,12 +260,21 @@ Known defects (some found by external review, verified, and being worked):
 - Output loses structure: `ClauseUnit` carries inclusive text only (parent and
   child overlap); direct spans, node role, region namespace, and confidence are
   not surfaced. Evidence records one page/block even when a clause spans several.
-- Body-start still uses block length; markers are English-only (not multilingual
-  yet); the parser does not populate block geometry.
+- Markers are English-only (not multilingual yet); the parser does not populate
+  block geometry.
 
 Fixed so far: sibling matching respects numbering kind and tolerates one dropped
 ordinal; `starts_sequence` no longer over-nests decimal sections; orphan
-parenthesised sub-parts are not promoted to top level.
+parenthesised sub-parts are not promoted to top level. An article now adopts a
+following section whose leading ordinal matches even when the .01 opener was
+dropped or reordered, so a whole article's sections are no longer lost.
+Body-start keys on the content run after a marker (text until the next section)
+rather than a single block's length, so a section whose heading was split into a
+short block is still recognised; it then backs up over the opening lead-in (short
+article and section headers, plus the sub-parts between them), so a Definitions
+article opening with short headings is no longer skipped. The
+scorer evaluates only section-level markers (parenthesised sub-parts are scored at
+their own level, not counted as false sections).
 
 Phase 3 (a learned boundary model) is not started and is not justified until the
 deterministic core and the evaluation are solid.
