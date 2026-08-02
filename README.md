@@ -42,10 +42,10 @@ tools on *deal* documents). Custom effort concentrates on the contract-specific 
 | # | Stage | Decision | Tool / how |
 |---|-------|----------|------------|
 | — | Ingest + OCR (upstream) | **Buy** | consumer-supplied: Textract / Azure DI / docling |
-| 1 | Canonicalise OCR text | **Buy + adapter** | consumer adapter → `CanonicalDocument` |
+| 1 | Canonicalise OCR text | **Buy + adapter** | consumer adapter → `ParsedDocument` |
 | 2 | Reconstruct structure | **Buy + own adapter** | parser output → blocks/headings/tables/offsets |
-| 3 | Detect language & doc type | **Buy / light** | language ID + doc-type classifier (routes models) |
-| 4 | Segment sections & clauses | **Build** | contract-aware, multilingual |
+| 3 | Detect language & doc type | **Buy / light** | language ID (built) + doc-type classifier (deferred) |
+| 4 | Segment sections & clauses | **Build** | contract-aware deterministic core built; English-only so far |
 | 5 | Classify clauses | **Build** | multilingual encoder (XLM-R/mDeBERTa) fine-tuned on CUAD |
 | 6 | Extract entities | **Hybrid** | multilingual NER baseline + custom deal entities |
 | 7 | Relations & obligations/events | **Build** | deal-specific |
@@ -74,27 +74,27 @@ This package is meant to be **consumed** without dictating vendors. Two rules:
 
 ```
 package/deal_document_intelligence/    # the library (one package)
-├── contracts/                     #   one Pydantic model per file (~27 models)
-│   ├── canonical_document.py      #   + block, bbox, block_type, evidence_span, document_type
-│   ├── segmented_clause.py        #   stage-4 clause; + clause_classification, clause_role
-│   ├── entity.py                  #   + entity_type, obligation, event, relation*
-│   ├── relation_extraction.py     #   stage-7 output bundle
-│   ├── evidence_backed_result.py  #   stage-9a (per-document) + verify_evidence()
-│   └── deal_intelligence.py       #   stage-9b + canonical_entity, entity_mention (deal-level)
-├── parsing/parser.py              # 1-2  Parser[consumer implements]
-├── language/language_detector.py  # 3    LanguageDetector
-├── segmentation/segmenter.py      # 4    Segmenter
-├── classification/classifier.py   # 5    Classifier
-├── extraction/entity_extractor.py # 6    EntityExtractor
-├── linking/relation_extractor.py  # 7    RelationExtractor
-├── resolution/resolver.py         # 8    Resolver (normalise + alias)
-├── aggregation/deal_aggregator.py # 9b   DealAggregator (cross-document)
-├── assembly/                      # 10   persist / evidence output
-├── pipeline.py                    #      single-document Pipeline (stage 9a)
-├── deal_pipeline.py               #      DealPipeline (many docs → DealIntelligence)
-└── config.py
+├── contracts/                     #   typed Pydantic models, one per file (~27)
+│   ├── parsed_document.py         #   stage 1-2 output; + block, bbox, block_type, evidence_span
+│   ├── segmented_clause.py        #   stage-4 clause (structural); + clause_role, direct spans
+│   ├── clause_classification.py   #   stage-5 output, keyed by clause id (separate contract)
+│   ├── segmentation_result.py     #   stage-4 return: clauses + SegmentationConfidence (review gate)
+│   ├── entity.py / relation*.py   #   stage 6-7 facts + their types
+│   ├── evidence_backed_result.py  #   stage-9a per-document result + verify_evidence()
+│   └── deal_intelligence.py       #   stage-9b cross-document + canonical_entity, entity_mention
+├── interfaces/                    #   one Protocol per stage — the whole pipeline contract:
+│                                  #   Parser, LanguageDetector, DocumentTypeDetector,
+│                                  #   ClauseSegmenter, ClauseClassifier, EntityExtractor,
+│                                  #   RelationExtractor, EntityResolver, DealAggregator
+├── segmentation/                  # 4  IMPLEMENTED: DeterministicClauseSegmenter + core
+├── classification/                # 5  IMPLEMENTED: TransformerClauseClassifier (CUAD)
+├── pipeline.py                    #      single-document Pipeline (stages wired via Protocols)
+└── deal_pipeline.py               #      DealPipeline (many docs → DealIntelligence)
+# Other stages (parse, language, extraction, resolution, aggregation) are
+# interface-only today: consumer-supplied or not yet built.
 training/   # 🔬 model building, per stage (data prep, train, evaluate, explore)
-demo/       # ▶️ runnable consumer (docling parser + baseline stages)
+demo/       # ▶️ runnable consumer (docling parser + built stages)
+eval/       # 📏 per-feature evaluation (e.g. clause_segmentation: gold + scorer)
 tests/      # ✅ tests (root, outside the package — standard)
 docs/       # 📄 living technical reports
 artifacts/  #   gitignored: data/ (datasets) · models/ (checkpoints) · outputs/ (logs)
@@ -102,7 +102,7 @@ artifacts/  #   gitignored: data/ (datasets) · models/ (checkpoints) · outputs
 
 ## Build strategy — walking skeleton first
 
-1. **Phase 0 — contracts.** Define the Pydantic schemas (`CanonicalDocument`,
+1. **Phase 0 — contracts.** Define the Pydantic schemas (`ParsedDocument`,
    `SegmentedClause`, `EvidenceSpan`, `EvidenceBackedResult`). Nails every stage's in/out.
 2. **Phase 1 — walking skeleton.** One real document flows through *all* stages
    using libraries / generic baselines end-to-end. Produces real output **and** a
@@ -127,6 +127,13 @@ intend to publish. Anything trained for public release uses openly-licensed data
 - [x] Phase 0.5 — pipeline revised to 10 stages; contracts + interfaces evolved (deal-level, multilingual, `model_version` provenance)
 - [x] Phase 1 — walking skeleton: docling demo, all stages, document + deal-level (cross-doc) intelligence, evidence-backed JSON
 - [ ] Phase 2 — custom models (segmentation, clause classification, extraction)
+  - [~] stage 4 — clause segmentation deterministic core built + measured: mean F1
+    **0.98** at the section level on a narrow slice (15 US SEC merger/SPA filings,
+    born-digital, English; gold auto-derived from each document's own table of
+    contents). Ships typed hierarchy, exact spans, region namespaces, and a
+    fail-safe confidence gate. NOT yet validated on OCR, non-English, or other
+    document types; see `docs/04-segment-clauses.md` for the honest scope and the
+    known defects. The learned boundary model (Phase 3) is not started.
   - [x] stage 5 — dataset built (leakage-checked) + Legal-XLM-R trained (1 epoch): test macro-F1 **0.246** vs 0.162 floor (all 41 deal types)
 - [ ] Phase 3 — applications & production hardening
 
@@ -142,7 +149,7 @@ poetry install --with training                   # + model-training stack
 poetry install --with demo                       # + docling, for the demo
 poetry install --with dev && poetry run pytest    # tests
 poetry run python training/clause_classification/explore_cuad.py   # sanity-check the data
-poetry run python demo/walking_skeleton.py       # run the end-to-end demo
+poetry run python demo/main.py                   # run the parse → language → segment demo
 ```
 Generated artifacts (datasets, model checkpoints, run outputs) live under
 `artifacts/` and are gitignored.
