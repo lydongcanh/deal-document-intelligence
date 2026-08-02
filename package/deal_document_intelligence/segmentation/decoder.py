@@ -131,6 +131,21 @@ def _kind(family: str) -> str:
     return family  # paren-lower / paren-upper / paren-num
 
 
+def _article_adopts_relative_section(parent: ParsedMarker, marker: ParsedMarker) -> bool:
+    """True for article-relative numbering: some documents restart section numbers
+    inside every article ("Section 1.01" under Article 2, 3, ... rather than 2.01,
+    3.01). Adopt the opener of such a run (its minor starts at 1) even though its
+    leading ordinal does not match the article number; the rest sibling-chain off
+    it, and `decode` re-bases their paths onto the real article number."""
+    return (
+        parent.family == "article"
+        and marker.family in ("section", "hier-decimal")
+        and len(marker.path) >= 2
+        and marker.path[0] != parent.path[0]
+        and starts_sequence(marker)
+    )
+
+
 def _region_adopts_section(parent: ParsedMarker, marker: ParsedMarker) -> bool:
     """True if a region (Schedule/Annex/Exhibit) should adopt a section as its
     child. A region opens its own numbering namespace: the sections inside it are
@@ -169,6 +184,7 @@ def _place(
     if stack and (
         is_child_start(stack[-1][1], marker)
         or _article_adopts_section(stack[-1][1], marker)
+        or _article_adopts_relative_section(stack[-1][1], marker)
         or _region_adopts_section(stack[-1][1], marker)
         or (starts_sequence(marker) and candidate.marker_family.startswith("paren"))
     ):
@@ -183,6 +199,25 @@ def _place(
         return 0, None
 
     return None, None
+
+
+def _canonical_path(
+    marker: ParsedMarker, stack: list[tuple[ClauseNode, ParsedMarker]], depth: int
+) -> tuple[int, ...]:
+    """The path stored on the node. For article-relative numbering (a section
+    whose leading ordinal differs from its enclosing article), re-base the leading
+    component onto the real article number, so "Section 1.02" under Article 2 gets
+    the canonical path (2, 2) and is globally unique. Otherwise the parsed path."""
+    if (
+        depth >= 1
+        and marker.family in ("section", "hier-decimal")
+        and stack
+        and stack[0][1].family == "article"
+        and marker.path
+        and marker.path[0] != stack[0][1].path[0]
+    ):
+        return (stack[0][1].path[0],) + marker.path[1:]
+    return marker.path
 
 
 def decode(document: ParsedDocument) -> list[ClauseNode]:
@@ -206,11 +241,13 @@ def decode(document: ParsedDocument) -> list[ClauseNode]:
             id=f"cl-{len(nodes)}",
             marker_text=candidate.marker_text,
             marker_family=candidate.marker_family,
-            path=marker.path,
+            path=_canonical_path(marker, stack, depth),
             depth=depth,
             parent_id=parent_id,
             source_offset=candidate.source_offset,
         )
+        # The stack keeps the RAW marker so subsequent sections sibling-chain on the
+        # body's own numbering; only the node's stored path is canonicalised.
         stack.append((node, marker))
         nodes.append(node)
 

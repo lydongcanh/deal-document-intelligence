@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import bisect
+import re
 
 from deal_document_intelligence.contracts import (
     ClauseRole,
@@ -25,6 +26,18 @@ _ROLE_BY_FAMILY = {
 def _role(marker_family: str) -> ClauseRole:
     """Article, region, numbered section, or parenthesised sub-clause."""
     return _ROLE_BY_FAMILY.get(marker_family, ClauseRole.SUBCLAUSE)
+
+
+def _number(node: ClauseNode) -> str:
+    """The clause's number. For article-relative sections the decoder re-based the
+    path onto the real article, so reflect that in the displayed number too:
+    'Section 1.02' under Article 2 becomes 'Section 2.02', keeping the drafter's
+    zero-padding. Every other marker keeps its source rendering."""
+    raw = node.marker_text.strip().rstrip(".")
+    lead = re.search(r"\d+", raw)
+    if lead and node.path and int(lead.group()) != node.path[0]:
+        raw = raw[: lead.start()] + str(node.path[0]) + raw[lead.end() :]
+    return raw
 
 
 def _heading(text: str, node: ClauseNode) -> str | None:
@@ -92,7 +105,7 @@ class DeterministicClauseSegmenter:
                     text=document.text[start:end],
                     char_start=start,
                     char_end=end,
-                    number=node.marker_text.strip().rstrip("."),
+                    number=_number(node),
                     heading=_heading(document.text, node),
                     depth=node.depth,
                     parent_id=node.parent_id,

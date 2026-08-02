@@ -220,9 +220,10 @@ aggregates, saves `artifacts/eval/clause_segmentation/score.json`, and fails bel
 a mean-F1 threshold. `make seg-measure` reports internal consistency and coverage
 only, not correctness.
 
-Current score: mean F1 0.93 (recall 0.93, precision 0.98) over the 15. Eight
-documents are exact, four at 0.98-0.99, and two remain low for the specific,
-understood reasons in Known defects below (Staffing 0.89, FRESH 0.19).
+Current score: mean F1 0.98 (recall 0.99, precision 0.97) over the 15. Six
+documents are exact, seven at 0.98-0.99, and the two lowest are Staffing (0.89,
+scrambled reading order) and FRESH (0.87, residual false articles); both are
+understood and noted in Known defects below.
 
 Fail-safe review gate: `segment` returns a `SegmentationResult` that bundles the
 clauses with a `SegmentationConfidence`, scored from gold-free structural signals
@@ -230,13 +231,15 @@ clauses with a `SegmentationConfidence`, scored from gold-free structural signal
 caller cannot take the clauses without seeing the `needs_review` flag; the
 pipeline carries it onto `EvidenceBackedResult.segmentation_confidence`. An
 out-of-distribution document is routed to review or a coarser fallback instead of
-being silently mis-segmented. On the graded set the
-gate flags FRESH (0.31, the restart-per-article numbering) and PS (0.67, real
-duplicate numbers) and clears every exact document, with no clean document
-false-flagged. It is deliberately conservative: coverage (were real sections
-dropped?) is not yet a signal, because the obvious proxy is dominated by in-clause
-numbered lists and false-flags clean documents (measured), so a subtle miss like
-Staffing (0.88) can still pass. A reliable coverage signal is a tracked follow-up.
+being silently mis-segmented. The order and uniqueness signals are namespace-aware
+(regions restart numbering, so they are excluded), which is what keeps a schedule's
+1.1 from reading as a duplicate of the body's 1.1 and false-flagging a clean
+document; on the graded set no exact document is flagged. It is deliberately
+conservative: coverage (were real sections dropped?) and spurious-clause detection
+(the residual false articles in FRESH, now 0.87 and not flagged) are not yet
+signals, because the obvious coverage proxy is dominated by in-clause numbered
+lists and false-flags clean documents (measured). A reliable coverage signal is a
+tracked follow-up, so a subtle miss like Staffing (0.89) can still pass today.
 
 Known defects (some found by external review, verified, and being worked):
 - Greedy decoder, not the scored constrained decoder this doc describes. It has
@@ -249,11 +252,6 @@ Known defects (some found by external review, verified, and being worked):
   its children. This belongs to the parser's reading order, not the decoder;
   reordering candidates here was tried and correctly rejected (it breaks the
   evidence-by-offset invariant).
-- Article-relative section numbering. Some bodies restart section numbers per
-  article ("Section 1.01" under every article) while the TOC lists them
-  fully-qualified ("2.01"). The segmenter faithfully reads "1.01", so it neither
-  nests nor matches gold (FRESH). The fix is a numbering namespace that qualifies
-  a section by its enclosing article; it is a distinct feature, not a decoder bug.
 - Inline sections are dropped. When the parser merges an article header with its
   first section into one block, that section is inline and not recovered (a
   general-inline attempt regressed the well-structured docs and was reverted).
@@ -287,7 +285,12 @@ page), so consumers no longer dig hierarchy out of an untyped `meta`. Regions
 REGION node that resets the stack and adopts its own sections, so a schedule's
 numbering lives in its own namespace instead of corrupting or being lost from the
 main body. The scorer is main-body only (it skips region descendants), because the
-TOC-derived gold does not cover schedules.
+TOC-derived gold does not cover schedules. Article-relative numbering is handled: a
+document that restarts section numbers inside each article ("Section 1.01" under
+Article 2) has those sections adopted and re-based onto the real article, so they
+are captured and globally unique ("2.01"); this took FRESH from 0.19 to 0.87. The
+scorer compares numbers component-wise as integers, so zero-padding ("4.010" vs
+"4.10") does not cause a spurious miss.
 
 Phase 3 (a learned boundary model) is not started and is not justified until the
 deterministic core and the evaluation are solid.

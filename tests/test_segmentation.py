@@ -244,6 +244,25 @@ def test_spans_materialise_and_validate() -> None:
     assert validate_tree(nodes, doc) == []
 
 
+def test_article_relative_numbering_is_qualified() -> None:
+    # Some documents restart section numbers inside each article ("Section 1.01"
+    # under Article 2, not 2.01). Each such section must be captured and re-based
+    # to its real article, so it is globally unique and matches a fully-qualified
+    # reference, while an article whose sections already match is left untouched.
+    body = "x" * 400
+    doc = _doc([
+        "ARTICLE 1", f"Section 1.01 Defs. {body}", f"Section 1.02 Rules. {body}",
+        "ARTICLE 2", f"Section 1.01 Sale. {body}", f"Section 1.02 Price. {body}",
+    ])
+    units = DeterministicClauseSegmenter().segment(doc).clauses
+    arts = {u.number: u for u in units if u.role is ClauseRole.ARTICLE}
+
+    a1_secs = sorted(u.number for u in units if u.parent_id == arts["ARTICLE 1"].id)
+    a2_secs = sorted(u.number for u in units if u.parent_id == arts["ARTICLE 2"].id)
+    assert a1_secs == ["Section 1.01", "Section 1.02"]  # already correct, untouched
+    assert a2_secs == ["Section 2.01", "Section 2.02"]  # re-based from 1.0x to 2.0x
+
+
 def test_region_is_captured_in_its_own_namespace() -> None:
     # A schedule must not be silently dropped: it becomes a top-level REGION node
     # that adopts its own sections, so a schedule's "1.1" is captured under the

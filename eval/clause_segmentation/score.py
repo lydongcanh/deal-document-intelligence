@@ -45,7 +45,8 @@ def _norm(number: str) -> tuple:
         tok = t.split()[-1]
         return ("ART", int(tok) if tok.isdigit() else parse_roman(tok))
     m = re.search(r"\d+(?:\.\d+)*", t)
-    return ("SEC", m.group(0)) if m else ("RAW", t)
+    # compare components as ints so zero-padding does not matter: "4.010" == "4.10"
+    return ("SEC", tuple(int(x) for x in m.group(0).split("."))) if m else ("RAW", t)
 
 
 def _parse_cached(source_rel: str) -> ParsedDocument:

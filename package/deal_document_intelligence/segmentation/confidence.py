@@ -33,17 +33,39 @@ _INVALID_CAP = 0.2  # multiplier applied when the tree fails an invariant
 
 
 def _article_order(nodes: list[ClauseNode]) -> float:
-    """Fraction of adjacent top-level nodes that are in increasing order."""
-    tops = [n for n in nodes if n.depth == 0 and n.path]
-    pairs = list(zip(tops, tops[1:]))
+    """Fraction of adjacent articles that are in increasing order. Only articles
+    are compared: regions legitimately restart numbering (a Schedule A after
+    Article XI is not disorder), and a stray top-level section is a different
+    concern. A scrambled reading order (Article VIII emitted after IX) shows here."""
+    arts = [n for n in nodes if n.depth == 0 and n.marker_family == "article" and n.path]
+    pairs = list(zip(arts, arts[1:]))
     if not pairs:
         return 1.0
     return sum(1 for a, b in pairs if b.path > a.path) / len(pairs)
 
 
+def _region_member_ids(nodes: list[ClauseNode]) -> set[str]:
+    """Ids of region nodes and everything under them. A schedule is a separate
+    numbering namespace, so its sections must not be compared against the main
+    body (a schedule's 1.1 is not a duplicate of the body's 1.1)."""
+    by_id = {n.id: n for n in nodes}
+    members: set[str] = set()
+    for n in nodes:
+        cur, seen = n, set()
+        while cur is not None and cur.id not in seen:
+            seen.add(cur.id)
+            if cur.marker_family == "region":
+                members.add(n.id)
+                break
+            cur = by_id.get(cur.parent_id)
+    return members
+
+
 def _uniqueness(nodes: list[ClauseNode]) -> float:
-    """Fraction of section-level nodes whose (depth, number) is not a duplicate."""
-    keys = [(n.depth, n.path) for n in nodes if n.depth <= 1 and n.path]
+    """Fraction of main-body section-level nodes whose (depth, number) is unique."""
+    region = _region_member_ids(nodes)
+    keys = [(n.depth, n.path) for n in nodes
+            if n.depth <= 1 and n.path and n.id not in region]
     if not keys:
         return 1.0
     return len(set(keys)) / len(keys)
