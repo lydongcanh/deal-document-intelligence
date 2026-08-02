@@ -118,14 +118,26 @@ def _article_adopts_section(parent: ParsedMarker, marker: ParsedMarker) -> bool:
 
 
 def _kind(family: str) -> str:
-    """Numbering kind for sibling comparison. Articles, decimal sections, and
-    each parenthesised style are distinct kinds, so "(i)" is never a sibling of
-    "ARTICLE VIII" just because alpha i = 9 = 8 + 1."""
+    """Numbering kind for sibling comparison. Articles, regions, decimal sections,
+    and each parenthesised style are distinct kinds, so "(i)" is never a sibling of
+    "ARTICLE VIII" just because alpha i = 9 = 8 + 1, and Schedule A/B are siblings
+    of each other but not of an article."""
     if family == "article":
         return "article"
+    if family == "region":
+        return "region"
     if family in ("section", "hier-decimal", "decimal"):
         return "decimal"
     return family  # paren-lower / paren-upper / paren-num
+
+
+def _region_adopts_section(parent: ParsedMarker, marker: ParsedMarker) -> bool:
+    """True if a region (Schedule/Annex/Exhibit) should adopt a section as its
+    child. A region opens its own numbering namespace: the sections inside it are
+    numbered independently of the main body and of the region's own letter, so we
+    adopt any decimal section rather than trying to match numbers, which is what
+    keeps a schedule's "7.2" from being lost or fused into the main hierarchy."""
+    return parent.family == "region" and marker.family in ("section", "hier-decimal")
 
 
 def _place(
@@ -144,9 +156,10 @@ def _place(
             parent_id = stack[level - 1][0].id if level > 0 else None
             return level, parent_id
 
-    # An article is always top level, so a stray leading TOC article cannot swallow
-    # the body.
-    if candidate.marker_family == "article":
+    # An article or a region (Schedule/Annex/Exhibit) is always top level. A region
+    # also resets the stack, so entering the schedules closes the main body and
+    # opens a fresh namespace instead of corrupting the main hierarchy.
+    if candidate.marker_family in ("article", "region"):
         return 0, None
 
     # Child of the current top: a decimal section nests only by path (2 -> 2.1);
@@ -156,6 +169,7 @@ def _place(
     if stack and (
         is_child_start(stack[-1][1], marker)
         or _article_adopts_section(stack[-1][1], marker)
+        or _region_adopts_section(stack[-1][1], marker)
         or (starts_sequence(marker) and candidate.marker_family.startswith("paren"))
     ):
         return len(stack), stack[-1][0].id

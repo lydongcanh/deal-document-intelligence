@@ -15,6 +15,7 @@ from deal_document_intelligence.segmentation.spans import clause_tree
 
 _ROLE_BY_FAMILY = {
     "article": ClauseRole.ARTICLE,
+    "region": ClauseRole.REGION,
     "section": ClauseRole.SECTION,
     "hier-decimal": ClauseRole.SECTION,
     "decimal": ClauseRole.SECTION,
@@ -22,7 +23,7 @@ _ROLE_BY_FAMILY = {
 
 
 def _role(marker_family: str) -> ClauseRole:
-    """Article, numbered section, or parenthesised sub-clause."""
+    """Article, region, numbered section, or parenthesised sub-clause."""
     return _ROLE_BY_FAMILY.get(marker_family, ClauseRole.SUBCLAUSE)
 
 

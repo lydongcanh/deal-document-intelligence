@@ -244,6 +244,31 @@ def test_spans_materialise_and_validate() -> None:
     assert validate_tree(nodes, doc) == []
 
 
+def test_region_is_captured_in_its_own_namespace() -> None:
+    # A schedule must not be silently dropped: it becomes a top-level REGION node
+    # that adopts its own sections, so a schedule's "1.1" is captured under the
+    # schedule (different parent) rather than fused into or lost from the main body.
+    body = "x" * 400
+    doc = _doc([
+        "ARTICLE I", f"1.1 Term. {body}", f"1.2 Rent. {body}",
+        "Schedule B", f"1.1 Assets. {body}", f"1.2 Excluded. {body}",  # numbering restarts
+    ])
+    units = DeterministicClauseSegmenter().segment(doc).clauses
+
+    regions = [u for u in units if u.role is ClauseRole.REGION]
+    assert len(regions) == 1
+    sched = regions[0]
+    assert sched.number == "Schedule B" and sched.depth == 0
+
+    sched_kids = [u for u in units if u.parent_id == sched.id]
+    assert {u.number for u in sched_kids} == {"1.1", "1.2"}
+    assert all(u.depth == 1 for u in sched_kids)
+
+    art = next(u for u in units if u.number == "ARTICLE I")
+    main_kids = [u for u in units if u.parent_id == art.id]
+    assert {u.number for u in main_kids} == {"1.1", "1.2"}  # main body intact and separate
+
+
 def test_confidence_trusts_a_clean_tree() -> None:
     body = "x" * 400
     doc = _doc([

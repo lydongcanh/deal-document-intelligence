@@ -26,7 +26,7 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "demo"))
 from docling_parser import DoclingParser  # noqa: E402
 
-from deal_document_intelligence.contracts import ParsedDocument  # noqa: E402
+from deal_document_intelligence.contracts import ClauseRole, ParsedDocument  # noqa: E402
 from deal_document_intelligence.segmentation import DeterministicClauseSegmenter  # noqa: E402
 from deal_document_intelligence.segmentation.numbering import parse_roman  # noqa: E402
 
@@ -58,10 +58,24 @@ def _parse_cached(source_rel: str) -> ParsedDocument:
     return doc
 
 
+def _in_region(unit, by_id: dict) -> bool:
+    """True if the clause is inside a Schedule/Annex/Exhibit namespace. Gold is the
+    main-body TOC, so region sections (a schedule's own 7.2) are out of scope here
+    and would otherwise count as false extras."""
+    cur, seen = unit, set()
+    while cur is not None and cur.id not in seen:
+        seen.add(cur.id)
+        if cur.role == ClauseRole.REGION:
+            return True
+        cur = by_id.get(cur.parent_id)
+    return False
+
+
 def score_file(path: Path) -> dict:
     gold = json.loads(path.read_text())
     doc = _parse_cached(gold["source"])
     units = DeterministicClauseSegmenter().segment(doc).clauses
+    by_id = {u.id: u for u in units}
 
     want = {_norm(c["number"]): (c["number"], c["depth"])
             for c in gold["clauses"] if c["depth"] <= 1}
@@ -69,7 +83,7 @@ def score_file(path: Path) -> dict:
     duplicates: list[str] = []
     for u in units:
         depth = u.depth
-        if not u.number or depth > 1:
+        if not u.number or depth > 1 or _in_region(u, by_id):
             continue
         key = _norm(u.number)
         # Gold is section level (articles and N.M sections). A parenthesised

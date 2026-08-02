@@ -257,9 +257,10 @@ Known defects (some found by external review, verified, and being worked):
 - Inline sections are dropped. When the parser merges an article header with its
   first section into one block, that section is inline and not recovered (a
   general-inline attempt regressed the well-structured docs and was reverted).
-- Regions (schedules, annexes, exhibits) are recognised as markers but have no
-  numbering-grammar branch, so they get an empty path and are discarded; separate
-  schedule/exhibit namespaces are not implemented.
+- Region content is captured but not yet richly labelled: a schedule's sections
+  are namespaced by hierarchy (a REGION node they hang under), not by an explicit
+  namespace string on the clause, and a region using bare "1."/"2." sections
+  (rather than "1.1"/"Section 1") is not yet adopted.
 - Per-node confidence and region namespace are still not surfaced on `SegmentedClause`
   (the rest of the output contract is now in place: typed hierarchy, direct spans,
   role, and page-level evidence). Per-node boundary/hierarchy confidence needs a
@@ -281,7 +282,12 @@ scorer evaluates only section-level markers (parenthesised sub-parts are scored 
 their own level, not counted as false sections). The output contract now surfaces
 the full clause tree: typed depth, parent, path, and role, each clause's own
 direct spans, and page-level evidence (a clause spanning a page break records each
-page), so consumers no longer dig hierarchy out of an untyped `meta`.
+page), so consumers no longer dig hierarchy out of an untyped `meta`. Regions
+(schedules, annexes, exhibits) are no longer discarded: each becomes a top-level
+REGION node that resets the stack and adopts its own sections, so a schedule's
+numbering lives in its own namespace instead of corrupting or being lost from the
+main body. The scorer is main-body only (it skips region descendants), because the
+TOC-derived gold does not cover schedules.
 
 Phase 3 (a learned boundary model) is not started and is not justified until the
 deterministic core and the evaluation are solid.

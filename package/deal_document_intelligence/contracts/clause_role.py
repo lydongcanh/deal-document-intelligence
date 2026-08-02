@@ -14,3 +14,4 @@ class ClauseRole(str, Enum):
     ARTICLE = "article"
     SECTION = "section"
     SUBCLAUSE = "subclause"
+    REGION = "region"  # a schedule, annex, exhibit, or appendix (own namespace)

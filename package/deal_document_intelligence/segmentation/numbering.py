@@ -49,22 +49,13 @@ def _roman_or_int(token: str) -> int | None:
     return parse_roman(token)
 
 
-def parse_marker(family: str, marker_text: str) -> ParsedMarker:
-    text = marker_text.strip()
-
-    if family == "article":
-        n = _roman_or_int(text.split()[-1])  # "ARTICLE III" -> "III"
-        return ParsedMarker(family=family, path=(n,) if n else ())
-
-    if family in ("section", "hier-decimal", "decimal"):
-        nums = re.findall(r"\d+", text)  # "Section 7.2"/"7.2." -> ["7","2"]
-        return ParsedMarker(family=family, path=tuple(int(x) for x in nums))
+def _parse_paren(family: str, text: str) -> ParsedMarker:
+    inner = text.strip("()").strip()  # "(b)" -> "b"
 
     if family == "paren-num":
-        nums = re.findall(r"\d+", text)
+        nums = re.findall(r"\d+", inner)
         return ParsedMarker(family=family, path=(int(nums[0]),) if nums else ())
 
-    inner = text.strip("()").strip()  # "(b)" -> "b"
     if family == "paren-upper":
         v = alpha_value(inner)
         return ParsedMarker(family=family, path=(v,) if v else ())
@@ -79,8 +70,28 @@ def parse_marker(family: str, marker_text: str) -> ParsedMarker:
             path=(alpha,),
             alt_path=(roman,) if roman is not None else None,
         )
-
     return ParsedMarker(family=family, path=(roman,) if roman is not None else ())
+
+
+def parse_marker(family: str, marker_text: str) -> ParsedMarker:
+    text = marker_text.strip()
+
+    if family == "article":
+        n = _roman_or_int(text.split()[-1])  # "ARTICLE III" -> "III"
+        return ParsedMarker(family=family, path=(n,) if n else ())
+
+    if family == "region":
+        tok = text.split()[-1]  # "Schedule A" -> "A"; "Exhibit 2" -> "2"; "Annex IV" -> "IV"
+        n = _roman_or_int(tok)
+        if n is None:
+            n = alpha_value(tok)
+        return ParsedMarker(family=family, path=(n,) if n else ())
+
+    if family in ("section", "hier-decimal", "decimal"):
+        nums = re.findall(r"\d+", text)  # "Section 7.2"/"7.2." -> ["7","2"]
+        return ParsedMarker(family=family, path=tuple(int(x) for x in nums))
+
+    return _parse_paren(family, text)
 
 
 def _readings(m: ParsedMarker) -> list[tuple[int, ...]]:
