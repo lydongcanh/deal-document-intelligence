@@ -236,10 +236,16 @@ being silently mis-segmented. The order and uniqueness signals are namespace-awa
 1.1 from reading as a duplicate of the body's 1.1 and false-flagging a clean
 document; on the graded set no exact document is flagged. It is deliberately
 conservative: coverage (were real sections dropped?) and spurious-clause detection
-(the residual false articles in FRESH, now 0.87 and not flagged) are not yet
-signals, because the obvious coverage proxy is dominated by in-clause numbered
-lists and false-flags clean documents (measured). A reliable coverage signal is a
-tracked follow-up, so a subtle miss like Staffing (0.89) can still pass today.
+(the residual false articles in FRESH, now 0.87 and not flagged) are not signals,
+by decision after measurement. Five coverage proxies were tried and each either
+false-flags a clean document or detects nothing: a dropped section is not
+distinguishable, deterministically, from an in-clause numbered list, a
+cross-reference, or an exhibit section whose numbering coincides with the main body
+(one document attaches an equity plan whose "4.9"/"8.5" collide with the body's
+articles 4 and 8). So a subtle miss like Staffing (0.89) can still pass today.
+Real coverage detection needs explicit exhibit-boundary detection and the learned
+model, which can separate a true drop from the noise; a deterministic proxy cannot,
+and shipping one would flag perfect documents.
 
 Known defects (some found by external review, verified, and being worked):
 - Greedy decoder, not the scored constrained decoder this doc describes. It has
