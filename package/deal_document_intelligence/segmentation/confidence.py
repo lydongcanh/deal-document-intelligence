@@ -28,8 +28,16 @@ from deal_document_intelligence.contracts import ParsedDocument, SegmentationCon
 from deal_document_intelligence.segmentation.clause_node import ClauseNode
 from deal_document_intelligence.segmentation.validation import validate_tree
 
-REVIEW_THRESHOLD = 0.85  # below this, route to human review or a coarser fallback
-_INVALID_CAP = 0.2  # multiplier applied when the tree fails an invariant
+# Route to review below this. A policy knob, not a learned value: the signals
+# multiply, so 0.85 trips when one signal falls to ~0.85 (e.g. one section number
+# in seven is a duplicate) while everything else is clean. On the graded set it
+# flags the genuinely-degraded documents and no exact one; tune it to trade review
+# volume against miss rate.
+REVIEW_THRESHOLD = 0.85
+# A tree that fails a structural invariant is untrustworthy regardless of the other
+# signals, so cap it far below the threshold (0.2, review guaranteed) rather than
+# zero, which would erase the finer signal ordering among broken trees.
+_INVALID_CAP = 0.2
 
 
 def _article_order(nodes: list[ClauseNode]) -> float:

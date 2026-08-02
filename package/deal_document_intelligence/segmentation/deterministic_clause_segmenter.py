@@ -22,6 +22,11 @@ _ROLE_BY_FAMILY = {
     "decimal": ClauseRole.SECTION,
 }
 
+# A clause title is a short phrase ("Termination", "Governing Law"); a candidate
+# longer than this is the clause's body prose running on, not a heading, so drop
+# it rather than store a sentence as the title. ~100 chars is roughly one line.
+_MAX_HEADING_CHARS = 100
+
 
 def _role(marker_family: str) -> ClauseRole:
     """Article, region, numbered section, or parenthesised sub-clause."""
@@ -56,7 +61,7 @@ def _heading(text: str, node: ClauseNode) -> str | None:
     lead = lead.lstrip(". ") # drop any leftover marker punctuation
     head = lead.split(". ")[0].strip().rstrip(".")
 
-    return head if head and len(head) <= 100 else None
+    return head if head and len(head) <= _MAX_HEADING_CHARS else None
 
 
 def _evidence(

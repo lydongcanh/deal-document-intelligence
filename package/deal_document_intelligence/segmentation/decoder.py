@@ -78,8 +78,14 @@ def body_start_index(
     entry from a real clause: a TOC line has almost no text before the next entry,
     while a real clause runs for paragraphs even when its title was split into a
     short heading block (so "1.1 Purchase and Sale." with the body in the next
-    block still qualifies, which a block-length test missed). Robust multi-signal
-    TOC detection remains a tracked follow-up in docs/04.
+    block still qualifies, which a block-length test missed).
+
+    `min_content_chars` is the one hand-tuned value here: ~100 chars is about a
+    line, enough to separate a TOC entry (a title plus a page number, well under a
+    line) from a real clause (at least a sentence). It is deliberately generous so
+    the run only needs to clear "more than a title". Making this fully relative
+    (comparing to the document's own TOC-vs-body run distribution) is the tracked
+    robust multi-signal TOC detection follow-up in docs/04.
     """
     # For each position, the offset of the next section-level (non-paren) marker,
     # scanning right to left so each entry sees the nearest one after it.
@@ -163,8 +169,11 @@ def _place(
     """Decide (depth, parent_id) for a marker, or (None, None) to skip it."""
 
     # Sibling of an open level (deepest first), same numbering kind only. One
-    # dropped ordinal is tolerated so a single missing marker does not reject the
-    # whole rest of the run (1.1 -> 1.3 still continues the sequence).
+    # dropped ordinal is tolerated (max_skip=1) so a single missing marker does not
+    # reject the whole rest of the run (1.1 -> 1.3 still continues the sequence).
+    # One, not more: a two-step gap (1.1 -> 1.4) is more likely two unrelated
+    # numbers than two markers dropped in a row, so widening the tolerance would
+    # start fusing distinct clauses.
     for level in range(len(stack) - 1, -1, -1):
         same_kind = _kind(stack[level][1].family) == _kind(candidate.marker_family)
         if same_kind and is_sibling_successor(stack[level][1], marker, max_skip=1):
