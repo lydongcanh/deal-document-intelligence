@@ -300,3 +300,62 @@ scorer compares numbers component-wise as integers, so zero-padding ("4.010" vs
 
 Phase 3 (a learned boundary model) is not started and is not justified until the
 deterministic core and the evaluation are solid.
+
+## Resume here (PAUSED)
+
+Paused deliberately: the remaining work is the cascade (deterministic → LLM
+fallback), which is a larger build than is worth doing right now. The deterministic
+Tier-1 is functionally complete and good on its target population; what is not done
+is the router that would drive escalation. Pick up from this section.
+
+### What the held-out run showed (the key evidence)
+
+`eval/clause_segmentation/heldout.py` runs the segmenter, blind, over 21 other
+contract types under `demo/documents/{material_contracts,equity_compensation,
+charter_bylaws}` (public SEC filings, never tuned on). Result:
+
+- Structurally robust: 0 empty, 0 invalid trees. The core never produced corrupt
+  output on unseen types.
+- But it under-segments the contract types that lack formal ARTICLE/Section/N.N
+  numbering (most material contracts and equity/comp agreements are prose with
+  lettered lists). Only the charter/bylaws, which uses formal numbering, segmented
+  well (11 articles, 62 sections). It also mislabels the SEC exhibit tag
+  ("Exhibit 10" = EX-10) as a region.
+- Critically, the confidence gate rated the under-segmented documents 1.00 and
+  escalated only 1/21. So the router cannot currently tell "sparse because the
+  document has no numbering" from "correctly segmented".
+
+### Why (the real problem)
+
+The gate measures internal consistency (no duplicate numbers, articles in order,
+valid spans), not correctness. A near-empty tree is internally consistent, so it
+scores high. It is a self-assessment built only from the segmenter's own output,
+so it can detect corruption but not omission or wrong-scope. You cannot grade what
+you did not find by looking only at what you did find.
+
+### The intended fix (design, not yet built)
+
+Make the router a SCOPE DETECTOR, not a quality grader, so it does not need an
+ever-growing test set to calibrate:
+
+1. Input-marker density (principled, no per-doc tuning): a document with ~0
+   ARTICLE/Section/N.N markers does not meet the method's precondition, so it is
+   out of scope by definition → escalate, regardless of the tree produced. This
+   catches all 21 failures without being fitted to them.
+2. Keep the existing internal-consistency signals for in-scope documents.
+3. LLM cross-check for the ambiguous middle: run the LLM on a borderline document
+   and escalate on substantial disagreement. This is the external reference a
+   self-assessment structurally lacks.
+
+Then the cascade is: in-scope + consistent → trust the deterministic result
+(cheap); out of scope or low-confidence → LLM fallback; distil the LLM into a
+cheap ML tier later only if volume/cost justify. Do NOT tune output-richness
+thresholds to whichever documents we happen to have — that is the overfitting trap.
+
+### Still-open deterministic items (deferred, each with a reason above/in Status)
+
+Scored constrained (Viterbi/beam) decoder; inline sections (merged article+first
+section); scrambled reading order (parse-layer, offset invariant); per-clause
+confidence (needs a scoring decoder or the model); multilingual markers; block
+geometry; a real held-out F1 (only gold-free health was run on the 21, no gold for
+those types).

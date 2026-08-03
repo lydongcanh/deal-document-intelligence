@@ -10,7 +10,7 @@ the contract: whatever you plug in must return a `ParsedDocument`. You can
 self-check your adapter with `ParsedDocument.verify()` /
 `EvidenceBackedResult.verify_evidence()`.
 
-It's a `Protocol`, so no base class to inherit — any object with a matching
+It's a `Protocol`, so no base class to inherit - any object with a matching
 `parse` method satisfies it.
 """
 
