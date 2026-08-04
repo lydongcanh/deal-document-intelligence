@@ -37,7 +37,7 @@ class EvidenceBackedResult(BaseModel):
     doc_id: str
     document: ParsedDocument
     language: DetectedLanguage | None = None
-    document_type: DetectedDocumentType | None = None  # stage deferred; see docs/03
+    document_type: DetectedDocumentType | None = None  # detector not built yet; see docs/03
     clauses: list[SegmentedClause] = Field(default_factory=list)
     segmentation_confidence: SegmentationConfidence | None = None
     classifications: list[ClauseClassification] = Field(default_factory=list)

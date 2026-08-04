@@ -99,6 +99,5 @@ class DoclingParser:
             doc_id=source.stem,
             text=_SEPARATOR.join(parts),
             blocks=blocks,
-            source_path=str(source),
             page_count=max((b.page for b in blocks), default=None),
         )

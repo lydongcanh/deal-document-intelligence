@@ -7,7 +7,7 @@ add value.
 
     Parser               source file      -> ParsedDocument             [buy]
     LanguageDetector     document         -> DetectedLanguage            [buy/light]
-    DocumentTypeDetector document         -> DetectedDocumentType        [build, deferred]
+    DocumentTypeDetector document         -> DetectedDocumentType        [build, not built yet]
     ClauseSegmenter      document         -> SegmentedClause[]           [build]
     ClauseClassifier     clauses          -> ClauseClassification[]      [build]
     EntityExtractor      document+clauses -> entities                    [hybrid]

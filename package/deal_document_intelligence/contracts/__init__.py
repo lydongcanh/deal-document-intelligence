@@ -27,6 +27,8 @@ from deal_document_intelligence.contracts.detected_document_type import (
 from deal_document_intelligence.contracts.detected_language import (
     DetectedLanguage,
 )
+from deal_document_intelligence.contracts.document_category import DocumentCategory
+from deal_document_intelligence.contracts.document_form import DocumentForm
 from deal_document_intelligence.contracts.document_type import DocumentType
 from deal_document_intelligence.contracts.entity import Entity
 from deal_document_intelligence.contracts.entity_mention import EntityMention
@@ -65,6 +67,8 @@ __all__ = [
     "DealIntelligence",
     "DetectedDocumentType",
     "DetectedLanguage",
+    "DocumentCategory",
+    "DocumentForm",
     "DocumentType",
     "Entity",
     "EntityMention",

@@ -20,7 +20,6 @@ class ParsedDocument(BaseModel):
     doc_id: str
     text: str
     blocks: list[Block] = Field(default_factory=list)
-    source_path: str | None = None
     mime_type: str | None = None
     page_count: int | None = None
     meta: dict = Field(default_factory=dict)
@@ -38,4 +37,5 @@ class ParsedDocument(BaseModel):
         """
         if not 0 <= span.char_start <= span.char_end <= len(self.text):
             return False
+
         return self.slice(span.char_start, span.char_end) == span.text

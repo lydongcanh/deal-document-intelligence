@@ -19,9 +19,10 @@ before the heavy extraction stages, not after.
 
 ## Taxonomy
 
-A document answers several independent questions, so a label carries several
-fields. They vary independently and serve different consumers, which is why one
-field is not enough.
+A document answers several independent questions, so the stage works with several
+fields, not one. Most describe the document type itself (and are what the detector
+outputs or derives); one, quality, is an input it only consumes. They vary
+independently and serve different consumers.
 
 - **type**: "what exactly is this?" The specific leaf label (nda, lease, financial
   statement, board minutes). The primary, user-facing output. It is the hardest to
@@ -42,14 +43,16 @@ field is not enough.
   association are category `corporate` but form `contract` (clause-structured); a
   cap table is also `corporate` but form `statement` (a grid of figures). You need
   both.
-- **quality_status**: a separate operational axis (`ok`, `low_ocr_quality`,
-  `unreadable`, `blank`, `encrypted_or_restricted`, `unsupported_format`), assessed
-  at parse/OCR time (stages 1-2), where the signal actually lives. It acts as a GATE
-  at the start of this stage: a non-`ok` document short-circuits to review before any
-  language, type, or segmentation compute is spent. This stage consumes it; it never
-  computes it. It is kept apart from the semantic label on purpose: "cannot read it"
-  is not "do not know its type", and conflating them poisons both routing and
-  evaluation (an OCR failure must not count as a classification error).
+- **quality_status**: NOT part of the type label and NOT stored on
+  `DetectedDocumentType`. It is a document-level attribute produced at parse/OCR time
+  (stages 1-2), where the signal actually lives, and carried on `ParsedDocument`. It
+  is listed here only because this stage gates on it: a non-`ok` document
+  (`low_ocr_quality`, `unreadable`, `blank`, `encrypted_or_restricted`,
+  `unsupported_format`) short-circuits to review before any language, type, or
+  segmentation compute is spent. This stage reads it; it never computes or stores it.
+  Keeping it off the semantic label is deliberate: "cannot read it" is not "do not
+  know its type", and conflating them poisons both routing and evaluation (an OCR
+  failure must not count as a classification error).
 
 Form selects a pipeline *family*, not a single implementation. The exact extractor
 is chosen by form together with type/subtype: within `statement`, a P&L needs
@@ -71,6 +74,13 @@ subtype. This is why the flow reads `form` early and the other fields later: for
 just the routing-facing projection of type; type itself drives the classification
 ontology and the user-facing label immediately after routing, and category drives
 deal-level grouping once that stage exists.
+
+So `DetectedDocumentType` stays minimal: `type`, `subtype`, `confidence`, and the
+derived `category`/`form`. Language (stage 3a) and quality (parse) travel with the
+document, not inside this result. Downstream stages consume the type too, but exactly
+how, the per-type entity schemas, prompts, and normalisation rules, is designed when
+we build each stage against real data, not pre-baked here. The type is simply carried
+in the per-document context, so a later stage opts in without any contract change.
 
 Each form still gets structural segmentation, just a different kind with a
 different ontology:
