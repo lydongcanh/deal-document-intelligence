@@ -34,6 +34,8 @@ evaluate = "==0.4.6"        # standard metric implementations (F1, etc.)
 accelerate = "==1.14.0"     # device/precision handling for training loops
 seqeval = "==1.2.2"         # the standard metric for token-level NER
 sentencepiece = "==0.2.2"   # tokenizer backend for XLM-R / Legal-XLM-R
+scikit-learn = "==1.9.0"    # TF-IDF + linear baseline (document-type)
+numpy = "==2.5.1"           # metrics / array ops (declared, not transitive)
 
 # Demo / walking-skeleton stack — a CONSUMER of the package, not part of it.
 # docling lives here (not in the package) so the library stays vendor-free.

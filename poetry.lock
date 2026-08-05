@@ -5090,4 +5090,4 @@ classification = ["sentencepiece", "torch", "transformers"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<3.14"
-content-hash = "70ff0cdd6cc5a64f01419a4f68c0fa3dbd3cc22a0f9d31e6ecfe1f671f889832"
+content-hash = "3f2d60ef2582ace07e3db094b0f076b4b79b3fc59db75db87b18133b3c0084d7"
